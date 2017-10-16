@@ -3,7 +3,7 @@
         <div class="pop-page show status-editor">
             <div class="content">
                 <div class="editor-wrapper">
-                    <textarea v-getRadio maxlength='140' name="radio" class="editor" placeholder="分享生活点滴..." ></textarea>
+                    <textarea v-getRadio maxlength='140' name="radio" class="editor" placeholder="分享生活点滴..." >{{content}}</textarea>
                 </div>
                 <div class="info-bar">
                     <div class="btn btn-camera" style="background-image:url(../svg/ic_status_camera_green.svg);">
@@ -21,25 +21,35 @@
         <div>
             <div class="pop-page-header header show">
                 <span class="title">发广播</span>
-                <div class="btn btn-left ">取消</div>
-                <div class="btn btn-right disable" @click="publish">发布</div>
+                <div class="btn btn-left" v-cancel>取消</div>
+                <div class="btn btn-right disable" v-publish>发布</div>
             </div>
         </div>
         <div v-for="i in image" class="images">
-            <img :src="'../addImage/tamp/phone18124092479/' + i" alt="" />
-            <i class="del"></i>
+            <img :src="'../addImage/tamp/phone18124092479/' + i" :dataid="i"/>
+            <i class="del" v-deleImage></i>
         </div>
     </div>
 </template>
 <script>
+    // import C from "../../js/cookie.js";
     export default {
         data(){
             return{
                 image:[],
-                codelen:140
+                codelen:140,
+                content:'',
+                eternalContent:[]
             }
         },
         methods:{
+            init:function(){
+                this.image = [];
+                this.content = '';
+                this.codelen = 140;
+                C.set('content','',null,'/');
+                console.log(4555);
+            },
             createTmp:function(){
                 $.ajax({
                     type:'get',
@@ -73,29 +83,23 @@
                         processData: false,
                         contentType: false,
                         success: function(data) {
+                            if(!data)return;
                             //拼接数组
                             self.image = self.image.concat(data.slice(0,-1).split(','));
                         }
                 })
             },
-            deleteImage:function(){
-
-            },
-            publish:function(){
-                this.image = [];
-                $.ajax({
-                    type:'get',
-                    url:'http://localhost:12345/publish',
-                    success:function(data){
-                        console.log(data);
-                    }
-
-                })
+            cancel:function(){
+                
             }
+
         },
         mounted:function(){
             this.createTmp();
             this.mountedImage();
+            this.content = C.get('content');
+            this.eternalContent = JSON.parse(C.get('eternal'));
+            this.codelen = 140 - this.content.length;
         },
         directives:{
             getRadio:{
@@ -104,7 +108,43 @@
                         var str = $(el).val();
                         //vnode.context指向这个对象
                         vnode.context.codelen = 140 - str.length;
+                        // console.log(str);
+                        document.cookie = 'content=' + str;
+                        vnode.context.content = str;
+                        console.log(vnode.context.content);
+                        console.log(1234);
                         // console.log(str.length,binding,vnode.context.codelen);
+                    })
+                    
+                }
+            },
+            publish:{
+                bind:function(el,binding,vnode){
+                    var self = vnode.context;
+                    $(el).on('click',()=>{
+                        $.ajax({
+                            type:'get',
+                            url:'http://localhost:12345/publish',
+                            success:function(data){
+                                if(!data || self.content == '')return;
+                                var now = new Date();
+                                now.setDate(now.getDate()+7);
+                                // self.eternalContent += self.content+',';
+                                var user = {
+                                    id:'',
+                                    eternal:self.content,
+                                    time:new Date().format("yyyy-MM-dd hh:mm:ss"),
+                                    img:self.image
+                                };
+                                self.eternalContent.push(user);
+                                C.set('eternal',JSON.stringify(self.eternalContent),now,'/');
+                                self.init();
+                                $(".editor").val('');
+                                console.log(self.eternalContent);
+                                router.push('radio');
+                            }
+
+                        })
                     })
                     
                 }
@@ -116,6 +156,47 @@
                     })
                 }
                 
+            },
+            deleImage:{
+                bind:function(el,binding){
+                    el.onclick = function(){
+                        var $par = $(el).parent('.images');
+                        var src = $par.children('img').attr('dataid');
+                        $.ajax({
+                            type:'get',
+                            url:'http://localhost:12345/deleImage',
+                            data:{'src':src},
+                            success:function(res){
+                                if(!res)return;
+                                $par.remove();
+                            }
+                        })
+                    }
+                }
+            },
+            cancel:{
+                bind:function(el,binding,vnode){
+                    $(el).on('click',function(){
+                        var self = vnode.context;
+                        $.ajax({
+                            type:'get',
+                            url:'http://localhost:12345/delAll',
+                            success:function(data){
+                                if(!data)return;
+                                self.init();
+                                C.set('content','',null,'/');
+                                $(".editor").val('');
+                                console.log(4352345)
+                            }
+                        })
+                    })
+                    
+                }
+            }
+        },
+        computed:{
+            s(){
+                return this.content;
             }
         }
     }
@@ -270,7 +351,7 @@ textarea::-webkit-input-placeholder{
 .del::before {
     content: "×";
     font-family: sans-serif;
-    font-size: 10px;
+    font-size: 13px;
     color: #fff;
     font-weight: 200;
     display: block;

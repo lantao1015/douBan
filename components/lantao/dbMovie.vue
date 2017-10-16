@@ -11,13 +11,18 @@
                         <div class="section-content">
                             <ul class="row items">
                                 <li class="item item__movie" v-for="i in item1"  >
-                                    <a :href="'#home/movieDetail/' + i.id">
+                                    <a :href="'#home/movieDetail/' + i.id" :title="i.title" v-clickdetail>
                                     <div class="item-poster" :style="'background-image:url(' + i.cover.url + ')'"></div>
                                     <span class="item-title">{{i.title}}</span>
                                         <div class="item-rating">
                                             <div class="rank">
-                                                <span class="rating-stars" v-if="i.rating" :data-rate="i.rating.value/2">
-                                                    <span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-gray"></span></span>
+                                            <div v-if="i.rating">
+                                                <span class="rate rate1" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==4"></span>
+                                                <span class="rate rate2" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==5"></span>
+                                                <span class="rate rate3" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==3"></span>
+                                                <span class="rate rate4" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==2"></span>
+                                                <span class="rate rate5" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==1"></span>
+                                            </div>
                                                 <span v-if="i.rating">{{i.rating.value}}</span>
                                                 <span v-if="!i.rating">暂无评分</span>
                                                 </div>
@@ -40,7 +45,13 @@
                                     <span class="item-title">{{i.title}}</span>
                                         <div class="item-rating">
                                             <div class="rank">
-                                                <span class="rating-stars" data-rating="3.6"><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-full"></span><span class="rating-star rating-star-small-gray"></span></span> 
+                                                <div v-if="i.rating">
+                                                <span class="rate rate1" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==4"></span>
+                                                <span class="rate rate2" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==5"></span>
+                                                <span class="rate rate3" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==3"></span>
+                                                <span class="rate rate4" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==2"></span>
+                                                <span class="rate rate5" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==1"></span>
+                                            </div>
                                                 <span v-if="i.rating">{{i.rating.value}}</span>
                                                 <span v-if="!i.rating">暂无评分</span>
                                                 </div>
@@ -63,13 +74,13 @@
                                     <span class="item-title">{{i.title}}</span>
                                         <div class="item-rating">
                                             <div class="rank">
-                                                <span class="rating-stars" v-if="i.rating" :data-rate="i.rating.value">
-                                                    <span class="rating-star rating-full"></span>
-                                                    <span class="rating-star rating-full"></span>
-                                                    <span class="rating-star rating-full"></span>
-                                                    <span class="rating-star rating-full"></span>
-                                                    <span class="rating-star rating-gray"></span>
-                                                </span> 
+                                                <div v-if="i.rating">
+                                                <span class="rate rate1" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==4"></span>
+                                                <span class="rate rate2" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==5"></span>
+                                                <span class="rate rate3" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==3"></span>
+                                                <span class="rate rate4" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==2"></span>
+                                                <span class="rate rate5" :style="'background-image:url(./star/ic_rating_s.png)'" v-if="Math.ceil(i.rating.value/2)==1"></span>
+                                            </div>
                                                 <span v-if="i.rating">{{i.rating.value}}</span>
                                                 <span v-if="!i.rating">暂无评分</span>
                                                 </div>
@@ -146,16 +157,7 @@
                     </section>
                 </div>
             </div>
-            <div class="download-app">
-                <div class="info">
-                    <img src="https://img3.doubanio.com/f/talion/7837f29dd7deab9416274ae374a59bc17b5f33c6/pics/card/douban-app-logo.png" width="48">
-                    <div class="info-content">
-                        <strong>豆瓣</strong>
-                        <div>我们的精神角落</div>
-                    </div>
-                </div>
-                    <a href="https://www.douban.com/doubanapp/card/log?category=movie_home&amp;cid=&amp;action=click_download&amp;ref=http%3A//www.douban.com/doubanapp/app%3Fchannel%3Dcard_movie_home%26direct_dl%3D1" rel="nofollow">去 App Store 免费下载 iOS 客户端</a>
-            </div> 
+            <download></download>
         </div>
         <!-- <router-view></router-view> -->
        
@@ -163,7 +165,7 @@
     
 </template>
 <script>
-// import $ from "jquery";
+import download from './downLoad.vue';
     export default {
         data(){
             return {
@@ -173,35 +175,37 @@
                 item1:[],
                 item2:[],
                 item3:[],
-                interests:[{
-                    border_color:'#CC3344',
-                    url:'https://m.douban.com/doulist/968362/',
-                    content:'同时入选IMDB250和豆瓣电影250的电影'
-                },{
-                    border_color:'#42BD56',
-                    url:'https://m.douban.com/doulist/16002/',
-                    content:'带你进入不正常的世界'
-                },{
-                    border_color:'#2384E8;',
-                    url:'https://m.douban.com/doulist/190343/',
-                    content:'用电【影】来祭奠逝去的岁月'
-                },{
-                    border_color:'#3BA94D',
-                    url:'https://m.douban.com/doulist/16002/',
-                    content:'女孩们的故事【电影】'
-                },{
-                    border_color:'#FF4055',
-                    url:'https://m.douban.com/doulist/16002/',
-                    content:'科幻是未来的钥匙——科幻启示录【科幻题材】'
-                },{
-                    border_color:'#42BD56',
-                    url:'https://m.douban.com/doulist/16002/',
-                    content:'带你进入不正常的世界'
-                },{
-                    border_color:'#FFC46C',
-                    url:'https://m.douban.com/doulist/458087/',
-                    content:'经典韩国电影——收集100部'
-                }]
+                title:''
+                // ,
+                // interests:[{
+                //     border_color:'#CC3344',
+                //     url:'https://m.douban.com/doulist/968362/',
+                //     content:'同时入选IMDB250和豆瓣电影250的电影'
+                // },{
+                //     border_color:'#42BD56',
+                //     url:'https://m.douban.com/doulist/16002/',
+                //     content:'带你进入不正常的世界'
+                // },{
+                //     border_color:'#2384E8;',
+                //     url:'https://m.douban.com/doulist/190343/',
+                //     content:'用电【影】来祭奠逝去的岁月'
+                // },{
+                //     border_color:'#3BA94D',
+                //     url:'https://m.douban.com/doulist/16002/',
+                //     content:'女孩们的故事【电影】'
+                // },{
+                //     border_color:'#FF4055',
+                //     url:'https://m.douban.com/doulist/16002/',
+                //     content:'科幻是未来的钥匙——科幻启示录【科幻题材】'
+                // },{
+                //     border_color:'#42BD56',
+                //     url:'https://m.douban.com/doulist/16002/',
+                //     content:'带你进入不正常的世界'
+                // },{
+                //     border_color:'#FFC46C',
+                //     url:'https://m.douban.com/doulist/458087/',
+                //     content:'经典韩国电影——收集100部'
+                // }]
 
             }
         },
@@ -215,8 +219,8 @@
                     success:function(data){
                         self.name1 = data.subject_collection.name;
                         self.item1 = data.subject_collection_items;
-                        console.log(data);
-                        console.log(self.item1[0].rating.value);
+                        // console.log(data);
+                        // console.log(self.item1[0].rating.value);
                     }
                 })
             },
@@ -230,7 +234,7 @@
                         self.name2 = data.subject_collection.name;
                         self.item2 = data.subject_collection_items;
 
-                        console.log(self.name2);
+                        // console.log(self.name2);
                     }
                 })
             },
@@ -242,7 +246,7 @@
                     dataType:'jsonp',
                     success:function(data){
                         self.name3 = data.subject_collection.name;
-                        console.log(self.name3);
+                        // console.log(self.name3);
                         self.item3 = data.subject_collection_items;
 
                     }
@@ -260,12 +264,26 @@
             s(){
             }
 
+        },
+        components:{
+            'download':download
+        },
+        directives:{
+            clickdetail:{
+                bind:function(el,binding,vnode){
+                    var self = vnode.context;
+                    el.onclick = function(){
+                        var title = $(el).prop('title');
+                        C.set('title',title,null,'/');
+                    }
+                }
+            }
         }
 
     }
 </script>
 <style scoped>
-    .page {
+.page {
     padding-top: 47px;
     max-width: 650px;
     background: #fff;
@@ -451,48 +469,27 @@ section header a {
     transform: rotate(-45deg);
     margin-top: 1rem;
 }
-.download-app {
-    padding: 0 0 20px 0;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    text-align: center;
-    font-size: 15px;
+.rate{
+    display:block;
+    float:left;
+    width: 55px;
+    height: 11px;
+    margin-left: 10px;
+    margin-top: 1px;
 }
-.download-app .info {
-    margin: 0 auto 15px;
-    overflow: hidden;
-    text-align: left;
-    font-size: 14px;
-    display: inline-block;
-    color: #111;
+.rate1{
+    background-position: 0 99px;
 }
-.download-app .info img {
-    float: left;
-    margin-right: 12px;
+.rate2{
+    background-position: 0 0;
 }
-.download-app .info-content {
-    overflow: hidden;
+.rate3{
+    background-position: 0 -165px;
 }
-.download-app .info strong {
-    font-size: 24px;
-    font-weight: normal;
-    line-height: 28px;
+.rate4{
+    background-position: 0 55px;
 }
-.download-app .info .info-content div {
-    white-space: pre;
-    line-height: 20px;
+.rate5{
+    background-position: 0 33px;
 }
-.download-app .info+a {
-    display: block;
-}
-/*.rating-stars .rating-star {
-    display: inline-block;
-    margin-right: 1px;
-    background-color: transparent;
-    background-repeat: no-repeat;
-}
-.rating-stars{
-    display: inline-block;
-    vertical-align: middle;
-}*/
 </style>

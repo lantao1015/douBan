@@ -50,7 +50,7 @@
                     </div>
                 </section>
                 <section class="subject-comments">
-                    <h2>的短评({{total}})</h2>
+                    <h2>{{title}}的短评({{total}})</h2>
                     <div class="bd" id="comment-list">
                         <ul data-reactroot="" class="list comment-list">
                             <li class="" v-for="i in interests">
@@ -81,7 +81,8 @@
                 id:'',
                 interests:[],
                 total:0,
-                credits:[]
+                credits:[],
+                title:''
             }
         },
         methods:{
@@ -116,6 +117,7 @@
         mounted:function(data){
             var idarr = window.location.hash.split('/');
             this.id = idarr[idarr.length-1];
+            this.title = C.get('title');
             console.log(this.id);
             this.load();
             this.loadCredits();

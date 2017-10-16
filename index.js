@@ -6,12 +6,16 @@ window.$ = $;
 //必须要通过 Vue.use() 明确地安装路由功能
 Vue.use(VueRouter)
 Vue.use(Vuex)
-
+import C from "./js/cookie.js";
+window.C = C;
+import "./js/date.js";
 // import dbHome from './components/lmm/dbHome.vue';
+import download from "./components/lantao/downLoad.vue";
 import dbMovie from './components/lantao/dbMovie.vue';
 import dbMovieDetail from './components/lantao/dbMovieDetail.vue';
 import dbRadio from './components/lantao/dbRadio.vue';
 import dbSendRadio from './components/lantao/dbSendRadio.vue';
+
 import "./css/base.css";
 //配置路由
 var router = new VueRouter({
@@ -63,6 +67,7 @@ var router = new VueRouter({
         // }
     ]
 })
+window.router = router;
 
 //配置状态管理
 var store = new Vuex.Store({

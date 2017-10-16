@@ -456,9 +456,6 @@ module.exports = function normalizeComponent (
         ? [].concat(existing, hook)
         : [hook]
     } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
       // register for functioal component in vue file
       options.render = function renderWithStyleInjection (h, context) {
         hook.call(context)
@@ -667,29 +664,57 @@ process.umask = function() { return 0; };
 
 /***/ }),
 /* 4 */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-var g;
-
-// This works in non-strict mode
-g = (function() {
-	return this;
-})();
-
-try {
-	// This works if eval is allowed (see CSP)
-	g = g || Function("return this")() || (1,eval)("this");
-} catch(e) {
-	// This works if the window reference is available
-	if(typeof window === "object")
-		g = window;
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6cd60c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_downLoad_vue__ = __webpack_require__(16);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(13)
 }
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = null
+/* template */
 
-// g can still be undefined, but nothing to do about it...
-// We return undefined, instead of nothing here, so it's
-// easier to handle this case. if(!global) { ...}
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __WEBPACK_IMPORTED_MODULE_0__node_modules_vue_loader_lib_template_compiler_index_id_data_v_6cd60c96_hasScoped_false_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_downLoad_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "components\\lantao\\downLoad.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
 
-module.exports = g;
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6cd60c96", Component.options)
+  } else {
+    hotAPI.reload("data-v-6cd60c96", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
 
 
 /***/ }),
@@ -703,35 +728,45 @@ var _vue = __webpack_require__(6);
 
 var _vue2 = _interopRequireDefault(_vue);
 
-var _jquery = __webpack_require__(9);
+var _jquery = __webpack_require__(8);
 
 var _jquery2 = _interopRequireDefault(_jquery);
 
-var _vueRouter = __webpack_require__(10);
+var _vueRouter = __webpack_require__(9);
 
 var _vueRouter2 = _interopRequireDefault(_vueRouter);
 
-var _vuex = __webpack_require__(11);
+var _vuex = __webpack_require__(10);
 
 var _vuex2 = _interopRequireDefault(_vuex);
 
-var _dbMovie = __webpack_require__(12);
+var _cookie = __webpack_require__(11);
+
+var _cookie2 = _interopRequireDefault(_cookie);
+
+__webpack_require__(12);
+
+var _downLoad = __webpack_require__(4);
+
+var _downLoad2 = _interopRequireDefault(_downLoad);
+
+var _dbMovie = __webpack_require__(17);
 
 var _dbMovie2 = _interopRequireDefault(_dbMovie);
 
-var _dbMovieDetail = __webpack_require__(18);
+var _dbMovieDetail = __webpack_require__(22);
 
 var _dbMovieDetail2 = _interopRequireDefault(_dbMovieDetail);
 
-var _dbRadio = __webpack_require__(23);
+var _dbRadio = __webpack_require__(27);
 
 var _dbRadio2 = _interopRequireDefault(_dbRadio);
 
-var _dbSendRadio = __webpack_require__(28);
+var _dbSendRadio = __webpack_require__(32);
 
 var _dbSendRadio2 = _interopRequireDefault(_dbSendRadio);
 
-__webpack_require__(33);
+__webpack_require__(37);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -740,6 +775,7 @@ window.$ = _jquery2.default;
 _vue2.default.use(_vueRouter2.default);
 _vue2.default.use(_vuex2.default);
 
+window.C = _cookie2.default;
 // import dbHome from './components/lmm/dbHome.vue';
 
 //配置路由
@@ -789,6 +825,7 @@ var router = new _vueRouter2.default({
         // }
     }]
 });
+window.router = router;
 
 //配置状态管理
 var store = new _vuex2.default.Store({
@@ -810,8 +847,8 @@ new _vue2.default({
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
-/* WEBPACK VAR INJECTION */(function(global, setImmediate) {/*!
- * Vue.js v2.5.2
+/* WEBPACK VAR INJECTION */(function(global) {/*!
+ * Vue.js v2.4.4
  * (c) 2014-2017 Evan You
  * Released under the MIT License.
  */
@@ -861,14 +898,7 @@ function isObject (obj) {
   return obj !== null && typeof obj === 'object'
 }
 
-/**
- * Get the raw type string of a value e.g. [object Object]
- */
 var _toString = Object.prototype.toString;
-
-function toRawType (value) {
-  return _toString.call(value).slice(8, -1)
-}
 
 /**
  * Strict object type check. Only returns true
@@ -886,7 +916,7 @@ function isRegExp (v) {
  * Check if val is a valid array index.
  */
 function isValidArrayIndex (val) {
-  var n = parseFloat(String(val));
+  var n = parseFloat(val);
   return n >= 0 && Math.floor(n) === n && isFinite(val)
 }
 
@@ -936,7 +966,7 @@ var isBuiltInTag = makeMap('slot,component', true);
 /**
  * Check if a attribute is a reserved attribute.
  */
-var isReservedAttribute = makeMap('key,ref,slot,slot-scope,is');
+var isReservedAttribute = makeMap('key,ref,slot,is');
 
 /**
  * Remove an item from an array
@@ -1146,8 +1176,7 @@ var LIFECYCLE_HOOKS = [
   'beforeDestroy',
   'destroyed',
   'activated',
-  'deactivated',
-  'errorCaptured'
+  'deactivated'
 ];
 
 /*  */
@@ -1282,6 +1311,120 @@ function parsePath (path) {
 
 /*  */
 
+var warn = noop;
+var tip = noop;
+var formatComponentName = (null); // work around flow check
+
+{
+  var hasConsole = typeof console !== 'undefined';
+  var classifyRE = /(?:^|[-_])(\w)/g;
+  var classify = function (str) { return str
+    .replace(classifyRE, function (c) { return c.toUpperCase(); })
+    .replace(/[-_]/g, ''); };
+
+  warn = function (msg, vm) {
+    var trace = vm ? generateComponentTrace(vm) : '';
+
+    if (config.warnHandler) {
+      config.warnHandler.call(null, msg, vm, trace);
+    } else if (hasConsole && (!config.silent)) {
+      console.error(("[Vue warn]: " + msg + trace));
+    }
+  };
+
+  tip = function (msg, vm) {
+    if (hasConsole && (!config.silent)) {
+      console.warn("[Vue tip]: " + msg + (
+        vm ? generateComponentTrace(vm) : ''
+      ));
+    }
+  };
+
+  formatComponentName = function (vm, includeFile) {
+    if (vm.$root === vm) {
+      return '<Root>'
+    }
+    var name = typeof vm === 'string'
+      ? vm
+      : typeof vm === 'function' && vm.options
+        ? vm.options.name
+        : vm._isVue
+          ? vm.$options.name || vm.$options._componentTag
+          : vm.name;
+
+    var file = vm._isVue && vm.$options.__file;
+    if (!name && file) {
+      var match = file.match(/([^/\\]+)\.vue$/);
+      name = match && match[1];
+    }
+
+    return (
+      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
+      (file && includeFile !== false ? (" at " + file) : '')
+    )
+  };
+
+  var repeat = function (str, n) {
+    var res = '';
+    while (n) {
+      if (n % 2 === 1) { res += str; }
+      if (n > 1) { str += str; }
+      n >>= 1;
+    }
+    return res
+  };
+
+  var generateComponentTrace = function (vm) {
+    if (vm._isVue && vm.$parent) {
+      var tree = [];
+      var currentRecursiveSequence = 0;
+      while (vm) {
+        if (tree.length > 0) {
+          var last = tree[tree.length - 1];
+          if (last.constructor === vm.constructor) {
+            currentRecursiveSequence++;
+            vm = vm.$parent;
+            continue
+          } else if (currentRecursiveSequence > 0) {
+            tree[tree.length - 1] = [last, currentRecursiveSequence];
+            currentRecursiveSequence = 0;
+          }
+        }
+        tree.push(vm);
+        vm = vm.$parent;
+      }
+      return '\n\nfound in\n\n' + tree
+        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
+            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
+            : formatComponentName(vm))); })
+        .join('\n')
+    } else {
+      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
+    }
+  };
+}
+
+/*  */
+
+function handleError (err, vm, info) {
+  if (config.errorHandler) {
+    config.errorHandler.call(null, err, vm, info);
+  } else {
+    {
+      warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
+    }
+    /* istanbul ignore else */
+    if (inBrowser && typeof console !== 'undefined') {
+      console.error(err);
+    } else {
+      throw err
+    }
+  }
+}
+
+/*  */
+/* globals MutationObserver */
+
 // can we use __proto__?
 var hasProto = '__proto__' in {};
 
@@ -1341,8 +1484,94 @@ var hasSymbol =
   typeof Symbol !== 'undefined' && isNative(Symbol) &&
   typeof Reflect !== 'undefined' && isNative(Reflect.ownKeys);
 
+/**
+ * Defer a task to execute it asynchronously.
+ */
+var nextTick = (function () {
+  var callbacks = [];
+  var pending = false;
+  var timerFunc;
+
+  function nextTickHandler () {
+    pending = false;
+    var copies = callbacks.slice(0);
+    callbacks.length = 0;
+    for (var i = 0; i < copies.length; i++) {
+      copies[i]();
+    }
+  }
+
+  // the nextTick behavior leverages the microtask queue, which can be accessed
+  // via either native Promise.then or MutationObserver.
+  // MutationObserver has wider support, however it is seriously bugged in
+  // UIWebView in iOS >= 9.3.3 when triggered in touch event handlers. It
+  // completely stops working after triggering a few times... so, if native
+  // Promise is available, we will use it:
+  /* istanbul ignore if */
+  if (typeof Promise !== 'undefined' && isNative(Promise)) {
+    var p = Promise.resolve();
+    var logError = function (err) { console.error(err); };
+    timerFunc = function () {
+      p.then(nextTickHandler).catch(logError);
+      // in problematic UIWebViews, Promise.then doesn't completely break, but
+      // it can get stuck in a weird state where callbacks are pushed into the
+      // microtask queue but the queue isn't being flushed, until the browser
+      // needs to do some other work, e.g. handle a timer. Therefore we can
+      // "force" the microtask queue to be flushed by adding an empty timer.
+      if (isIOS) { setTimeout(noop); }
+    };
+  } else if (!isIE && typeof MutationObserver !== 'undefined' && (
+    isNative(MutationObserver) ||
+    // PhantomJS and iOS 7.x
+    MutationObserver.toString() === '[object MutationObserverConstructor]'
+  )) {
+    // use MutationObserver where native Promise is not available,
+    // e.g. PhantomJS, iOS7, Android 4.4
+    var counter = 1;
+    var observer = new MutationObserver(nextTickHandler);
+    var textNode = document.createTextNode(String(counter));
+    observer.observe(textNode, {
+      characterData: true
+    });
+    timerFunc = function () {
+      counter = (counter + 1) % 2;
+      textNode.data = String(counter);
+    };
+  } else {
+    // fallback to setTimeout
+    /* istanbul ignore next */
+    timerFunc = function () {
+      setTimeout(nextTickHandler, 0);
+    };
+  }
+
+  return function queueNextTick (cb, ctx) {
+    var _resolve;
+    callbacks.push(function () {
+      if (cb) {
+        try {
+          cb.call(ctx);
+        } catch (e) {
+          handleError(e, ctx, 'nextTick');
+        }
+      } else if (_resolve) {
+        _resolve(ctx);
+      }
+    });
+    if (!pending) {
+      pending = true;
+      timerFunc();
+    }
+    if (!cb && typeof Promise !== 'undefined') {
+      return new Promise(function (resolve, reject) {
+        _resolve = resolve;
+      })
+    }
+  }
+})();
+
 var _Set;
-/* istanbul ignore if */ // $flow-disable-line
+/* istanbul ignore if */
 if (typeof Set !== 'undefined' && isNative(Set)) {
   // use native Set when available.
   _Set = Set;
@@ -1364,100 +1593,6 @@ if (typeof Set !== 'undefined' && isNative(Set)) {
 
     return Set;
   }());
-}
-
-/*  */
-
-var warn = noop;
-var tip = noop;
-var generateComponentTrace = (noop); // work around flow check
-var formatComponentName = (noop);
-
-{
-  var hasConsole = typeof console !== 'undefined';
-  var classifyRE = /(?:^|[-_])(\w)/g;
-  var classify = function (str) { return str
-    .replace(classifyRE, function (c) { return c.toUpperCase(); })
-    .replace(/[-_]/g, ''); };
-
-  warn = function (msg, vm) {
-    var trace = vm ? generateComponentTrace(vm) : '';
-
-    if (config.warnHandler) {
-      config.warnHandler.call(null, msg, vm, trace);
-    } else if (hasConsole && (!config.silent)) {
-      console.error(("[Vue warn]: " + msg + trace));
-    }
-  };
-
-  tip = function (msg, vm) {
-    if (hasConsole && (!config.silent)) {
-      console.warn("[Vue tip]: " + msg + (
-        vm ? generateComponentTrace(vm) : ''
-      ));
-    }
-  };
-
-  formatComponentName = function (vm, includeFile) {
-    if (vm.$root === vm) {
-      return '<Root>'
-    }
-    var options = typeof vm === 'function' && vm.cid != null
-      ? vm.options
-      : vm._isVue
-        ? vm.$options || vm.constructor.options
-        : vm || {};
-    var name = options.name || options._componentTag;
-    var file = options.__file;
-    if (!name && file) {
-      var match = file.match(/([^/\\]+)\.vue$/);
-      name = match && match[1];
-    }
-
-    return (
-      (name ? ("<" + (classify(name)) + ">") : "<Anonymous>") +
-      (file && includeFile !== false ? (" at " + file) : '')
-    )
-  };
-
-  var repeat = function (str, n) {
-    var res = '';
-    while (n) {
-      if (n % 2 === 1) { res += str; }
-      if (n > 1) { str += str; }
-      n >>= 1;
-    }
-    return res
-  };
-
-  generateComponentTrace = function (vm) {
-    if (vm._isVue && vm.$parent) {
-      var tree = [];
-      var currentRecursiveSequence = 0;
-      while (vm) {
-        if (tree.length > 0) {
-          var last = tree[tree.length - 1];
-          if (last.constructor === vm.constructor) {
-            currentRecursiveSequence++;
-            vm = vm.$parent;
-            continue
-          } else if (currentRecursiveSequence > 0) {
-            tree[tree.length - 1] = [last, currentRecursiveSequence];
-            currentRecursiveSequence = 0;
-          }
-        }
-        tree.push(vm);
-        vm = vm.$parent;
-      }
-      return '\n\nfound in\n\n' + tree
-        .map(function (vm, i) { return ("" + (i === 0 ? '---> ' : repeat(' ', 5 + i * 2)) + (Array.isArray(vm)
-            ? ((formatComponentName(vm[0])) + "... (" + (vm[1]) + " recursive calls)")
-            : formatComponentName(vm))); })
-        .join('\n')
-    } else {
-      return ("\n\n(found in " + (formatComponentName(vm)) + ")")
-    }
-  };
 }
 
 /*  */
@@ -1509,101 +1644,6 @@ function pushTarget (_target) {
 
 function popTarget () {
   Dep.target = targetStack.pop();
-}
-
-/*  */
-
-var VNode = function VNode (
-  tag,
-  data,
-  children,
-  text,
-  elm,
-  context,
-  componentOptions,
-  asyncFactory
-) {
-  this.tag = tag;
-  this.data = data;
-  this.children = children;
-  this.text = text;
-  this.elm = elm;
-  this.ns = undefined;
-  this.context = context;
-  this.functionalContext = undefined;
-  this.functionalOptions = undefined;
-  this.functionalScopeId = undefined;
-  this.key = data && data.key;
-  this.componentOptions = componentOptions;
-  this.componentInstance = undefined;
-  this.parent = undefined;
-  this.raw = false;
-  this.isStatic = false;
-  this.isRootInsert = true;
-  this.isComment = false;
-  this.isCloned = false;
-  this.isOnce = false;
-  this.asyncFactory = asyncFactory;
-  this.asyncMeta = undefined;
-  this.isAsyncPlaceholder = false;
-};
-
-var prototypeAccessors = { child: { configurable: true } };
-
-// DEPRECATED: alias for componentInstance for backwards compat.
-/* istanbul ignore next */
-prototypeAccessors.child.get = function () {
-  return this.componentInstance
-};
-
-Object.defineProperties( VNode.prototype, prototypeAccessors );
-
-var createEmptyVNode = function (text) {
-  if ( text === void 0 ) text = '';
-
-  var node = new VNode();
-  node.text = text;
-  node.isComment = true;
-  return node
-};
-
-function createTextVNode (val) {
-  return new VNode(undefined, undefined, undefined, String(val))
-}
-
-// optimized shallow clone
-// used for static nodes and slot nodes because they may be reused across
-// multiple renders, cloning them avoids errors when DOM manipulations rely
-// on their elm reference.
-function cloneVNode (vnode, deep) {
-  var cloned = new VNode(
-    vnode.tag,
-    vnode.data,
-    vnode.children,
-    vnode.text,
-    vnode.elm,
-    vnode.context,
-    vnode.componentOptions,
-    vnode.asyncFactory
-  );
-  cloned.ns = vnode.ns;
-  cloned.isStatic = vnode.isStatic;
-  cloned.key = vnode.key;
-  cloned.isComment = vnode.isComment;
-  cloned.isCloned = true;
-  if (deep && vnode.children) {
-    cloned.children = cloneVNodes(vnode.children);
-  }
-  return cloned
-}
-
-function cloneVNodes (vnodes, deep) {
-  var len = vnodes.length;
-  var res = new Array(len);
-  for (var i = 0; i < len; i++) {
-    res[i] = cloneVNode(vnodes[i], deep);
-  }
-  return res
 }
 
 /*
@@ -1691,7 +1731,7 @@ var Observer = function Observer (value) {
 Observer.prototype.walk = function walk (obj) {
   var keys = Object.keys(obj);
   for (var i = 0; i < keys.length; i++) {
-    defineReactive(obj, keys[i], obj[keys[i]]);
+    defineReactive$$1(obj, keys[i], obj[keys[i]]);
   }
 };
 
@@ -1734,7 +1774,7 @@ function copyAugment (target, src, keys) {
  * or the existing observer if the value already has one.
  */
 function observe (value, asRootData) {
-  if (!isObject(value) || value instanceof VNode) {
+  if (!isObject(value)) {
     return
   }
   var ob;
@@ -1758,7 +1798,7 @@ function observe (value, asRootData) {
 /**
  * Define a reactive property on an Object.
  */
-function defineReactive (
+function defineReactive$$1 (
   obj,
   key,
   val,
@@ -1841,7 +1881,7 @@ function set (target, key, val) {
     target[key] = val;
     return val
   }
-  defineReactive(ob.value, key, val);
+  defineReactive$$1(ob.value, key, val);
   ob.dep.notify();
   return val
 }
@@ -2024,19 +2064,11 @@ LIFECYCLE_HOOKS.forEach(function (hook) {
  * a three-way merge between constructor options, instance
  * options and parent options.
  */
-function mergeAssets (
-  parentVal,
-  childVal,
-  vm,
-  key
-) {
+function mergeAssets (parentVal, childVal) {
   var res = Object.create(parentVal || null);
-  if (childVal) {
-    "development" !== 'production' && assertObjectType(key, childVal, vm);
-    return extend(res, childVal)
-  } else {
-    return res
-  }
+  return childVal
+    ? extend(res, childVal)
+    : res
 }
 
 ASSET_TYPES.forEach(function (type) {
@@ -2049,30 +2081,22 @@ ASSET_TYPES.forEach(function (type) {
  * Watchers hashes should not overwrite one
  * another, so we merge them as arrays.
  */
-strats.watch = function (
-  parentVal,
-  childVal,
-  vm,
-  key
-) {
+strats.watch = function (parentVal, childVal) {
   // work around Firefox's Object.prototype.watch...
   if (parentVal === nativeWatch) { parentVal = undefined; }
   if (childVal === nativeWatch) { childVal = undefined; }
   /* istanbul ignore if */
   if (!childVal) { return Object.create(parentVal || null) }
-  {
-    assertObjectType(key, childVal, vm);
-  }
   if (!parentVal) { return childVal }
   var ret = {};
   extend(ret, parentVal);
-  for (var key$1 in childVal) {
-    var parent = ret[key$1];
-    var child = childVal[key$1];
+  for (var key in childVal) {
+    var parent = ret[key];
+    var child = childVal[key];
     if (parent && !Array.isArray(parent)) {
       parent = [parent];
     }
-    ret[key$1] = parent
+    ret[key] = parent
       ? parent.concat(child)
       : Array.isArray(child) ? child : [child];
   }
@@ -2085,15 +2109,7 @@ strats.watch = function (
 strats.props =
 strats.methods =
 strats.inject =
-strats.computed = function (
-  parentVal,
-  childVal,
-  vm,
-  key
-) {
-  if (childVal && "development" !== 'production') {
-    assertObjectType(key, childVal, vm);
-  }
+strats.computed = function (parentVal, childVal) {
   if (!parentVal) { return childVal }
   var ret = Object.create(null);
   extend(ret, parentVal);
@@ -2130,7 +2146,7 @@ function checkComponents (options) {
  * Ensure all props option syntax are normalized into the
  * Object-based format.
  */
-function normalizeProps (options, vm) {
+function normalizeProps (options) {
   var props = options.props;
   if (!props) { return }
   var res = {};
@@ -2154,12 +2170,6 @@ function normalizeProps (options, vm) {
         ? val
         : { type: val };
     }
-  } else {
-    warn(
-      "Invalid value for option \"props\": expected an Array or an Object, " +
-      "but got " + (toRawType(props)) + ".",
-      vm
-    );
   }
   options.props = res;
 }
@@ -2167,26 +2177,13 @@ function normalizeProps (options, vm) {
 /**
  * Normalize all injections into Object-based format
  */
-function normalizeInject (options, vm) {
+function normalizeInject (options) {
   var inject = options.inject;
-  var normalized = options.inject = {};
   if (Array.isArray(inject)) {
+    var normalized = options.inject = {};
     for (var i = 0; i < inject.length; i++) {
-      normalized[inject[i]] = { from: inject[i] };
+      normalized[inject[i]] = inject[i];
     }
-  } else if (isPlainObject(inject)) {
-    for (var key in inject) {
-      var val = inject[key];
-      normalized[key] = isPlainObject(val)
-        ? extend({ from: key }, val)
-        : { from: val };
-    }
-  } else if ("development" !== 'production' && inject) {
-    warn(
-      "Invalid value for option \"inject\": expected an Array or an Object, " +
-      "but got " + (toRawType(inject)) + ".",
-      vm
-    );
   }
 }
 
@@ -2202,16 +2199,6 @@ function normalizeDirectives (options) {
         dirs[key] = { bind: def, update: def };
       }
     }
-  }
-}
-
-function assertObjectType (name, value, vm) {
-  if (!isPlainObject(value)) {
-    warn(
-      "Invalid value for option \"" + name + "\": expected an Object, " +
-      "but got " + (toRawType(value)) + ".",
-      vm
-    );
   }
 }
 
@@ -2232,8 +2219,8 @@ function mergeOptions (
     child = child.options;
   }
 
-  normalizeProps(child, vm);
-  normalizeInject(child, vm);
+  normalizeProps(child);
+  normalizeInject(child);
   normalizeDirectives(child);
   var extendsFrom = child.extends;
   if (extendsFrom) {
@@ -2397,9 +2384,9 @@ function assertProp (
   }
   if (!valid) {
     warn(
-      "Invalid prop: type check failed for prop \"" + name + "\"." +
-      " Expected " + (expectedTypes.map(capitalize).join(', ')) +
-      ", got " + (toRawType(value)) + ".",
+      'Invalid prop: type check failed for prop "' + name + '".' +
+      ' Expected ' + expectedTypes.map(capitalize).join(', ') +
+      ', got ' + Object.prototype.toString.call(value).slice(8, -1) + '.',
       vm
     );
     return
@@ -2465,165 +2452,6 @@ function isType (type, fn) {
 
 /*  */
 
-function handleError (err, vm, info) {
-  if (vm) {
-    var cur = vm;
-    while ((cur = cur.$parent)) {
-      var hooks = cur.$options.errorCaptured;
-      if (hooks) {
-        for (var i = 0; i < hooks.length; i++) {
-          try {
-            var capture = hooks[i].call(cur, err, vm, info) === false;
-            if (capture) { return }
-          } catch (e) {
-            globalHandleError(e, cur, 'errorCaptured hook');
-          }
-        }
-      }
-    }
-  }
-  globalHandleError(err, vm, info);
-}
-
-function globalHandleError (err, vm, info) {
-  if (config.errorHandler) {
-    try {
-      return config.errorHandler.call(null, err, vm, info)
-    } catch (e) {
-      logError(e, null, 'config.errorHandler');
-    }
-  }
-  logError(err, vm, info);
-}
-
-function logError (err, vm, info) {
-  {
-    warn(("Error in " + info + ": \"" + (err.toString()) + "\""), vm);
-  }
-  /* istanbul ignore else */
-  if (inBrowser && typeof console !== 'undefined') {
-    console.error(err);
-  } else {
-    throw err
-  }
-}
-
-/*  */
-/* globals MessageChannel */
-
-var callbacks = [];
-var pending = false;
-
-function flushCallbacks () {
-  pending = false;
-  var copies = callbacks.slice(0);
-  callbacks.length = 0;
-  for (var i = 0; i < copies.length; i++) {
-    copies[i]();
-  }
-}
-
-// Here we have async deferring wrappers using both micro and macro tasks.
-// In < 2.4 we used micro tasks everywhere, but there are some scenarios where
-// micro tasks have too high a priority and fires in between supposedly
-// sequential events (e.g. #4521, #6690) or even between bubbling of the same
-// event (#6566). However, using macro tasks everywhere also has subtle problems
-// when state is changed right before repaint (e.g. #6813, out-in transitions).
-// Here we use micro task by default, but expose a way to force macro task when
-// needed (e.g. in event handlers attached by v-on).
-var microTimerFunc;
-var macroTimerFunc;
-var useMacroTask = false;
-
-// Determine (macro) Task defer implementation.
-// Technically setImmediate should be the ideal choice, but it's only available
-// in IE. The only polyfill that consistently queues the callback after all DOM
-// events triggered in the same loop is by using MessageChannel.
-/* istanbul ignore if */
-if (typeof setImmediate !== 'undefined' && isNative(setImmediate)) {
-  macroTimerFunc = function () {
-    setImmediate(flushCallbacks);
-  };
-} else if (typeof MessageChannel !== 'undefined' && (
-  isNative(MessageChannel) ||
-  // PhantomJS
-  MessageChannel.toString() === '[object MessageChannelConstructor]'
-)) {
-  var channel = new MessageChannel();
-  var port = channel.port2;
-  channel.port1.onmessage = flushCallbacks;
-  macroTimerFunc = function () {
-    port.postMessage(1);
-  };
-} else {
-  /* istanbul ignore next */
-  macroTimerFunc = function () {
-    setTimeout(flushCallbacks, 0);
-  };
-}
-
-// Determine MicroTask defer implementation.
-/* istanbul ignore next, $flow-disable-line */
-if (typeof Promise !== 'undefined' && isNative(Promise)) {
-  var p = Promise.resolve();
-  microTimerFunc = function () {
-    p.then(flushCallbacks);
-    // in problematic UIWebViews, Promise.then doesn't completely break, but
-    // it can get stuck in a weird state where callbacks are pushed into the
-    // microtask queue but the queue isn't being flushed, until the browser
-    // needs to do some other work, e.g. handle a timer. Therefore we can
-    // "force" the microtask queue to be flushed by adding an empty timer.
-    if (isIOS) { setTimeout(noop); }
-  };
-} else {
-  // fallback to macro
-  microTimerFunc = macroTimerFunc;
-}
-
-/**
- * Wrap a function so that if any code inside triggers state change,
- * the changes are queued using a Task instead of a MicroTask.
- */
-function withMacroTask (fn) {
-  return fn._withTask || (fn._withTask = function () {
-    useMacroTask = true;
-    var res = fn.apply(null, arguments);
-    useMacroTask = false;
-    return res
-  })
-}
-
-function nextTick (cb, ctx) {
-  var _resolve;
-  callbacks.push(function () {
-    if (cb) {
-      try {
-        cb.call(ctx);
-      } catch (e) {
-        handleError(e, ctx, 'nextTick');
-      }
-    } else if (_resolve) {
-      _resolve(ctx);
-    }
-  });
-  if (!pending) {
-    pending = true;
-    if (useMacroTask) {
-      macroTimerFunc();
-    } else {
-      microTimerFunc();
-    }
-  }
-  // $flow-disable-line
-  if (!cb && typeof Promise !== 'undefined') {
-    return new Promise(function (resolve) {
-      _resolve = resolve;
-    })
-  }
-}
-
-/*  */
-
 var mark;
 var measure;
 
@@ -2662,10 +2490,8 @@ var initProxy;
   var warnNonPresent = function (target, key) {
     warn(
       "Property or method \"" + key + "\" is not defined on the instance but " +
-      'referenced during render. Make sure that this property is reactive, ' +
-      'either in the data option, or for class-based components, by ' +
-      'initializing the property. ' +
-      'See: https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties.',
+      "referenced during render. Make sure to declare reactive data " +
+      "properties in the data option.",
       target
     );
   };
@@ -2675,7 +2501,7 @@ var initProxy;
     Proxy.toString().match(/native code/);
 
   if (hasProxy) {
-    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta,exact');
+    var isBuiltInModifier = makeMap('stop,prevent,self,ctrl,shift,alt,meta');
     config.keyCodes = new Proxy(config.keyCodes, {
       set: function set (target, key, value) {
         if (isBuiltInModifier(key)) {
@@ -2725,6 +2551,99 @@ var initProxy;
 
 /*  */
 
+var VNode = function VNode (
+  tag,
+  data,
+  children,
+  text,
+  elm,
+  context,
+  componentOptions,
+  asyncFactory
+) {
+  this.tag = tag;
+  this.data = data;
+  this.children = children;
+  this.text = text;
+  this.elm = elm;
+  this.ns = undefined;
+  this.context = context;
+  this.functionalContext = undefined;
+  this.key = data && data.key;
+  this.componentOptions = componentOptions;
+  this.componentInstance = undefined;
+  this.parent = undefined;
+  this.raw = false;
+  this.isStatic = false;
+  this.isRootInsert = true;
+  this.isComment = false;
+  this.isCloned = false;
+  this.isOnce = false;
+  this.asyncFactory = asyncFactory;
+  this.asyncMeta = undefined;
+  this.isAsyncPlaceholder = false;
+};
+
+var prototypeAccessors = { child: {} };
+
+// DEPRECATED: alias for componentInstance for backwards compat.
+/* istanbul ignore next */
+prototypeAccessors.child.get = function () {
+  return this.componentInstance
+};
+
+Object.defineProperties( VNode.prototype, prototypeAccessors );
+
+var createEmptyVNode = function (text) {
+  if ( text === void 0 ) text = '';
+
+  var node = new VNode();
+  node.text = text;
+  node.isComment = true;
+  return node
+};
+
+function createTextVNode (val) {
+  return new VNode(undefined, undefined, undefined, String(val))
+}
+
+// optimized shallow clone
+// used for static nodes and slot nodes because they may be reused across
+// multiple renders, cloning them avoids errors when DOM manipulations rely
+// on their elm reference.
+function cloneVNode (vnode, deep) {
+  var cloned = new VNode(
+    vnode.tag,
+    vnode.data,
+    vnode.children,
+    vnode.text,
+    vnode.elm,
+    vnode.context,
+    vnode.componentOptions,
+    vnode.asyncFactory
+  );
+  cloned.ns = vnode.ns;
+  cloned.isStatic = vnode.isStatic;
+  cloned.key = vnode.key;
+  cloned.isComment = vnode.isComment;
+  cloned.isCloned = true;
+  if (deep && vnode.children) {
+    cloned.children = cloneVNodes(vnode.children);
+  }
+  return cloned
+}
+
+function cloneVNodes (vnodes, deep) {
+  var len = vnodes.length;
+  var res = new Array(len);
+  for (var i = 0; i < len; i++) {
+    res[i] = cloneVNode(vnodes[i], deep);
+  }
+  return res
+}
+
+/*  */
+
 var normalizeEvent = cached(function (name) {
   var passive = name.charAt(0) === '&';
   name = passive ? name.slice(1) : name;
@@ -2732,8 +2651,10 @@ var normalizeEvent = cached(function (name) {
   name = once$$1 ? name.slice(1) : name;
   var capture = name.charAt(0) === '!';
   name = capture ? name.slice(1) : name;
+  var plain = !(passive || once$$1 || capture);
   return {
     name: name,
+    plain: plain,
     once: once$$1,
     capture: capture,
     passive: passive
@@ -2759,6 +2680,11 @@ function createFnInvoker (fns) {
   return invoker
 }
 
+// #6552
+function prioritizePlainEvents (a, b) {
+  return a.plain ? -1 : b.plain ? 1 : 0
+}
+
 function updateListeners (
   on,
   oldOn,
@@ -2767,10 +2693,13 @@ function updateListeners (
   vm
 ) {
   var name, cur, old, event;
+  var toAdd = [];
+  var hasModifier = false;
   for (name in on) {
     cur = on[name];
     old = oldOn[name];
     event = normalizeEvent(name);
+    if (!event.plain) { hasModifier = true; }
     if (isUndef(cur)) {
       "development" !== 'production' && warn(
         "Invalid handler for event \"" + (event.name) + "\": got " + String(cur),
@@ -2780,10 +2709,18 @@ function updateListeners (
       if (isUndef(cur.fns)) {
         cur = on[name] = createFnInvoker(cur);
       }
-      add(event.name, cur, event.once, event.capture, event.passive);
+      event.handler = cur;
+      toAdd.push(event);
     } else if (cur !== old) {
       old.fns = cur;
       on[name] = old;
+    }
+  }
+  if (toAdd.length) {
+    if (hasModifier) { toAdd.sort(prioritizePlainEvents); }
+    for (var i = 0; i < toAdd.length; i++) {
+      var event$1 = toAdd[i];
+      add(event$1.name, event$1.handler, event$1.once, event$1.capture, event$1.passive);
     }
   }
   for (name in oldOn) {
@@ -2935,29 +2872,20 @@ function isTextNode (node) {
 
 function normalizeArrayChildren (children, nestedIndex) {
   var res = [];
-  var i, c, lastIndex, last;
+  var i, c, last;
   for (i = 0; i < children.length; i++) {
     c = children[i];
     if (isUndef(c) || typeof c === 'boolean') { continue }
-    lastIndex = res.length - 1;
-    last = res[lastIndex];
+    last = res[res.length - 1];
     //  nested
     if (Array.isArray(c)) {
-      if (c.length > 0) {
-        c = normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i));
-        // merge adjacent text nodes
-        if (isTextNode(c[0]) && isTextNode(last)) {
-          res[lastIndex] = createTextVNode(last.text + (c[0]).text);
-          c.shift();
-        }
-        res.push.apply(res, c);
-      }
+      res.push.apply(res, normalizeArrayChildren(c, ((nestedIndex || '') + "_" + i)));
     } else if (isPrimitive(c)) {
       if (isTextNode(last)) {
         // merge adjacent text nodes
         // this is necessary for SSR hydration because text nodes are
         // essentially merged when rendered to HTML strings
-        res[lastIndex] = createTextVNode(last.text + c);
+        (last).text += String(c);
       } else if (c !== '') {
         // convert primitive to vnode
         res.push(createTextVNode(c));
@@ -2965,7 +2893,7 @@ function normalizeArrayChildren (children, nestedIndex) {
     } else {
       if (isTextNode(c) && isTextNode(last)) {
         // merge adjacent text nodes
-        res[lastIndex] = createTextVNode(last.text + c.text);
+        res[res.length - 1] = createTextVNode(last.text + c.text);
       } else {
         // default key for nested array children (likely generated by v-for)
         if (isTrue(children._isVList) &&
@@ -2984,10 +2912,7 @@ function normalizeArrayChildren (children, nestedIndex) {
 /*  */
 
 function ensureCtor (comp, base) {
-  if (
-    comp.__esModule ||
-    (hasSymbol && comp[Symbol.toStringTag] === 'Module')
-  ) {
+  if (comp.__esModule && comp.default) {
     comp = comp.default;
   }
   return isObject(comp)
@@ -3143,8 +3068,8 @@ function initEvents (vm) {
 
 var target;
 
-function add (event, fn, once) {
-  if (once) {
+function add (event, fn, once$$1) {
+  if (once$$1) {
     target.$once(event, fn);
   } else {
     target.$on(event, fn);
@@ -3447,10 +3372,6 @@ function lifecycleMixin (Vue) {
     if (vm.$el) {
       vm.$el.__vue__ = null;
     }
-    // release circular reference (#6759)
-    if (vm.$vnode) {
-      vm.$vnode.parent = null;
-    }
   };
 }
 
@@ -3494,12 +3415,12 @@ function mountComponent (
       mark(startTag);
       var vnode = vm._render();
       mark(endTag);
-      measure(("vue " + name + " render"), startTag, endTag);
+      measure((name + " render"), startTag, endTag);
 
       mark(startTag);
       vm._update(vnode, hydrating);
       mark(endTag);
-      measure(("vue " + name + " patch"), startTag, endTag);
+      measure((name + " patch"), startTag, endTag);
     };
   } else {
     updateComponent = function () {
@@ -4057,6 +3978,16 @@ function initState (vm) {
   }
 }
 
+function checkOptionType (vm, name) {
+  var option = vm.$options[name];
+  if (!isPlainObject(option)) {
+    warn(
+      ("component option \"" + name + "\" should be an object."),
+      vm
+    );
+  }
+}
+
 function initProps (vm, propsOptions) {
   var propsData = vm.$options.propsData || {};
   var props = vm._props = {};
@@ -4071,15 +4002,13 @@ function initProps (vm, propsOptions) {
     var value = validateProp(key, propsOptions, propsData, vm);
     /* istanbul ignore else */
     {
-      var hyphenatedKey = hyphenate(key);
-      if (isReservedAttribute(hyphenatedKey) ||
-          config.isReservedAttr(hyphenatedKey)) {
+      if (isReservedAttribute(key) || config.isReservedAttr(key)) {
         warn(
-          ("\"" + hyphenatedKey + "\" is a reserved attribute and cannot be used as component prop."),
+          ("\"" + key + "\" is a reserved attribute and cannot be used as component prop."),
           vm
         );
       }
-      defineReactive(props, key, value, function () {
+      defineReactive$$1(props, key, value, function () {
         if (vm.$parent && !isUpdatingChildComponent) {
           warn(
             "Avoid mutating a prop directly since the value will be " +
@@ -4147,7 +4076,7 @@ function initData (vm) {
 
 function getData (data, vm) {
   try {
-    return data.call(vm, vm)
+    return data.call(vm)
   } catch (e) {
     handleError(e, vm, "data()");
     return {}
@@ -4157,6 +4086,7 @@ function getData (data, vm) {
 var computedWatcherOptions = { lazy: true };
 
 function initComputed (vm, computed) {
+  "development" !== 'production' && checkOptionType(vm, 'computed');
   var watchers = vm._computedWatchers = Object.create(null);
   // computed properties are just getters during SSR
   var isSSR = isServerRendering();
@@ -4245,6 +4175,7 @@ function createComputedGetter (key) {
 }
 
 function initMethods (vm, methods) {
+  "development" !== 'production' && checkOptionType(vm, 'methods');
   var props = vm.$options.props;
   for (var key in methods) {
     {
@@ -4273,6 +4204,7 @@ function initMethods (vm, methods) {
 }
 
 function initWatch (vm, watch) {
+  "development" !== 'production' && checkOptionType(vm, 'watch');
   for (var key in watch) {
     var handler = watch[key];
     if (Array.isArray(handler)) {
@@ -4366,7 +4298,7 @@ function initInjections (vm) {
     Object.keys(result).forEach(function (key) {
       /* istanbul ignore else */
       {
-        defineReactive(vm, key, result[key], function () {
+        defineReactive$$1(vm, key, result[key], function () {
           warn(
             "Avoid mutating an injected value directly since the changes will be " +
             "overwritten whenever the provided component re-renders. " +
@@ -4393,7 +4325,7 @@ function resolveInject (inject, vm) {
 
     for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
-      var provideKey = inject[key].from;
+      var provideKey = inject[key];
       var source = vm;
       while (source) {
         if (source._provided && provideKey in source._provided) {
@@ -4402,15 +4334,8 @@ function resolveInject (inject, vm) {
         }
         source = source.$parent;
       }
-      if (!source) {
-        if ('default' in inject[key]) {
-          var provideDefault = inject[key].default;
-          result[key] = typeof provideDefault === 'function'
-            ? provideDefault.call(vm)
-            : provideDefault;
-        } else {
-          warn(("Injection \"" + key + "\" not found"), vm);
-        }
+      if ("development" !== 'production' && !source) {
+        warn(("Injection \"" + key + "\" not found"), vm);
       }
     }
     return result
@@ -4419,327 +4344,15 @@ function resolveInject (inject, vm) {
 
 /*  */
 
-/**
- * Runtime helper for rendering v-for lists.
- */
-function renderList (
-  val,
-  render
-) {
-  var ret, i, l, keys, key;
-  if (Array.isArray(val) || typeof val === 'string') {
-    ret = new Array(val.length);
-    for (i = 0, l = val.length; i < l; i++) {
-      ret[i] = render(val[i], i);
-    }
-  } else if (typeof val === 'number') {
-    ret = new Array(val);
-    for (i = 0; i < val; i++) {
-      ret[i] = render(i + 1, i);
-    }
-  } else if (isObject(val)) {
-    keys = Object.keys(val);
-    ret = new Array(keys.length);
-    for (i = 0, l = keys.length; i < l; i++) {
-      key = keys[i];
-      ret[i] = render(val[key], key, i);
-    }
-  }
-  if (isDef(ret)) {
-    (ret)._isVList = true;
-  }
-  return ret
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering <slot>
- */
-function renderSlot (
-  name,
-  fallback,
-  props,
-  bindObject
-) {
-  var scopedSlotFn = this.$scopedSlots[name];
-  if (scopedSlotFn) { // scoped slot
-    props = props || {};
-    if (bindObject) {
-      if ("development" !== 'production' && !isObject(bindObject)) {
-        warn(
-          'slot v-bind without argument expects an Object',
-          this
-        );
-      }
-      props = extend(extend({}, bindObject), props);
-    }
-    return scopedSlotFn(props) || fallback
-  } else {
-    var slotNodes = this.$slots[name];
-    // warn duplicate slot usage
-    if (slotNodes && "development" !== 'production') {
-      slotNodes._rendered && warn(
-        "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
-        "- this will likely cause render errors.",
-        this
-      );
-      slotNodes._rendered = true;
-    }
-    return slotNodes || fallback
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for resolving filters
- */
-function resolveFilter (id) {
-  return resolveAsset(this.$options, 'filters', id, true) || identity
-}
-
-/*  */
-
-/**
- * Runtime helper for checking keyCodes from config.
- * exposed as Vue.prototype._k
- * passing in eventKeyName as last argument separately for backwards compat
- */
-function checkKeyCodes (
-  eventKeyCode,
-  key,
-  builtInAlias,
-  eventKeyName
-) {
-  var keyCodes = config.keyCodes[key] || builtInAlias;
-  if (keyCodes) {
-    if (Array.isArray(keyCodes)) {
-      return keyCodes.indexOf(eventKeyCode) === -1
-    } else {
-      return keyCodes !== eventKeyCode
-    }
-  } else if (eventKeyName) {
-    return hyphenate(eventKeyName) !== key
-  }
-}
-
-/*  */
-
-/**
- * Runtime helper for merging v-bind="object" into a VNode's data.
- */
-function bindObjectProps (
-  data,
-  tag,
-  value,
-  asProp,
-  isSync
-) {
-  if (value) {
-    if (!isObject(value)) {
-      "development" !== 'production' && warn(
-        'v-bind without argument expects an Object or Array value',
-        this
-      );
-    } else {
-      if (Array.isArray(value)) {
-        value = toObject(value);
-      }
-      var hash;
-      var loop = function ( key ) {
-        if (
-          key === 'class' ||
-          key === 'style' ||
-          isReservedAttribute(key)
-        ) {
-          hash = data;
-        } else {
-          var type = data.attrs && data.attrs.type;
-          hash = asProp || config.mustUseProp(tag, type, key)
-            ? data.domProps || (data.domProps = {})
-            : data.attrs || (data.attrs = {});
-        }
-        if (!(key in hash)) {
-          hash[key] = value[key];
-
-          if (isSync) {
-            var on = data.on || (data.on = {});
-            on[("update:" + key)] = function ($event) {
-              value[key] = $event;
-            };
-          }
-        }
-      };
-
-      for (var key in value) loop( key );
-    }
-  }
-  return data
-}
-
-/*  */
-
-/**
- * Runtime helper for rendering static trees.
- */
-function renderStatic (
-  index,
-  isInFor
-) {
-  // static trees can be rendered once and cached on the contructor options
-  // so every instance shares the same cached trees
-  var renderFns = this.$options.staticRenderFns;
-  var cached = renderFns.cached || (renderFns.cached = []);
-  var tree = cached[index];
-  // if has already-rendered static tree and not inside v-for,
-  // we can reuse the same tree by doing a shallow clone.
-  if (tree && !isInFor) {
-    return Array.isArray(tree)
-      ? cloneVNodes(tree)
-      : cloneVNode(tree)
-  }
-  // otherwise, render a fresh tree.
-  tree = cached[index] = renderFns[index].call(this._renderProxy, null, this);
-  markStatic(tree, ("__static__" + index), false);
-  return tree
-}
-
-/**
- * Runtime helper for v-once.
- * Effectively it means marking the node as static with a unique key.
- */
-function markOnce (
-  tree,
-  index,
-  key
-) {
-  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
-  return tree
-}
-
-function markStatic (
-  tree,
-  key,
-  isOnce
-) {
-  if (Array.isArray(tree)) {
-    for (var i = 0; i < tree.length; i++) {
-      if (tree[i] && typeof tree[i] !== 'string') {
-        markStaticNode(tree[i], (key + "_" + i), isOnce);
-      }
-    }
-  } else {
-    markStaticNode(tree, key, isOnce);
-  }
-}
-
-function markStaticNode (node, key, isOnce) {
-  node.isStatic = true;
-  node.key = key;
-  node.isOnce = isOnce;
-}
-
-/*  */
-
-function bindObjectListeners (data, value) {
-  if (value) {
-    if (!isPlainObject(value)) {
-      "development" !== 'production' && warn(
-        'v-on without argument expects an Object value',
-        this
-      );
-    } else {
-      var on = data.on = data.on ? extend({}, data.on) : {};
-      for (var key in value) {
-        var existing = on[key];
-        var ours = value[key];
-        on[key] = existing ? [].concat(existing, ours) : ours;
-      }
-    }
-  }
-  return data
-}
-
-/*  */
-
-function installRenderHelpers (target) {
-  target._o = markOnce;
-  target._n = toNumber;
-  target._s = toString;
-  target._l = renderList;
-  target._t = renderSlot;
-  target._q = looseEqual;
-  target._i = looseIndexOf;
-  target._m = renderStatic;
-  target._f = resolveFilter;
-  target._k = checkKeyCodes;
-  target._b = bindObjectProps;
-  target._v = createTextVNode;
-  target._e = createEmptyVNode;
-  target._u = resolveScopedSlots;
-  target._g = bindObjectListeners;
-}
-
-/*  */
-
-function FunctionalRenderContext (
-  data,
-  props,
-  children,
-  parent,
-  Ctor
-) {
-  var options = Ctor.options;
-  this.data = data;
-  this.props = props;
-  this.children = children;
-  this.parent = parent;
-  this.listeners = data.on || emptyObject;
-  this.injections = resolveInject(options.inject, parent);
-  this.slots = function () { return resolveSlots(children, parent); };
-
-  // ensure the createElement function in functional components
-  // gets a unique context - this is necessary for correct named slot check
-  var contextVm = Object.create(parent);
-  var isCompiled = isTrue(options._compiled);
-  var needNormalization = !isCompiled;
-
-  // support for compiled functional template
-  if (isCompiled) {
-    // exposing $options for renderStatic()
-    this.$options = options;
-    // pre-resolve slots for renderSlot()
-    this.$slots = this.slots();
-    this.$scopedSlots = data.scopedSlots || emptyObject;
-  }
-
-  if (options._scopeId) {
-    this._c = function (a, b, c, d) {
-      var vnode = createElement(contextVm, a, b, c, d, needNormalization);
-      if (vnode) {
-        vnode.functionalScopeId = options._scopeId;
-        vnode.functionalContext = parent;
-      }
-      return vnode
-    };
-  } else {
-    this._c = function (a, b, c, d) { return createElement(contextVm, a, b, c, d, needNormalization); };
-  }
-}
-
-installRenderHelpers(FunctionalRenderContext.prototype);
-
 function createFunctionalComponent (
   Ctor,
   propsData,
   data,
-  contextVm,
+  context,
   children
 ) {
-  var options = Ctor.options;
   var props = {};
-  var propOptions = options.props;
+  var propOptions = Ctor.options.props;
   if (isDef(propOptions)) {
     for (var key in propOptions) {
       props[key] = validateProp(key, propOptions, propsData || emptyObject);
@@ -4748,25 +4361,26 @@ function createFunctionalComponent (
     if (isDef(data.attrs)) { mergeProps(props, data.attrs); }
     if (isDef(data.props)) { mergeProps(props, data.props); }
   }
-
-  var renderContext = new FunctionalRenderContext(
-    data,
-    props,
-    children,
-    contextVm,
-    Ctor
-  );
-
-  var vnode = options.render.call(null, renderContext._c, renderContext);
-
+  // ensure the createElement function in functional components
+  // gets a unique context - this is necessary for correct named slot check
+  var _context = Object.create(context);
+  var h = function (a, b, c, d) { return createElement(_context, a, b, c, d, true); };
+  var vnode = Ctor.options.render.call(null, h, {
+    data: data,
+    props: props,
+    children: children,
+    parent: context,
+    listeners: data.on || emptyObject,
+    injections: resolveInject(Ctor.options.inject, context),
+    slots: function () { return resolveSlots(children, context); }
+  });
   if (vnode instanceof VNode) {
-    vnode.functionalContext = contextVm;
-    vnode.functionalOptions = options;
+    vnode.functionalContext = context;
+    vnode.functionalOptions = Ctor.options;
     if (data.slot) {
       (vnode.data || (vnode.data = {})).slot = data.slot;
     }
   }
-
   return vnode
 }
 
@@ -5111,18 +4725,17 @@ function _createElement (
   }
 }
 
-function applyNS (vnode, ns, force) {
+function applyNS (vnode, ns) {
   vnode.ns = ns;
   if (vnode.tag === 'foreignObject') {
     // use default namespace inside foreignObject
-    ns = undefined;
-    force = true;
+    return
   }
   if (isDef(vnode.children)) {
     for (var i = 0, l = vnode.children.length; i < l; i++) {
       var child = vnode.children[i];
-      if (isDef(child.tag) && (isUndef(child.ns) || isTrue(force))) {
-        applyNS(child, ns, force);
+      if (isDef(child.tag) && isUndef(child.ns)) {
+        applyNS(child, ns);
       }
     }
   }
@@ -5130,12 +4743,240 @@ function applyNS (vnode, ns, force) {
 
 /*  */
 
+/**
+ * Runtime helper for rendering v-for lists.
+ */
+function renderList (
+  val,
+  render
+) {
+  var ret, i, l, keys, key;
+  if (Array.isArray(val) || typeof val === 'string') {
+    ret = new Array(val.length);
+    for (i = 0, l = val.length; i < l; i++) {
+      ret[i] = render(val[i], i);
+    }
+  } else if (typeof val === 'number') {
+    ret = new Array(val);
+    for (i = 0; i < val; i++) {
+      ret[i] = render(i + 1, i);
+    }
+  } else if (isObject(val)) {
+    keys = Object.keys(val);
+    ret = new Array(keys.length);
+    for (i = 0, l = keys.length; i < l; i++) {
+      key = keys[i];
+      ret[i] = render(val[key], key, i);
+    }
+  }
+  if (isDef(ret)) {
+    (ret)._isVList = true;
+  }
+  return ret
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering <slot>
+ */
+function renderSlot (
+  name,
+  fallback,
+  props,
+  bindObject
+) {
+  var scopedSlotFn = this.$scopedSlots[name];
+  if (scopedSlotFn) { // scoped slot
+    props = props || {};
+    if (bindObject) {
+      props = extend(extend({}, bindObject), props);
+    }
+    return scopedSlotFn(props) || fallback
+  } else {
+    var slotNodes = this.$slots[name];
+    // warn duplicate slot usage
+    if (slotNodes && "development" !== 'production') {
+      slotNodes._rendered && warn(
+        "Duplicate presence of slot \"" + name + "\" found in the same render tree " +
+        "- this will likely cause render errors.",
+        this
+      );
+      slotNodes._rendered = true;
+    }
+    return slotNodes || fallback
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for resolving filters
+ */
+function resolveFilter (id) {
+  return resolveAsset(this.$options, 'filters', id, true) || identity
+}
+
+/*  */
+
+/**
+ * Runtime helper for checking keyCodes from config.
+ */
+function checkKeyCodes (
+  eventKeyCode,
+  key,
+  builtInAlias
+) {
+  var keyCodes = config.keyCodes[key] || builtInAlias;
+  if (Array.isArray(keyCodes)) {
+    return keyCodes.indexOf(eventKeyCode) === -1
+  } else {
+    return keyCodes !== eventKeyCode
+  }
+}
+
+/*  */
+
+/**
+ * Runtime helper for merging v-bind="object" into a VNode's data.
+ */
+function bindObjectProps (
+  data,
+  tag,
+  value,
+  asProp,
+  isSync
+) {
+  if (value) {
+    if (!isObject(value)) {
+      "development" !== 'production' && warn(
+        'v-bind without argument expects an Object or Array value',
+        this
+      );
+    } else {
+      if (Array.isArray(value)) {
+        value = toObject(value);
+      }
+      var hash;
+      var loop = function ( key ) {
+        if (
+          key === 'class' ||
+          key === 'style' ||
+          isReservedAttribute(key)
+        ) {
+          hash = data;
+        } else {
+          var type = data.attrs && data.attrs.type;
+          hash = asProp || config.mustUseProp(tag, type, key)
+            ? data.domProps || (data.domProps = {})
+            : data.attrs || (data.attrs = {});
+        }
+        if (!(key in hash)) {
+          hash[key] = value[key];
+
+          if (isSync) {
+            var on = data.on || (data.on = {});
+            on[("update:" + key)] = function ($event) {
+              value[key] = $event;
+            };
+          }
+        }
+      };
+
+      for (var key in value) loop( key );
+    }
+  }
+  return data
+}
+
+/*  */
+
+/**
+ * Runtime helper for rendering static trees.
+ */
+function renderStatic (
+  index,
+  isInFor
+) {
+  var tree = this._staticTrees[index];
+  // if has already-rendered static tree and not inside v-for,
+  // we can reuse the same tree by doing a shallow clone.
+  if (tree && !isInFor) {
+    return Array.isArray(tree)
+      ? cloneVNodes(tree)
+      : cloneVNode(tree)
+  }
+  // otherwise, render a fresh tree.
+  tree = this._staticTrees[index] =
+    this.$options.staticRenderFns[index].call(this._renderProxy);
+  markStatic(tree, ("__static__" + index), false);
+  return tree
+}
+
+/**
+ * Runtime helper for v-once.
+ * Effectively it means marking the node as static with a unique key.
+ */
+function markOnce (
+  tree,
+  index,
+  key
+) {
+  markStatic(tree, ("__once__" + index + (key ? ("_" + key) : "")), true);
+  return tree
+}
+
+function markStatic (
+  tree,
+  key,
+  isOnce
+) {
+  if (Array.isArray(tree)) {
+    for (var i = 0; i < tree.length; i++) {
+      if (tree[i] && typeof tree[i] !== 'string') {
+        markStaticNode(tree[i], (key + "_" + i), isOnce);
+      }
+    }
+  } else {
+    markStaticNode(tree, key, isOnce);
+  }
+}
+
+function markStaticNode (node, key, isOnce) {
+  node.isStatic = true;
+  node.key = key;
+  node.isOnce = isOnce;
+}
+
+/*  */
+
+function bindObjectListeners (data, value) {
+  if (value) {
+    if (!isPlainObject(value)) {
+      "development" !== 'production' && warn(
+        'v-on without argument expects an Object value',
+        this
+      );
+    } else {
+      var on = data.on = data.on ? extend({}, data.on) : {};
+      for (var key in value) {
+        var existing = on[key];
+        var ours = value[key];
+        on[key] = existing ? [].concat(ours, existing) : ours;
+      }
+    }
+  }
+  return data
+}
+
+/*  */
+
 function initRender (vm) {
   vm._vnode = null; // the root of the child tree
-  var options = vm.$options;
-  var parentVnode = vm.$vnode = options._parentVnode; // the placeholder node in parent tree
+  vm._staticTrees = null;
+  var parentVnode = vm.$vnode = vm.$options._parentVnode; // the placeholder node in parent tree
   var renderContext = parentVnode && parentVnode.context;
-  vm.$slots = resolveSlots(options._renderChildren, renderContext);
+  vm.$slots = resolveSlots(vm.$options._renderChildren, renderContext);
   vm.$scopedSlots = emptyObject;
   // bind the createElement fn to this instance
   // so that we get proper render context inside it.
@@ -5152,19 +4993,16 @@ function initRender (vm) {
 
   /* istanbul ignore else */
   {
-    defineReactive(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
+    defineReactive$$1(vm, '$attrs', parentData && parentData.attrs || emptyObject, function () {
       !isUpdatingChildComponent && warn("$attrs is readonly.", vm);
     }, true);
-    defineReactive(vm, '$listeners', options._parentListeners || emptyObject, function () {
+    defineReactive$$1(vm, '$listeners', vm.$options._parentListeners || emptyObject, function () {
       !isUpdatingChildComponent && warn("$listeners is readonly.", vm);
     }, true);
   }
 }
 
 function renderMixin (Vue) {
-  // install runtime convenience helpers
-  installRenderHelpers(Vue.prototype);
-
   Vue.prototype.$nextTick = function (fn) {
     return nextTick(fn, this)
   };
@@ -5173,6 +5011,7 @@ function renderMixin (Vue) {
     var vm = this;
     var ref = vm.$options;
     var render = ref.render;
+    var staticRenderFns = ref.staticRenderFns;
     var _parentVnode = ref._parentVnode;
 
     if (vm._isMounted) {
@@ -5188,6 +5027,9 @@ function renderMixin (Vue) {
 
     vm.$scopedSlots = (_parentVnode && _parentVnode.data.scopedSlots) || emptyObject;
 
+    if (staticRenderFns && !vm._staticTrees) {
+      vm._staticTrees = [];
+    }
     // set parent vnode. this allows render functions to have access
     // to the data on the placeholder node.
     vm.$vnode = _parentVnode;
@@ -5196,21 +5038,14 @@ function renderMixin (Vue) {
     try {
       vnode = render.call(vm._renderProxy, vm.$createElement);
     } catch (e) {
-      handleError(e, vm, "render");
+      handleError(e, vm, "render function");
       // return error render result,
       // or previous vnode to prevent render error causing blank component
       /* istanbul ignore else */
       {
-        if (vm.$options.renderError) {
-          try {
-            vnode = vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e);
-          } catch (e) {
-            handleError(e, vm, "renderError");
-            vnode = vm._vnode;
-          }
-        } else {
-          vnode = vm._vnode;
-        }
+        vnode = vm.$options.renderError
+          ? vm.$options.renderError.call(vm._renderProxy, vm.$createElement, e)
+          : vm._vnode;
       }
     }
     // return empty vnode in case the render function errored out
@@ -5228,6 +5063,25 @@ function renderMixin (Vue) {
     vnode.parent = _parentVnode;
     return vnode
   };
+
+  // internal render helpers.
+  // these are exposed on the instance prototype to reduce generated render
+  // code size.
+  Vue.prototype._o = markOnce;
+  Vue.prototype._n = toNumber;
+  Vue.prototype._s = toString;
+  Vue.prototype._l = renderList;
+  Vue.prototype._t = renderSlot;
+  Vue.prototype._q = looseEqual;
+  Vue.prototype._i = looseIndexOf;
+  Vue.prototype._m = renderStatic;
+  Vue.prototype._f = resolveFilter;
+  Vue.prototype._k = checkKeyCodes;
+  Vue.prototype._b = bindObjectProps;
+  Vue.prototype._v = createTextVNode;
+  Vue.prototype._e = createEmptyVNode;
+  Vue.prototype._u = resolveScopedSlots;
+  Vue.prototype._g = bindObjectListeners;
 }
 
 /*  */
@@ -5243,7 +5097,7 @@ function initMixin (Vue) {
     var startTag, endTag;
     /* istanbul ignore if */
     if ("development" !== 'production' && config.performance && mark) {
-      startTag = "vue-perf-start:" + (vm._uid);
+      startTag = "vue-perf-init:" + (vm._uid);
       endTag = "vue-perf-end:" + (vm._uid);
       mark(startTag);
     }
@@ -5282,7 +5136,7 @@ function initMixin (Vue) {
     if ("development" !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false);
       mark(endTag);
-      measure(("vue " + (vm._name) + " init"), startTag, endTag);
+      measure(((vm._name) + " init"), startTag, endTag);
     }
 
     if (vm.$options.el) {
@@ -5548,6 +5402,8 @@ function initAssetRegisters (Vue) {
 
 /*  */
 
+var patternTypes = [String, RegExp, Array];
+
 function getComponentName (opts) {
   return opts && (opts.Ctor.options.name || opts.tag)
 }
@@ -5564,36 +5420,26 @@ function matches (pattern, name) {
   return false
 }
 
-function pruneCache (keepAliveInstance, filter) {
-  var cache = keepAliveInstance.cache;
-  var keys = keepAliveInstance.keys;
-  var _vnode = keepAliveInstance._vnode;
+function pruneCache (cache, current, filter) {
   for (var key in cache) {
     var cachedNode = cache[key];
     if (cachedNode) {
       var name = getComponentName(cachedNode.componentOptions);
       if (name && !filter(name)) {
-        pruneCacheEntry(cache, key, keys, _vnode);
+        if (cachedNode !== current) {
+          pruneCacheEntry(cachedNode);
+        }
+        cache[key] = null;
       }
     }
   }
 }
 
-function pruneCacheEntry (
-  cache,
-  key,
-  keys,
-  current
-) {
-  var cached$$1 = cache[key];
-  if (cached$$1 && cached$$1 !== current) {
-    cached$$1.componentInstance.$destroy();
+function pruneCacheEntry (vnode) {
+  if (vnode) {
+    vnode.componentInstance.$destroy();
   }
-  cache[key] = null;
-  remove(keys, key);
 }
-
-var patternTypes = [String, RegExp, Array];
 
 var KeepAlive = {
   name: 'keep-alive',
@@ -5601,29 +5447,27 @@ var KeepAlive = {
 
   props: {
     include: patternTypes,
-    exclude: patternTypes,
-    max: [String, Number]
+    exclude: patternTypes
   },
 
   created: function created () {
     this.cache = Object.create(null);
-    this.keys = [];
   },
 
   destroyed: function destroyed () {
     var this$1 = this;
 
     for (var key in this$1.cache) {
-      pruneCacheEntry(this$1.cache, key, this$1.keys);
+      pruneCacheEntry(this$1.cache[key]);
     }
   },
 
   watch: {
     include: function include (val) {
-      pruneCache(this, function (name) { return matches(val, name); });
+      pruneCache(this.cache, this._vnode, function (name) { return matches(val, name); });
     },
     exclude: function exclude (val) {
-      pruneCache(this, function (name) { return !matches(val, name); });
+      pruneCache(this.cache, this._vnode, function (name) { return !matches(val, name); });
     }
   },
 
@@ -5639,29 +5483,16 @@ var KeepAlive = {
       )) {
         return vnode
       }
-
-      var ref = this;
-      var cache = ref.cache;
-      var keys = ref.keys;
       var key = vnode.key == null
         // same constructor may get registered as different local components
         // so cid alone is not enough (#3269)
         ? componentOptions.Ctor.cid + (componentOptions.tag ? ("::" + (componentOptions.tag)) : '')
         : vnode.key;
-      if (cache[key]) {
-        vnode.componentInstance = cache[key].componentInstance;
-        // make current key freshest
-        remove(keys, key);
-        keys.push(key);
+      if (this.cache[key]) {
+        vnode.componentInstance = this.cache[key].componentInstance;
       } else {
-        cache[key] = vnode;
-        keys.push(key);
-        // prune oldest entry
-        if (this.max && keys.length > parseInt(this.max)) {
-          pruneCacheEntry(cache, keys[0], keys, this._vnode);
-        }
+        this.cache[key] = vnode;
       }
-
       vnode.data.keepAlive = true;
     }
     return vnode
@@ -5694,7 +5525,7 @@ function initGlobalAPI (Vue) {
     warn: warn,
     extend: extend,
     mergeOptions: mergeOptions,
-    defineReactive: defineReactive
+    defineReactive: defineReactive$$1
   };
 
   Vue.set = set;
@@ -5731,7 +5562,7 @@ Object.defineProperty(Vue$3.prototype, '$ssrContext', {
   }
 });
 
-Vue$3.version = '2.5.2';
+Vue$3.version = '2.4.4';
 
 /*  */
 
@@ -6141,13 +5972,13 @@ function createPatchFunction (backend) {
   }
 
   function createRmCb (childElm, listeners) {
-    function remove () {
-      if (--remove.listeners === 0) {
+    function remove$$1 () {
+      if (--remove$$1.listeners === 0) {
         removeNode(childElm);
       }
     }
-    remove.listeners = listeners;
-    return remove
+    remove$$1.listeners = listeners;
+    return remove$$1
   }
 
   function removeNode (el) {
@@ -6176,14 +6007,7 @@ function createPatchFunction (backend) {
         if (
           !inPre &&
           !vnode.ns &&
-          !(
-            config.ignoredElements.length &&
-            config.ignoredElements.some(function (ignore) {
-              return isRegExp(ignore)
-                ? ignore.test(tag)
-                : ignore === tag
-            })
-          ) &&
+          !(config.ignoredElements.length && config.ignoredElements.indexOf(tag) > -1) &&
           config.isUnknownElement(tag)
         ) {
           warn(
@@ -6326,21 +6150,16 @@ function createPatchFunction (backend) {
   // of going through the normal attribute patching process.
   function setScope (vnode) {
     var i;
-    if (isDef(i = vnode.functionalScopeId)) {
-      nodeOps.setAttribute(vnode.elm, i, '');
-    } else {
-      var ancestor = vnode;
-      while (ancestor) {
-        if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
-          nodeOps.setAttribute(vnode.elm, i, '');
-        }
-        ancestor = ancestor.parent;
+    var ancestor = vnode;
+    while (ancestor) {
+      if (isDef(i = ancestor.context) && isDef(i = i.$options._scopeId)) {
+        nodeOps.setAttribute(vnode.elm, i, '');
       }
+      ancestor = ancestor.parent;
     }
     // for slot content they should also get the scopeId from the host instance.
     if (isDef(i = activeInstance) &&
       i !== vnode.context &&
-      i !== vnode.functionalContext &&
       isDef(i = i.$options._scopeId)
     ) {
       nodeOps.setAttribute(vnode.elm, i, '');
@@ -6419,7 +6238,7 @@ function createPatchFunction (backend) {
     var newEndIdx = newCh.length - 1;
     var newStartVnode = newCh[0];
     var newEndVnode = newCh[newEndIdx];
-    var oldKeyToIdx, idxInOld, vnodeToMove, refElm;
+    var oldKeyToIdx, idxInOld, elmToMove, refElm;
 
     // removeOnly is a special flag used only by <transition-group>
     // to ensure removed elements stay in correct relative positions
@@ -6457,18 +6276,18 @@ function createPatchFunction (backend) {
         if (isUndef(idxInOld)) { // New element
           createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
         } else {
-          vnodeToMove = oldCh[idxInOld];
+          elmToMove = oldCh[idxInOld];
           /* istanbul ignore if */
-          if ("development" !== 'production' && !vnodeToMove) {
+          if ("development" !== 'production' && !elmToMove) {
             warn(
               'It seems there are duplicate keys that is causing an update error. ' +
               'Make sure each v-for item has a unique key.'
             );
           }
-          if (sameVnode(vnodeToMove, newStartVnode)) {
-            patchVnode(vnodeToMove, newStartVnode, insertedVnodeQueue);
+          if (sameVnode(elmToMove, newStartVnode)) {
+            patchVnode(elmToMove, newStartVnode, insertedVnodeQueue);
             oldCh[idxInOld] = undefined;
-            canMove && nodeOps.insertBefore(parentElm, vnodeToMove.elm, oldStartVnode.elm);
+            canMove && nodeOps.insertBefore(parentElm, elmToMove.elm, oldStartVnode.elm);
           } else {
             // same key but different element. treat as new element
             createElm(newStartVnode, insertedVnodeQueue, parentElm, oldStartVnode.elm);
@@ -6749,8 +6568,6 @@ function createPatchFunction (backend) {
                   insert.fns[i$2]();
                 }
               }
-            } else {
-              registerRef(ancestor);
             }
             ancestor = ancestor.parent;
           }
@@ -6914,9 +6731,8 @@ function updateAttrs (oldVnode, vnode) {
     }
   }
   // #4391: in IE9, setting type can reset value for input[type=radio]
-  // #6666: IE/Edge forces progress value down to 1 before setting a max
   /* istanbul ignore if */
-  if ((isIE9 || isEdge) && attrs.value !== oldAttrs.value) {
+  if (isIE9 && attrs.value !== oldAttrs.value) {
     setAttr(elm, 'value', attrs.value);
   }
   for (key in oldAttrs) {
@@ -7206,15 +7022,7 @@ function getBindingAttr (
   }
 }
 
-// note: this only removes the attr from the Array (attrsList) so that it
-// doesn't get processed by processAttrs.
-// By default it does NOT remove it from the map (attrsMap) because the map is
-// needed during codegen.
-function getAndRemoveAttr (
-  el,
-  name,
-  removeFromMap
-) {
+function getAndRemoveAttr (el, name) {
   var val;
   if ((val = el.attrsMap[name]) != null) {
     var list = el.attrsList;
@@ -7224,9 +7032,6 @@ function getAndRemoveAttr (
         break
       }
     }
-  }
-  if (removeFromMap) {
-    delete el.attrsMap[name];
   }
   return val
 }
@@ -7272,26 +7077,25 @@ function genAssignmentCode (
   value,
   assignment
 ) {
-  var res = parseModel(value);
-  if (res.key === null) {
+  var modelRs = parseModel(value);
+  if (modelRs.idx === null) {
     return (value + "=" + assignment)
   } else {
-    return ("$set(" + (res.exp) + ", " + (res.key) + ", " + assignment + ")")
+    return ("$set(" + (modelRs.exp) + ", " + (modelRs.idx) + ", " + assignment + ")")
   }
 }
 
 /**
- * Parse a v-model expression into a base path and a final key segment.
- * Handles both dot-path and possible square brackets.
+ * parse directive model to do the array update transform. a[idx] = val => $$a.splice($$idx, 1, val)
  *
- * Possible cases:
+ * for loop possible cases:
  *
  * - test
- * - test[key]
- * - test[test1[key]]
- * - test["a"][key]
- * - xxx.test[a[a].test1[key]]
- * - test.xxx.a["asa"][test1[key]]
+ * - test[idx]
+ * - test[test1[idx]]
+ * - test["a"][idx]
+ * - xxx.test[a[a].test1[idx]]
+ * - test.xxx.a["asa"][test1[idx]]
  *
  */
 
@@ -7302,28 +7106,17 @@ var index$1;
 var expressionPos;
 var expressionEndPos;
 
-
-
 function parseModel (val) {
-  len = val.length;
+  str = val;
+  len = str.length;
+  index$1 = expressionPos = expressionEndPos = 0;
 
   if (val.indexOf('[') < 0 || val.lastIndexOf(']') < len - 1) {
-    index$1 = val.lastIndexOf('.');
-    if (index$1 > -1) {
-      return {
-        exp: val.slice(0, index$1),
-        key: '"' + val.slice(index$1 + 1) + '"'
-      }
-    } else {
-      return {
-        exp: val,
-        key: null
-      }
+    return {
+      exp: val,
+      idx: null
     }
   }
-
-  str = val;
-  index$1 = expressionPos = expressionEndPos = 0;
 
   while (!eof()) {
     chr = next();
@@ -7336,8 +7129,8 @@ function parseModel (val) {
   }
 
   return {
-    exp: val.slice(0, expressionPos),
-    key: val.slice(expressionPos + 1, expressionEndPos)
+    exp: val.substring(0, expressionPos),
+    idx: val.substring(expressionPos + 1, expressionEndPos)
   }
 }
 
@@ -7402,6 +7195,13 @@ function model (
   var type = el.attrsMap.type;
 
   {
+    var dynamicType = el.attrsMap['v-bind:type'] || el.attrsMap[':type'];
+    if (tag === 'input' && dynamicType) {
+      warn$1(
+        "<input :type=\"" + dynamicType + "\" v-model=\"" + value + "\">:\n" +
+        "v-model does not support dynamic input types. Use v-if branches instead."
+      );
+    }
     // inputs with type="file" are read only and setting the input's
     // value will throw an error.
     if (tag === 'input' && type === 'file') {
@@ -7458,7 +7258,7 @@ function genCheckboxModel (
           : (":_q(" + value + "," + trueValueBinding + ")")
       )
   );
-  addHandler(el, 'change',
+  addHandler(el, CHECKBOX_RADIO_TOKEN,
     "var $$a=" + value + "," +
         '$$el=$event.target,' +
         "$$c=$$el.checked?(" + trueValueBinding + "):(" + falseValueBinding + ");" +
@@ -7481,7 +7281,7 @@ function genRadioModel (
   var valueBinding = getBindingAttr(el, 'value') || 'null';
   valueBinding = number ? ("_n(" + valueBinding + ")") : valueBinding;
   addProp(el, 'checked', ("_q(" + value + "," + valueBinding + ")"));
-  addHandler(el, 'change', genAssignmentCode(value, valueBinding), null, true);
+  addHandler(el, CHECKBOX_RADIO_TOKEN, genAssignmentCode(value, valueBinding), null, true);
 }
 
 function genSelect (
@@ -7545,33 +7345,23 @@ function genDefaultModel (
 // the whole point is ensuring the v-model callback gets called before
 // user-attached handlers.
 function normalizeEvents (on) {
+  var event;
   /* istanbul ignore if */
   if (isDef(on[RANGE_TOKEN])) {
     // IE input[type=range] only supports `change` event
-    var event = isIE ? 'change' : 'input';
+    event = isIE ? 'change' : 'input';
     on[event] = [].concat(on[RANGE_TOKEN], on[event] || []);
     delete on[RANGE_TOKEN];
   }
-  // This was originally intended to fix #4521 but no longer necessary
-  // after 2.5. Keeping it for backwards compat with generated code from < 2.4
-  /* istanbul ignore if */
   if (isDef(on[CHECKBOX_RADIO_TOKEN])) {
-    on.change = [].concat(on[CHECKBOX_RADIO_TOKEN], on.change || []);
+    // Chrome fires microtasks in between click/change, leads to #4521
+    event = isChrome ? 'click' : 'change';
+    on[event] = [].concat(on[CHECKBOX_RADIO_TOKEN], on[event] || []);
     delete on[CHECKBOX_RADIO_TOKEN];
   }
 }
 
 var target$1;
-
-function createOnceHandler (handler, event, capture) {
-  var _target = target$1; // save current target element in closure
-  return function onceHandler () {
-    var res = handler.apply(null, arguments);
-    if (res !== null) {
-      remove$2(event, onceHandler, capture, _target);
-    }
-  }
-}
 
 function add$1 (
   event,
@@ -7580,8 +7370,18 @@ function add$1 (
   capture,
   passive
 ) {
-  handler = withMacroTask(handler);
-  if (once$$1) { handler = createOnceHandler(handler, event, capture); }
+  if (once$$1) {
+    var oldHandler = handler;
+    var _target = target$1; // save current target element in closure
+    handler = function (ev) {
+      var res = arguments.length === 1
+        ? oldHandler(ev)
+        : oldHandler.apply(null, arguments);
+      if (res !== null) {
+        remove$2(event, handler, capture, _target);
+      }
+    };
+  }
   target$1.addEventListener(
     event,
     handler,
@@ -7597,11 +7397,7 @@ function remove$2 (
   capture,
   _target
 ) {
-  (_target || target$1).removeEventListener(
-    event,
-    handler._withTask || handler,
-    capture
-  );
+  (_target || target$1).removeEventListener(event, handler, capture);
 }
 
 function updateDOMListeners (oldVnode, vnode) {
@@ -7648,11 +7444,6 @@ function updateDOMProps (oldVnode, vnode) {
     if (key === 'textContent' || key === 'innerHTML') {
       if (vnode.children) { vnode.children.length = 0; }
       if (cur === oldProps[key]) { continue }
-      // #6601 work around Chrome version <= 55 bug where single textNode
-      // replaced by innerHTML/textContent retains its parentNode property
-      if (elm.childNodes.length === 1) {
-        elm.removeChild(elm.childNodes[0]);
-      }
     }
 
     if (key === 'value') {
@@ -7661,7 +7452,7 @@ function updateDOMProps (oldVnode, vnode) {
       elm._value = cur;
       // avoid resetting cursor position when value is the same
       var strCur = isUndef(cur) ? '' : String(cur);
-      if (shouldUpdateValue(elm, strCur)) {
+      if (shouldUpdateValue(elm, vnode, strCur)) {
         elm.value = strCur;
       }
     } else {
@@ -7673,9 +7464,13 @@ function updateDOMProps (oldVnode, vnode) {
 // check platforms/web/util/attrs.js acceptValue
 
 
-function shouldUpdateValue (elm, checkVal) {
+function shouldUpdateValue (
+  elm,
+  vnode,
+  checkVal
+) {
   return (!elm.composing && (
-    elm.tagName === 'OPTION' ||
+    vnode.tag === 'option' ||
     isDirty(elm, checkVal) ||
     isInputChanged(elm, checkVal)
   ))
@@ -7930,20 +7725,20 @@ function removeClass (el, cls) {
 
 /*  */
 
-function resolveTransition (def) {
-  if (!def) {
+function resolveTransition (def$$1) {
+  if (!def$$1) {
     return
   }
   /* istanbul ignore else */
-  if (typeof def === 'object') {
+  if (typeof def$$1 === 'object') {
     var res = {};
-    if (def.css !== false) {
-      extend(res, autoCssTransition(def.name || 'v'));
+    if (def$$1.css !== false) {
+      extend(res, autoCssTransition(def$$1.name || 'v'));
     }
-    extend(res, def);
+    extend(res, def$$1);
     return res
-  } else if (typeof def === 'string') {
-    return autoCssTransition(def)
+  } else if (typeof def$$1 === 'string') {
+    return autoCssTransition(def$$1)
   }
 }
 
@@ -7984,11 +7779,9 @@ if (hasTransition) {
 }
 
 // binding to window is necessary to make hot reload work in IE in strict mode
-var raf = inBrowser
-  ? window.requestAnimationFrame
-    ? window.requestAnimationFrame.bind(window)
-    : setTimeout
-  : /* istanbul ignore next */ function (fn) { return fn(); };
+var raf = inBrowser && window.requestAnimationFrame
+  ? window.requestAnimationFrame.bind(window)
+  : setTimeout;
 
 function nextFrame (fn) {
   raf(function () {
@@ -8804,7 +8597,7 @@ var Transition = {
     ) {
       // replace old child transition data with fresh one
       // important for dynamic transitions!
-      var oldData = oldChild.data.transition = extend({}, data);
+      var oldData = oldChild && (oldChild.data.transition = extend({}, data));
       // handle transition mode
       if (mode === 'out-in') {
         // return placeholder node and queue update when leave finishes
@@ -8921,9 +8714,8 @@ var TransitionGroup = {
     children.forEach(applyTranslation);
 
     // force reflow to put everything in position
-    // assign to this to avoid being removed in tree-shaking
-    // $flow-disable-line
-    this._reflow = document.body.offsetHeight;
+    var body = document.body;
+    var f = body.offsetHeight; // eslint-disable-line
 
     children.forEach(function (c) {
       if (c.data.moved) {
@@ -9031,7 +8823,7 @@ Vue$3.prototype.$mount = function (
 
 // devtools global hook
 /* istanbul ignore next */
-Vue$3.nextTick(function () {
+setTimeout(function () {
   if (config.devtools) {
     if (devtools) {
       devtools.emit('init', Vue$3);
@@ -9192,16 +8984,31 @@ var style$1 = {
   genData: genData$1
 };
 
+var modules$1 = [
+  klass$1,
+  style$1
+];
+
 /*  */
 
-var decoder;
-
-var he = {
-  decode: function decode (html) {
-    decoder = decoder || document.createElement('div');
-    decoder.innerHTML = html;
-    return decoder.textContent
+function text (el, dir) {
+  if (dir.value) {
+    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
   }
+}
+
+/*  */
+
+function html (el, dir) {
+  if (dir.value) {
+    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
+  }
+}
+
+var directives$1 = {
+  model: model,
+  text: text,
+  html: html
 };
 
 /*  */
@@ -9226,6 +9033,33 @@ var isNonPhrasingTag = makeMap(
   'optgroup,option,param,rp,rt,source,style,summary,tbody,td,tfoot,th,thead,' +
   'title,tr,track'
 );
+
+/*  */
+
+var baseOptions = {
+  expectHTML: true,
+  modules: modules$1,
+  directives: directives$1,
+  isPreTag: isPreTag,
+  isUnaryTag: isUnaryTag,
+  mustUseProp: mustUseProp,
+  canBeLeftOpenTag: canBeLeftOpenTag,
+  isReservedTag: isReservedTag,
+  getTagNamespace: getTagNamespace,
+  staticKeys: genStaticKeys(modules$1)
+};
+
+/*  */
+
+var decoder;
+
+var he = {
+  decode: function decode (html) {
+    decoder = decoder || document.createElement('div');
+    decoder.innerHTML = html;
+    return decoder.textContent
+  }
+};
 
 /**
  * Not type-checking this file because it's mostly vendor code.
@@ -9556,23 +9390,6 @@ var platformIsPreTag;
 var platformMustUseProp;
 var platformGetTagNamespace;
 
-
-
-function createASTElement (
-  tag,
-  attrs,
-  parent
-) {
-  return {
-    type: 1,
-    tag: tag,
-    attrsList: attrs,
-    attrsMap: makeAttrsMap(attrs),
-    parent: parent,
-    children: []
-  }
-}
-
 /**
  * Convert HTML string to AST.
  */
@@ -9635,7 +9452,14 @@ function parse (
         attrs = guardIESVGBug(attrs);
       }
 
-      var element = createASTElement(tag, attrs, currentParent);
+      var element = {
+        type: 1,
+        tag: tag,
+        attrsList: attrs,
+        attrsMap: makeAttrsMap(attrs),
+        parent: currentParent,
+        children: []
+      };
       if (ns) {
         element.ns = ns;
       }
@@ -9651,7 +9475,7 @@ function parse (
 
       // apply pre-transforms
       for (var i = 0; i < preTransforms.length; i++) {
-        element = preTransforms[i](element, options) || element;
+        preTransforms[i](element, options);
       }
 
       if (!inVPre) {
@@ -9665,13 +9489,23 @@ function parse (
       }
       if (inVPre) {
         processRawAttrs(element);
-      } else if (!element.processed) {
-        // structural directives
+      } else {
         processFor(element);
         processIf(element);
         processOnce(element);
-        // element-scope stuff
-        processElement(element, options);
+        processKey(element);
+
+        // determine whether this is a plain element after
+        // removing structural attributes
+        element.plain = !element.key && !attrs.length;
+
+        processRef(element);
+        processSlot(element);
+        processComponent(element);
+        for (var i$1 = 0; i$1 < transforms.length; i$1++) {
+          transforms[i$1](element, options);
+        }
+        processAttrs(element);
       }
 
       function checkRootConstraints (el) {
@@ -9729,8 +9563,8 @@ function parse (
         endPre(element);
       }
       // apply post-transforms
-      for (var i$1 = 0; i$1 < postTransforms.length; i$1++) {
-        postTransforms[i$1](element, options);
+      for (var i$2 = 0; i$2 < postTransforms.length; i$2++) {
+        postTransforms[i$2](element, options);
       }
     },
 
@@ -9822,22 +9656,6 @@ function processRawAttrs (el) {
     // non root node in pre blocks with no attributes
     el.plain = true;
   }
-}
-
-function processElement (element, options) {
-  processKey(element);
-
-  // determine whether this is a plain element after
-  // removing structural attributes
-  element.plain = !element.key && !element.attrsList.length;
-
-  processRef(element);
-  processSlot(element);
-  processComponent(element);
-  for (var i = 0; i < transforms.length; i++) {
-    element = transforms[i](element, options) || element;
-  }
-  processAttrs(element);
 }
 
 function processKey (el) {
@@ -9959,31 +9777,14 @@ function processSlot (el) {
       );
     }
   } else {
-    var slotScope;
-    if (el.tag === 'template') {
-      slotScope = getAndRemoveAttr(el, 'scope');
-      /* istanbul ignore if */
-      if ("development" !== 'production' && slotScope) {
-        warn$2(
-          "the \"scope\" attribute for scoped slots have been deprecated and " +
-          "replaced by \"slot-scope\" since 2.5. The new \"slot-scope\" attribute " +
-          "can also be used on plain elements in addition to <template> to " +
-          "denote scoped slots.",
-          true
-        );
-      }
-      el.slotScope = slotScope || getAndRemoveAttr(el, 'slot-scope');
-    } else if ((slotScope = getAndRemoveAttr(el, 'slot-scope'))) {
-      el.slotScope = slotScope;
-    }
     var slotTarget = getBindingAttr(el, 'slot');
     if (slotTarget) {
       el.slotTarget = slotTarget === '""' ? '"default"' : slotTarget;
       // preserve slot as an attribute for native shadow DOM compat
-      // only for non-scoped slots.
-      if (!el.slotScope) {
-        addAttr(el, 'slot', slotTarget);
-      }
+      addAttr(el, 'slot', slotTarget);
+    }
+    if (el.tag === 'template') {
+      el.slotScope = getAndRemoveAttr(el, 'scope');
     }
   }
 }
@@ -10154,116 +9955,6 @@ function checkForAliasModel (el, value) {
     _el = _el.parent;
   }
 }
-
-/*  */
-
-/**
- * Expand input[v-model] with dyanmic type bindings into v-if-else chains
- * Turn this:
- *   <input v-model="data[type]" :type="type">
- * into this:
- *   <input v-if="type === 'checkbox'" type="checkbox" v-model="data[type]">
- *   <input v-else-if="type === 'radio'" type="radio" v-model="data[type]">
- *   <input v-else :type="type" v-model="data[type]">
- */
-
-function preTransformNode (el, options) {
-  if (el.tag === 'input') {
-    var map = el.attrsMap;
-    if (map['v-model'] && (map['v-bind:type'] || map[':type'])) {
-      var typeBinding = getBindingAttr(el, 'type');
-      var ifCondition = getAndRemoveAttr(el, 'v-if', true);
-      var ifConditionExtra = ifCondition ? ("&&(" + ifCondition + ")") : "";
-      // 1. checkbox
-      var branch0 = cloneASTElement(el);
-      // process for on the main node
-      processFor(branch0);
-      addRawAttr(branch0, 'type', 'checkbox');
-      processElement(branch0, options);
-      branch0.processed = true; // prevent it from double-processed
-      branch0.if = "(" + typeBinding + ")==='checkbox'" + ifConditionExtra;
-      addIfCondition(branch0, {
-        exp: branch0.if,
-        block: branch0
-      });
-      // 2. add radio else-if condition
-      var branch1 = cloneASTElement(el);
-      getAndRemoveAttr(branch1, 'v-for', true);
-      addRawAttr(branch1, 'type', 'radio');
-      processElement(branch1, options);
-      addIfCondition(branch0, {
-        exp: "(" + typeBinding + ")==='radio'" + ifConditionExtra,
-        block: branch1
-      });
-      // 3. other
-      var branch2 = cloneASTElement(el);
-      getAndRemoveAttr(branch2, 'v-for', true);
-      addRawAttr(branch2, ':type', typeBinding);
-      processElement(branch2, options);
-      addIfCondition(branch0, {
-        exp: ifCondition,
-        block: branch2
-      });
-      return branch0
-    }
-  }
-}
-
-function cloneASTElement (el) {
-  return createASTElement(el.tag, el.attrsList.slice(), el.parent)
-}
-
-function addRawAttr (el, name, value) {
-  el.attrsMap[name] = value;
-  el.attrsList.push({ name: name, value: value });
-}
-
-var model$2 = {
-  preTransformNode: preTransformNode
-};
-
-var modules$1 = [
-  klass$1,
-  style$1,
-  model$2
-];
-
-/*  */
-
-function text (el, dir) {
-  if (dir.value) {
-    addProp(el, 'textContent', ("_s(" + (dir.value) + ")"));
-  }
-}
-
-/*  */
-
-function html (el, dir) {
-  if (dir.value) {
-    addProp(el, 'innerHTML', ("_s(" + (dir.value) + ")"));
-  }
-}
-
-var directives$1 = {
-  model: model,
-  text: text,
-  html: html
-};
-
-/*  */
-
-var baseOptions = {
-  expectHTML: true,
-  modules: modules$1,
-  directives: directives$1,
-  isPreTag: isPreTag,
-  isUnaryTag: isUnaryTag,
-  mustUseProp: mustUseProp,
-  canBeLeftOpenTag: canBeLeftOpenTag,
-  isReservedTag: isReservedTag,
-  getTagNamespace: getTagNamespace,
-  staticKeys: genStaticKeys(modules$1)
-};
 
 /*  */
 
@@ -10481,14 +10172,6 @@ function genHandler (
         if (keyCodes[key]) {
           keys.push(key);
         }
-      } else if (key === 'exact') {
-        var modifiers = (handler.modifiers);
-        genModifierCode += genGuard(
-          ['ctrl', 'shift', 'alt', 'meta']
-            .filter(function (keyModifier) { return !modifiers[keyModifier]; })
-            .map(function (keyModifier) { return ("$event." + keyModifier + "Key"); })
-            .join('||')
-        );
       } else {
         keys.push(key);
       }
@@ -10518,13 +10201,8 @@ function genFilterCode (key) {
   if (keyVal) {
     return ("$event.keyCode!==" + keyVal)
   }
-  var code = keyCodes[key];
-  return (
-    "_k($event.keyCode," +
-    (JSON.stringify(key)) + "," +
-    (JSON.stringify(code)) + "," +
-    "$event.key)"
-  )
+  var alias = keyCodes[key];
+  return ("_k($event.keyCode," + (JSON.stringify(key)) + (alias ? ',' + JSON.stringify(alias) : '') + ")")
 }
 
 /*  */
@@ -10762,8 +10440,7 @@ function genData$2 (el, state) {
     data += (genHandlers(el.nativeEvents, true, state.warn)) + ",";
   }
   // slot target
-  // only for non-scoped slots
-  if (el.slotTarget && !el.slotScope) {
+  if (el.slotTarget) {
     data += "slot:" + (el.slotTarget) + ",";
   }
   // scoped slots
@@ -10821,7 +10498,7 @@ function genDirectives (el, state) {
 function genInlineTemplate (el, state) {
   var ast = el.children[0];
   if ("development" !== 'production' && (
-    el.children.length !== 1 || ast.type !== 1
+    el.children.length > 1 || ast.type !== 1
   )) {
     state.warn('Inline-template components must have exactly one child element.');
   }
@@ -10848,13 +10525,10 @@ function genScopedSlot (
   if (el.for && !el.forProcessed) {
     return genForScopedSlot(key, el, state)
   }
-  var fn = "function(" + (String(el.slotScope)) + "){" +
+  return "{key:" + key + ",fn:function(" + (String(el.attrsMap.scope)) + "){" +
     "return " + (el.tag === 'template'
-      ? el.if
-        ? ((el.if) + "?" + (genChildren(el, state) || 'undefined') + ":undefined")
-        : genChildren(el, state) || 'undefined'
-      : genElement(el, state)) + "}";
-  return ("{key:" + key + ",fn:" + fn + "}")
+      ? genChildren(el, state) || 'void 0'
+      : genElement(el, state)) + "}}"
 }
 
 function genForScopedSlot (
@@ -11083,14 +10757,10 @@ function checkExpression (exp, text, errors) {
     if (keywordMatch) {
       errors.push(
         "avoid using JavaScript keyword as property name: " +
-        "\"" + (keywordMatch[0]) + "\"\n  Raw expression: " + (text.trim())
+        "\"" + (keywordMatch[0]) + "\" in expression " + (text.trim())
       );
     } else {
-      errors.push(
-        "invalid expression: " + (e.message) + " in\n\n" +
-        "    " + exp + "\n\n" +
-        "  Raw expression: " + (text.trim()) + "\n"
-      );
+      errors.push(("invalid expression: " + (text.trim())));
     }
   }
 }
@@ -11114,9 +10784,7 @@ function createCompileToFunctionFn (compile) {
     options,
     vm
   ) {
-    options = extend({}, options);
-    var warn$$1 = options.warn || warn;
-    delete options.warn;
+    options = options || {};
 
     /* istanbul ignore if */
     {
@@ -11125,7 +10793,7 @@ function createCompileToFunctionFn (compile) {
         new Function('return 1');
       } catch (e) {
         if (e.toString().match(/unsafe-eval|CSP/)) {
-          warn$$1(
+          warn(
             'It seems you are using the standalone build of Vue.js in an ' +
             'environment with Content Security Policy that prohibits unsafe-eval. ' +
             'The template compiler cannot work in this environment. Consider ' +
@@ -11150,7 +10818,7 @@ function createCompileToFunctionFn (compile) {
     // check compilation errors/tips
     {
       if (compiled.errors && compiled.errors.length) {
-        warn$$1(
+        warn(
           "Error compiling template:\n\n" + template + "\n\n" +
           compiled.errors.map(function (e) { return ("- " + e); }).join('\n') + '\n',
           vm
@@ -11175,7 +10843,7 @@ function createCompileToFunctionFn (compile) {
     /* istanbul ignore if */
     {
       if ((!compiled.errors || !compiled.errors.length) && fnGenErrors.length) {
-        warn$$1(
+        warn(
           "Failed to generate render function:\n\n" +
           fnGenErrors.map(function (ref) {
             var err = ref.err;
@@ -11336,7 +11004,7 @@ Vue$3.prototype.$mount = function (
       /* istanbul ignore if */
       if ("development" !== 'production' && config.performance && mark) {
         mark('compile end');
-        measure(("vue " + (this._name) + " compile"), 'compile', 'compile end');
+        measure(((this._name) + " compile"), 'compile', 'compile end');
       }
     }
   }
@@ -11363,262 +11031,37 @@ return Vue$3;
 
 })));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(7).setImmediate))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)))
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ (function(module, exports) {
 
-var apply = Function.prototype.apply;
+var g;
 
-// DOM APIs, for completeness
+// This works in non-strict mode
+g = (function() {
+	return this;
+})();
 
-exports.setTimeout = function() {
-  return new Timeout(apply.call(setTimeout, window, arguments), clearTimeout);
-};
-exports.setInterval = function() {
-  return new Timeout(apply.call(setInterval, window, arguments), clearInterval);
-};
-exports.clearTimeout =
-exports.clearInterval = function(timeout) {
-  if (timeout) {
-    timeout.close();
-  }
-};
-
-function Timeout(id, clearFn) {
-  this._id = id;
-  this._clearFn = clearFn;
+try {
+	// This works if eval is allowed (see CSP)
+	g = g || Function("return this")() || (1,eval)("this");
+} catch(e) {
+	// This works if the window reference is available
+	if(typeof window === "object")
+		g = window;
 }
-Timeout.prototype.unref = Timeout.prototype.ref = function() {};
-Timeout.prototype.close = function() {
-  this._clearFn.call(window, this._id);
-};
 
-// Does not start the time, just sets up the members needed.
-exports.enroll = function(item, msecs) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = msecs;
-};
+// g can still be undefined, but nothing to do about it...
+// We return undefined, instead of nothing here, so it's
+// easier to handle this case. if(!global) { ...}
 
-exports.unenroll = function(item) {
-  clearTimeout(item._idleTimeoutId);
-  item._idleTimeout = -1;
-};
-
-exports._unrefActive = exports.active = function(item) {
-  clearTimeout(item._idleTimeoutId);
-
-  var msecs = item._idleTimeout;
-  if (msecs >= 0) {
-    item._idleTimeoutId = setTimeout(function onTimeout() {
-      if (item._onTimeout)
-        item._onTimeout();
-    }, msecs);
-  }
-};
-
-// setimmediate attaches itself to the global object
-__webpack_require__(8);
-exports.setImmediate = setImmediate;
-exports.clearImmediate = clearImmediate;
+module.exports = g;
 
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __webpack_require__) {
-
-/* WEBPACK VAR INJECTION */(function(global, process) {(function (global, undefined) {
-    "use strict";
-
-    if (global.setImmediate) {
-        return;
-    }
-
-    var nextHandle = 1; // Spec says greater than zero
-    var tasksByHandle = {};
-    var currentlyRunningATask = false;
-    var doc = global.document;
-    var registerImmediate;
-
-    function setImmediate(callback) {
-      // Callback can either be a function or a string
-      if (typeof callback !== "function") {
-        callback = new Function("" + callback);
-      }
-      // Copy function arguments
-      var args = new Array(arguments.length - 1);
-      for (var i = 0; i < args.length; i++) {
-          args[i] = arguments[i + 1];
-      }
-      // Store and register the task
-      var task = { callback: callback, args: args };
-      tasksByHandle[nextHandle] = task;
-      registerImmediate(nextHandle);
-      return nextHandle++;
-    }
-
-    function clearImmediate(handle) {
-        delete tasksByHandle[handle];
-    }
-
-    function run(task) {
-        var callback = task.callback;
-        var args = task.args;
-        switch (args.length) {
-        case 0:
-            callback();
-            break;
-        case 1:
-            callback(args[0]);
-            break;
-        case 2:
-            callback(args[0], args[1]);
-            break;
-        case 3:
-            callback(args[0], args[1], args[2]);
-            break;
-        default:
-            callback.apply(undefined, args);
-            break;
-        }
-    }
-
-    function runIfPresent(handle) {
-        // From the spec: "Wait until any invocations of this algorithm started before this one have completed."
-        // So if we're currently running a task, we'll need to delay this invocation.
-        if (currentlyRunningATask) {
-            // Delay by doing a setTimeout. setImmediate was tried instead, but in Firefox 7 it generated a
-            // "too much recursion" error.
-            setTimeout(runIfPresent, 0, handle);
-        } else {
-            var task = tasksByHandle[handle];
-            if (task) {
-                currentlyRunningATask = true;
-                try {
-                    run(task);
-                } finally {
-                    clearImmediate(handle);
-                    currentlyRunningATask = false;
-                }
-            }
-        }
-    }
-
-    function installNextTickImplementation() {
-        registerImmediate = function(handle) {
-            process.nextTick(function () { runIfPresent(handle); });
-        };
-    }
-
-    function canUsePostMessage() {
-        // The test against `importScripts` prevents this implementation from being installed inside a web worker,
-        // where `global.postMessage` means something completely different and can't be used for this purpose.
-        if (global.postMessage && !global.importScripts) {
-            var postMessageIsAsynchronous = true;
-            var oldOnMessage = global.onmessage;
-            global.onmessage = function() {
-                postMessageIsAsynchronous = false;
-            };
-            global.postMessage("", "*");
-            global.onmessage = oldOnMessage;
-            return postMessageIsAsynchronous;
-        }
-    }
-
-    function installPostMessageImplementation() {
-        // Installs an event handler on `global` for the `message` event: see
-        // * https://developer.mozilla.org/en/DOM/window.postMessage
-        // * http://www.whatwg.org/specs/web-apps/current-work/multipage/comms.html#crossDocumentMessages
-
-        var messagePrefix = "setImmediate$" + Math.random() + "$";
-        var onGlobalMessage = function(event) {
-            if (event.source === global &&
-                typeof event.data === "string" &&
-                event.data.indexOf(messagePrefix) === 0) {
-                runIfPresent(+event.data.slice(messagePrefix.length));
-            }
-        };
-
-        if (global.addEventListener) {
-            global.addEventListener("message", onGlobalMessage, false);
-        } else {
-            global.attachEvent("onmessage", onGlobalMessage);
-        }
-
-        registerImmediate = function(handle) {
-            global.postMessage(messagePrefix + handle, "*");
-        };
-    }
-
-    function installMessageChannelImplementation() {
-        var channel = new MessageChannel();
-        channel.port1.onmessage = function(event) {
-            var handle = event.data;
-            runIfPresent(handle);
-        };
-
-        registerImmediate = function(handle) {
-            channel.port2.postMessage(handle);
-        };
-    }
-
-    function installReadyStateChangeImplementation() {
-        var html = doc.documentElement;
-        registerImmediate = function(handle) {
-            // Create a <script> element; its readystatechange event will be fired asynchronously once it is inserted
-            // into the document. Do so, thus queuing up the task. Remember to clean up once it's been called.
-            var script = doc.createElement("script");
-            script.onreadystatechange = function () {
-                runIfPresent(handle);
-                script.onreadystatechange = null;
-                html.removeChild(script);
-                script = null;
-            };
-            html.appendChild(script);
-        };
-    }
-
-    function installSetTimeoutImplementation() {
-        registerImmediate = function(handle) {
-            setTimeout(runIfPresent, 0, handle);
-        };
-    }
-
-    // If supported, we should attach to the prototype of global, since that is where setTimeout et al. live.
-    var attachTo = Object.getPrototypeOf && Object.getPrototypeOf(global);
-    attachTo = attachTo && attachTo.setTimeout ? attachTo : global;
-
-    // Don't get fooled by e.g. browserify environments.
-    if ({}.toString.call(global.process) === "[object process]") {
-        // For Node.js before 0.9
-        installNextTickImplementation();
-
-    } else if (canUsePostMessage()) {
-        // For non-IE10 modern browsers
-        installPostMessageImplementation();
-
-    } else if (global.MessageChannel) {
-        // For web workers, where supported
-        installMessageChannelImplementation();
-
-    } else if (doc && "onreadystatechange" in doc.createElement("script")) {
-        // For IE 6–8
-        installReadyStateChangeImplementation();
-
-    } else {
-        // For older browsers
-        installSetTimeoutImplementation();
-    }
-
-    attachTo.setImmediate = setImmediate;
-    attachTo.clearImmediate = clearImmediate;
-}(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
-
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4), __webpack_require__(3)))
-
-/***/ }),
-/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -21878,13 +21321,13 @@ return jQuery;
 
 
 /***/ }),
-/* 10 */
+/* 9 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */(function(process) {/**
-  * vue-router v3.0.1
+  * vue-router v2.7.0
   * (c) 2017 Evan You
   * @license MIT
   */
@@ -21972,26 +21415,14 @@ var View = {
       }
     }
 
-    // also register instance in prepatch hook
+    // also regiseter instance in prepatch hook
     // in case the same component instance is reused across different routes
     ;(data.hook || (data.hook = {})).prepatch = function (_, vnode) {
       matched.instances[name] = vnode.componentInstance;
     };
 
     // resolve props
-    var propsToPass = data.props = resolveProps(route, matched.props && matched.props[name]);
-    if (propsToPass) {
-      // clone to prevent mutation
-      propsToPass = data.props = extend({}, propsToPass);
-      // pass non-declared props as attrs
-      var attrs = data.attrs = data.attrs || {};
-      for (var key in propsToPass) {
-        if (!component.props || !(key in component.props)) {
-          attrs[key] = propsToPass[key];
-          delete propsToPass[key];
-        }
-      }
-    }
+    data.props = resolveProps(route, matched.props && matched.props[name]);
 
     return h(component, data, children)
   }
@@ -22016,13 +21447,6 @@ function resolveProps (route, config) {
         );
       }
   }
-}
-
-function extend (to, from) {
-  for (var key in from) {
-    to[key] = from[key];
-  }
-  return to
 }
 
 /*  */
@@ -22056,7 +21480,8 @@ function resolveQuery (
     parsedQuery = {};
   }
   for (var key in extraQuery) {
-    parsedQuery[key] = extraQuery[key];
+    var val = extraQuery[key];
+    parsedQuery[key] = Array.isArray(val) ? val.slice() : val;
   }
   return parsedQuery
 }
@@ -22133,18 +21558,12 @@ function createRoute (
   router
 ) {
   var stringifyQuery$$1 = router && router.options.stringifyQuery;
-
-  var query = location.query || {};
-  try {
-    query = clone(query);
-  } catch (e) {}
-
   var route = {
     name: location.name || (record && record.name),
     meta: (record && record.meta) || {},
     path: location.path || '/',
     hash: location.hash || '',
-    query: query,
+    query: location.query || {},
     params: location.params || {},
     fullPath: getFullPath(location, stringifyQuery$$1),
     matched: record ? formatMatch(record) : []
@@ -22153,20 +21572,6 @@ function createRoute (
     route.redirectedFrom = getFullPath(redirectedFrom, stringifyQuery$$1);
   }
   return Object.freeze(route)
-}
-
-function clone (value) {
-  if (Array.isArray(value)) {
-    return value.map(clone)
-  } else if (value && typeof value === 'object') {
-    var res = {};
-    for (var key in value) {
-      res[key] = clone(value[key]);
-    }
-    return res
-  } else {
-    return value
-  }
 }
 
 // the starting route that represents the initial state
@@ -22222,8 +21627,6 @@ function isObjectEqual (a, b) {
   if ( a === void 0 ) a = {};
   if ( b === void 0 ) b = {};
 
-  // handle null value #1566
-  if (!a || !b) { return a === b }
   var aKeys = Object.keys(a);
   var bKeys = Object.keys(b);
   if (aKeys.length !== bKeys.length) {
@@ -22403,7 +21806,7 @@ function findAnchor (children) {
 var _Vue;
 
 function install (Vue) {
-  if (install.installed && _Vue === Vue) { return }
+  if (install.installed) { return }
   install.installed = true;
 
   _Vue = Vue;
@@ -22525,14 +21928,14 @@ function cleanPath (path) {
   return path.replace(/\/\//g, '/')
 }
 
-var isarray = Array.isArray || function (arr) {
+var index$1 = Array.isArray || function (arr) {
   return Object.prototype.toString.call(arr) == '[object Array]';
 };
 
 /**
  * Expose `pathToRegexp`.
  */
-var pathToRegexp_1 = pathToRegexp;
+var index = pathToRegexp;
 var parse_1 = parse;
 var compile_1 = compile;
 var tokensToFunction_1 = tokensToFunction;
@@ -22709,7 +22112,7 @@ function tokensToFunction (tokens) {
         }
       }
 
-      if (isarray(value)) {
+      if (index$1(value)) {
         if (!token.repeat) {
           throw new TypeError('Expected "' + token.name + '" to not repeat, but received `' + JSON.stringify(value) + '`')
         }
@@ -22860,7 +22263,7 @@ function stringToRegexp (path, keys, options) {
  * @return {!RegExp}
  */
 function tokensToRegExp (tokens, keys, options) {
-  if (!isarray(keys)) {
+  if (!index$1(keys)) {
     options = /** @type {!Object} */ (keys || options);
     keys = [];
   }
@@ -22936,7 +22339,7 @@ function tokensToRegExp (tokens, keys, options) {
  * @return {!RegExp}
  */
 function pathToRegexp (path, keys, options) {
-  if (!isarray(keys)) {
+  if (!index$1(keys)) {
     options = /** @type {!Object} */ (keys || options);
     keys = [];
   }
@@ -22947,21 +22350,20 @@ function pathToRegexp (path, keys, options) {
     return regexpToRegexp(path, /** @type {!Array} */ (keys))
   }
 
-  if (isarray(path)) {
+  if (index$1(path)) {
     return arrayToRegexp(/** @type {!Array} */ (path), /** @type {!Array} */ (keys), options)
   }
 
   return stringToRegexp(/** @type {string} */ (path), /** @type {!Array} */ (keys), options)
 }
 
-pathToRegexp_1.parse = parse_1;
-pathToRegexp_1.compile = compile_1;
-pathToRegexp_1.tokensToFunction = tokensToFunction_1;
-pathToRegexp_1.tokensToRegExp = tokensToRegExp_1;
+index.parse = parse_1;
+index.compile = compile_1;
+index.tokensToFunction = tokensToFunction_1;
+index.tokensToRegExp = tokensToRegExp_1;
 
 /*  */
 
-// $flow-disable-line
 var regexpCompileCache = Object.create(null);
 
 function fillParams (
@@ -22972,7 +22374,7 @@ function fillParams (
   try {
     var filler =
       regexpCompileCache[path] ||
-      (regexpCompileCache[path] = pathToRegexp_1.compile(path));
+      (regexpCompileCache[path] = index.compile(path));
     return filler(params || {}, { pretty: true })
   } catch (e) {
     if (process.env.NODE_ENV !== 'production') {
@@ -22992,9 +22394,7 @@ function createRouteMap (
 ) {
   // the path list is used to control path matching priority
   var pathList = oldPathList || [];
-  // $flow-disable-line
   var pathMap = oldPathMap || Object.create(null);
-  // $flow-disable-line
   var nameMap = oldNameMap || Object.create(null);
 
   routes.forEach(function (route) {
@@ -23036,12 +22436,8 @@ function addRouteRecord (
     );
   }
 
+  var normalizedPath = normalizePath(path, parent);
   var pathToRegexpOptions = route.pathToRegexpOptions || {};
-  var normalizedPath = normalizePath(
-    path,
-    parent,
-    pathToRegexpOptions.strict
-  );
 
   if (typeof route.caseSensitive === 'boolean') {
     pathToRegexpOptions.sensitive = route.caseSensitive;
@@ -23129,9 +22525,9 @@ function addRouteRecord (
 }
 
 function compileRouteRegex (path, pathToRegexpOptions) {
-  var regex = pathToRegexp_1(path, [], pathToRegexpOptions);
+  var regex = index(path, [], pathToRegexpOptions);
   if (process.env.NODE_ENV !== 'production') {
-    var keys = Object.create(null);
+    var keys = {};
     regex.keys.forEach(function (key) {
       warn(!keys[key.name], ("Duplicate param keys in route with path: \"" + path + "\""));
       keys[key.name] = true;
@@ -23140,8 +22536,8 @@ function compileRouteRegex (path, pathToRegexpOptions) {
   return regex
 }
 
-function normalizePath (path, parent, strict) {
-  if (!strict) { path = path.replace(/\/$/, ''); }
+function normalizePath (path, parent) {
+  path = path.replace(/\/$/, '');
   if (path[0] === '/') { return path }
   if (parent == null) { return path }
   return cleanPath(((parent.path) + "/" + path))
@@ -23413,8 +22809,6 @@ function resolveRecordPath (path, record) {
 var positionStore = Object.create(null);
 
 function setupScroll () {
-  // Fix for #1585 for Firefox
-  window.history.replaceState({ key: getStateKey() }, '');
   window.addEventListener('popstate', function (e) {
     saveScrollPosition();
     if (e.state && e.state.key) {
@@ -23446,21 +22840,25 @@ function handleScroll (
   router.app.$nextTick(function () {
     var position = getScrollPosition();
     var shouldScroll = behavior(to, from, isPop ? position : null);
-
     if (!shouldScroll) {
       return
     }
+    var isObject = typeof shouldScroll === 'object';
+    if (isObject && typeof shouldScroll.selector === 'string') {
+      var el = document.querySelector(shouldScroll.selector);
+      if (el) {
+        var offset = shouldScroll.offset && typeof shouldScroll.offset === 'object' ? shouldScroll.offset : {};
+        offset = normalizeOffset(offset);
+        position = getElementPosition(el, offset);
+      } else if (isValidPosition(shouldScroll)) {
+        position = normalizePosition(shouldScroll);
+      }
+    } else if (isObject && isValidPosition(shouldScroll)) {
+      position = normalizePosition(shouldScroll);
+    }
 
-    if (typeof shouldScroll.then === 'function') {
-      shouldScroll.then(function (shouldScroll) {
-        scrollToPosition((shouldScroll), position);
-      }).catch(function (err) {
-        if (process.env.NODE_ENV !== 'production') {
-          assert(false, err.toString());
-        }
-      });
-    } else {
-      scrollToPosition(shouldScroll, position);
+    if (position) {
+      window.scrollTo(position.x, position.y);
     }
   });
 }
@@ -23512,26 +22910,6 @@ function normalizeOffset (obj) {
 
 function isNumber (v) {
   return typeof v === 'number'
-}
-
-function scrollToPosition (shouldScroll, position) {
-  var isObject = typeof shouldScroll === 'object';
-  if (isObject && typeof shouldScroll.selector === 'string') {
-    var el = document.querySelector(shouldScroll.selector);
-    if (el) {
-      var offset = shouldScroll.offset && typeof shouldScroll.offset === 'object' ? shouldScroll.offset : {};
-      offset = normalizeOffset(offset);
-      position = getElementPosition(el, offset);
-    } else if (isValidPosition(shouldScroll)) {
-      position = normalizePosition(shouldScroll);
-    }
-  } else if (isObject && isValidPosition(shouldScroll)) {
-    position = normalizePosition(shouldScroll);
-  }
-
-  if (position) {
-    window.scrollTo(position.x, position.y);
-  }
 }
 
 /*  */
@@ -23629,7 +23007,7 @@ function resolveAsyncComponents (matched) {
         pending++;
 
         var resolve = once(function (resolvedDef) {
-          if (isESModule(resolvedDef)) {
+          if (resolvedDef.__esModule && resolvedDef.default) {
             resolvedDef = resolvedDef.default;
           }
           // save resolved on async factory in case it's used elsewhere
@@ -23693,14 +23071,6 @@ function flatMapComponents (
 
 function flatten (arr) {
   return Array.prototype.concat.apply([], arr)
-}
-
-var hasSymbol =
-  typeof Symbol === 'function' &&
-  typeof Symbol.toStringTag === 'symbol';
-
-function isESModule (obj) {
-  return obj.__esModule || (hasSymbol && obj[Symbol.toStringTag] === 'Module')
 }
 
 // in Webpack 2, require.ensure now also returns a Promise
@@ -24031,18 +23401,9 @@ var HTML5History = (function (History$$1) {
       setupScroll();
     }
 
-    var initLocation = getLocation(this.base);
     window.addEventListener('popstate', function (e) {
       var current = this$1.current;
-
-      // Avoiding first `popstate` event dispatched in some browsers but first
-      // history route not updated since async guard at the same time.
-      var location = getLocation(this$1.base);
-      if (this$1.current === START && location === initLocation) {
-        return
-      }
-
-      this$1.transitionTo(location, function (route) {
+      this$1.transitionTo(getLocation(this$1.base), function (route) {
         if (expectScroll) {
           handleScroll(router, route, current, true);
         }
@@ -24126,50 +23487,26 @@ var HashHistory = (function (History$$1) {
   HashHistory.prototype.setupListeners = function setupListeners () {
     var this$1 = this;
 
-    var router = this.router;
-    var expectScroll = router.options.scrollBehavior;
-    var supportsScroll = supportsPushState && expectScroll;
-
-    if (supportsScroll) {
-      setupScroll();
-    }
-
-    window.addEventListener(supportsPushState ? 'popstate' : 'hashchange', function () {
-      var current = this$1.current;
+    window.addEventListener('hashchange', function () {
       if (!ensureSlash()) {
         return
       }
       this$1.transitionTo(getHash(), function (route) {
-        if (supportsScroll) {
-          handleScroll(this$1.router, route, current, true);
-        }
-        if (!supportsPushState) {
-          replaceHash(route.fullPath);
-        }
+        replaceHash(route.fullPath);
       });
     });
   };
 
   HashHistory.prototype.push = function push (location, onComplete, onAbort) {
-    var this$1 = this;
-
-    var ref = this;
-    var fromRoute = ref.current;
     this.transitionTo(location, function (route) {
       pushHash(route.fullPath);
-      handleScroll(this$1.router, route, fromRoute, false);
       onComplete && onComplete(route);
     }, onAbort);
   };
 
   HashHistory.prototype.replace = function replace (location, onComplete, onAbort) {
-    var this$1 = this;
-
-    var ref = this;
-    var fromRoute = ref.current;
     this.transitionTo(location, function (route) {
       replaceHash(route.fullPath);
-      handleScroll(this$1.router, route, fromRoute, false);
       onComplete && onComplete(route);
     }, onAbort);
   };
@@ -24219,27 +23556,15 @@ function getHash () {
   return index === -1 ? '' : href.slice(index + 1)
 }
 
-function getUrl (path) {
-  var href = window.location.href;
-  var i = href.indexOf('#');
-  var base = i >= 0 ? href.slice(0, i) : href;
-  return (base + "#" + path)
-}
-
 function pushHash (path) {
-  if (supportsPushState) {
-    pushState(getUrl(path));
-  } else {
-    window.location.hash = path;
-  }
+  window.location.hash = path;
 }
 
 function replaceHash (path) {
-  if (supportsPushState) {
-    replaceState(getUrl(path));
-  } else {
-    window.location.replace(getUrl(path));
-  }
+  var href = window.location.href;
+  var i = href.indexOf('#');
+  var base = i >= 0 ? href.slice(0, i) : href;
+  window.location.replace((base + "#" + path));
 }
 
 /*  */
@@ -24341,7 +23666,7 @@ var VueRouter = function VueRouter (options) {
   }
 };
 
-var prototypeAccessors = { currentRoute: { configurable: true } };
+var prototypeAccessors = { currentRoute: {} };
 
 VueRouter.prototype.match = function match (
   raw,
@@ -24499,7 +23824,7 @@ function createHref (base, fullPath, mode) {
 }
 
 VueRouter.install = install;
-VueRouter.version = '3.0.1';
+VueRouter.version = '2.7.0';
 
 if (inBrowser && window.Vue) {
   window.Vue.use(VueRouter);
@@ -24510,7 +23835,7 @@ if (inBrowser && window.Vue) {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25457,61 +24782,125 @@ var index_esm = {
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(3)))
 
 /***/ }),
-/* 12 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue__ = __webpack_require__(16);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4ed459d5_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovie_vue__ = __webpack_require__(17);
-var disposed = false
-function injectStyle (ssrContext) {
-  if (disposed) return
-  __webpack_require__(13)
-}
-var normalizeComponent = __webpack_require__(2)
-/* script */
 
-/* template */
 
-/* template functional */
-  var __vue_template_functional__ = false
-/* styles */
-var __vue_styles__ = injectStyle
-/* scopeId */
-var __vue_scopeId__ = "data-v-4ed459d5"
-/* moduleIdentifier (server only) */
-var __vue_module_identifier__ = null
-var Component = normalizeComponent(
-  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue___default.a,
-  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4ed459d5_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovie_vue__["a" /* default */],
-  __vue_template_functional__,
-  __vue_styles__,
-  __vue_scopeId__,
-  __vue_module_identifier__
-)
-Component.options.__file = "components\\lantao\\dbMovie.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = {
+    /**
+     * [设置cookie]
+     * @param {String} name    [cookie名]
+     * @param {String} val     [cookie值]
+     * @param {[Date]} expires [有效期]
+     * @param {[String]} path    [cookie路径]
+     */
+    set: function set(name, val, expires, path) {
+        // document.cookie = 'cartlist=1234;expires=' + now
+        var cookieStr = name + '=' + val;
 
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-4ed459d5", Component.options)
-  } else {
-    hotAPI.reload("data-v-4ed459d5", Component.options)
-' + '  }
-  module.hot.dispose(function (data) {
-    disposed = true
-  })
-})()}
+        // 有效期
+        if (expires) {
+            console.log(expires);
+            cookieStr += ';expires=' + expires.toUTCString();
+        }
 
-/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+        // 设置路径
+        if (path) {
+            cookieStr += ';path=' + path;
+        }
 
+        // 写入
+        document.cookie = cookieStr;
+    },
+    get: function get(name) {
+        // 先获取所有cookie
+        var cookie = document.cookie;
+        if (cookie.length === 0) {
+            return '';
+        }
+
+        // 拆分成数组
+        cookie = cookie.split('; ');
+
+        // 遍历cookie，找到想要的cookie值
+        var res = '';
+        cookie.forEach(function (item) {
+            var arr = item.split('=');
+
+            if (arr[0] === name) {
+                res = arr[1];
+            }
+        });
+
+        return res;
+    },
+    remove: function remove(name) {
+        // 利用设置过期时间达到删除的效果。
+        var now = new Date();
+        now.setDate(now.getDate() - 100);
+
+        // document.cookie = name +'=xxx;expires=' + now.toUTCString();
+        Cookie.set(name, null, now);
+    }
+};
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Date.prototype.format = function (fmt) {
+  var o = {
+    "M+": this.getMonth() + 1, //月份 
+    "d+": this.getDate(), //日 
+    "h+": this.getHours(), //小时 
+    "m+": this.getMinutes(), //分 
+    "s+": this.getSeconds(), //秒 
+    "q+": Math.floor((this.getMonth() + 3) / 3), //季度 
+    "S": this.getMilliseconds() //毫秒 
+  };
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+  }
+  for (var k in o) {
+    if (new RegExp("(" + k + ")").test(fmt)) {
+      fmt = fmt.replace(RegExp.$1, RegExp.$1.length == 1 ? o[k] : ("00" + o[k]).substr(("" + o[k]).length));
+    }
+  }
+  return fmt;
+};
+// 组件间的通信 传bool值判断是否显示正在加载中
+// var store = new Vuex.Store({
+//     state:{
+//         isload:true,    //页面未加载时的load
+//         data:{},        //进入详情页需要传的数据，由于没有数据库
+//         isloadMore:false, //滚轮滑到底部的load
+//         scrollUp:true     //鼠标滚轮是否向上面滚
+//     },
+//     mutations:{
+//         setIsLoad:function(state,bool){
+//             state.isload = bool;
+//         },
+//         setTitle:function(state,content){
+//             state.data = content;
+//         }
+//     },
+//     actions:{
+//         set(context,data){
+//             context.commit('setIsLoad',data.bool);
+//         },
+//         setTitles(context,data){
+//             context.commit('setTitle',data);
+//         }
+//     }
+// })
 
 /***/ }),
 /* 13 */
@@ -25524,13 +24913,13 @@ var content = __webpack_require__(14);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(1)("79a5f11c", content, false);
+var update = __webpack_require__(1)("4ce778ac", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
  if(!content.locals) {
-   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4ed459d5\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./dbMovie.vue", function() {
-     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4ed459d5\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./dbMovie.vue");
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6cd60c96\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./downLoad.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-6cd60c96\",\"scoped\":false,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./downLoad.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });
@@ -25548,7 +24937,7 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.page[data-v-4ed459d5] {\n    padding-top: 47px;\n    max-width: 650px;\n    background: #fff;\n    margin: 0 auto;\n    overflow-x: hidden;\n    font-size: 12px;\n}\n.card[data-v-4ed459d5] {\n    margin: 0;\n}\nsection[data-v-4ed459d5]:first-child {\n    padding-top: 10px;\n}\nsection[data-v-4ed459d5] {\n    margin: 0;\n    overflow: hidden;\n    background-color: #fff;\n}\nsection header[data-v-4ed459d5] {\n    padding: 0 1.12rem;\n}\nsection h2[data-v-4ed459d5] {\n    display: inline-block;\n    min-width: 4em;\n    margin-bottom: 0;\n    color: #111;\n    padding-left: 0;\n    padding-bottom: 0;\n    font-size: 1.06rem;\n    margin: 0 0 15px;\n}\na[data-v-4ed459d5] {\n    color: #42bd56;\n    text-decoration: none;\n}\nsection .section-content[data-v-4ed459d5] {\n    margin-bottom: -1.12rem;\n}\n.row[data-v-4ed459d5] {\n    border-bottom: 1px solid #F2F2F2;\n    padding: 15px 0 43px 0;\n}\n.items[data-v-4ed459d5] {\n    font-size: 0;\n    white-space: nowrap;\n    overflow-x: auto;\n}\n.item[data-v-4ed459d5] {\n    display: inline-block;\n    vertical-align: top;\n    width: 100px;\n    text-align: center;\n    margin-left: 0.48rem;\n}\n.item a[data-v-4ed459d5] {\n    color: #111;\n    display:block;\n}\n.item[data-v-4ed459d5]:first-child {\n    margin-left: 1.12rem;\n}\n.item-poster[data-v-4ed459d5] {\n    width: 100%;\n    display:block;\n    overflow: hidden;\n    background-size: cover;\n    background-position: center;\n}\n.items>*[data-v-4ed459d5] {\n    font-size: .94rem;\n    white-space: normal;\n}\n.item__movie .item-title[data-v-4ed459d5] {\n    max-width: 100%;\n    word-wrap: normal;\n}\n.item-title[data-v-4ed459d5] {\n    display: block;\n    margin-top: .6rem;\n    line-height: .94rem;\n}\n.item:not(.item__celebrity) .item-title[data-v-4ed459d5] {\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n}\n.item-poster[data-v-4ed459d5]:before {\n    content: \"\";\n    float: left;\n    margin-top: 142.85714%;\n}\n.item-rating[data-v-4ed459d5] {\n    color: #aaa;\n    line-height: .94rem;\n    margin-top: .3rem;\n    font-size: .72rem;\n}\nsection header a[data-v-4ed459d5] {\n    float: right;\n    font-size: .9rem;\n    line-height: 1.5rem;\n}\n.interests a[data-v-4ed459d5] {\n    height: 50px;\n    line-height: 50px;\n    padding: 0 1.55rem;\n    letter-spacing: .1em;\n    overflow: auto;\n    display: block;\n    text-align: center;\n}\n.clearfix[data-v-4ed459d5]:after, .card section>header[data-v-4ed459d5]:after {\n    content: '';\n    clear: both;\n    display: block;\n}\n.interests li[data-v-4ed459d5] {\n    margin: 0 0 8px 8px;\n    font-size: .94rem;\n    display: inline-block;\n    border-radius: .25rem;\n    border: solid 1px;\n    vertical-align: middle;\n    border-color: #CC3344;\n}\n.interests ul[data-v-4ed459d5] {\n    white-space: nowrap;\n    overflow-x: auto;\n    padding: 15px 15px 43px 15px;\n    font-size: 0;\n    margin-left: -5px;\n}\n.interests li.line[data-v-4ed459d5] {\n    width: 100%;\n    display: block;\n    height: 1px;\n    border: 0;\n    margin: 0;\n}\n.types .section-content[data-v-4ed459d5] {\n    margin-bottom: 0;\n}\n.types .section-content[data-v-4ed459d5] {\n    margin-left: .94rem;\n}\n.type-list[data-v-4ed459d5] {\n    padding: 1.12rem 0 1.88rem;\n    color: #eee;\n    font-size: .9rem;\n    overflow: hidden;\n}\n.type-list a[data-v-4ed459d5] {\n    float: left;\n    display: inline-block;\n    width: 100%;\n    line-height: 2.64rem;\n}\n.type-list li[data-v-4ed459d5] {\n    border-top: solid 1px #eee;\n    border-right: solid 1px #eee;\n    float: left;\n    padding-right: 1.12rem;\n    height: 2.64rem;\n}\n@media (max-width: 399px) and (min-width: 360px){\n.type-list li[data-v-4ed459d5] {\n        width: 40.5%;\n}\n}\n.type-list li[data-v-4ed459d5]:nth-child(even) {\n    border-right: none;\n    padding-left: 1.12rem;\n}\n.type-list span[data-v-4ed459d5] {\n    color: #ccc;\n    float: right;\n    font-weight: bold;\n    display: inline-block;\n    border-right: solid 1px #ccc;\n    border-bottom: solid 1px #ccc;\n    width: .5rem;\n    height: .5rem;\n    transform: rotate(-45deg);\n    margin-top: 1rem;\n}\n.download-app[data-v-4ed459d5] {\n    padding: 0 0 20px 0;\n    margin-top: 50px;\n    margin-bottom: 30px;\n    text-align: center;\n    font-size: 15px;\n}\n.download-app .info[data-v-4ed459d5] {\n    margin: 0 auto 15px;\n    overflow: hidden;\n    text-align: left;\n    font-size: 14px;\n    display: inline-block;\n    color: #111;\n}\n.download-app .info img[data-v-4ed459d5] {\n    float: left;\n    margin-right: 12px;\n}\n.download-app .info-content[data-v-4ed459d5] {\n    overflow: hidden;\n}\n.download-app .info strong[data-v-4ed459d5] {\n    font-size: 24px;\n    font-weight: normal;\n    line-height: 28px;\n}\n.download-app .info .info-content div[data-v-4ed459d5] {\n    white-space: pre;\n    line-height: 20px;\n}\n.download-app .info+a[data-v-4ed459d5] {\n    display: block;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douBanSix/components/lantao/components/lantao/dbMovie.vue?254a6124"],"names":[],"mappings":";AAoQA;IACA,kBAAA;IACA,iBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,UAAA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,UAAA;IACA,iBAAA;IACA,uBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,eAAA;IACA,iBAAA;IACA,YAAA;IACA,gBAAA;IACA,kBAAA;IACA,mBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,sBAAA;CACA;AACA;IACA,wBAAA;CACA;AACA;IACA,iCAAA;IACA,uBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;IACA,oBAAA;IACA,aAAA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;CACA;AACA;IACA,qBAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;IACA,iBAAA;IACA,uBAAA;IACA,4BAAA;CACA;AACA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,kBAAA;CACA;AACA;IACA,eAAA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,iBAAA;IACA,oBAAA;IACA,wBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,uBAAA;CACA;AACA;IACA,YAAA;IACA,oBAAA;IACA,kBAAA;IACA,kBAAA;CACA;AACA;IACA,aAAA;IACA,iBAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,qBAAA;IACA,eAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,eAAA;CACA;AACA;IACA,oBAAA;IACA,kBAAA;IACA,sBAAA;IACA,sBAAA;IACA,kBAAA;IACA,uBAAA;IACA,sBAAA;CACA;AACA;IACA,oBAAA;IACA,iBAAA;IACA,6BAAA;IACA,aAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,eAAA;IACA,YAAA;IACA,UAAA;IACA,UAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,2BAAA;IACA,YAAA;IACA,iBAAA;IACA,iBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,YAAA;IACA,qBAAA;CACA;AACA;IACA,2BAAA;IACA,6BAAA;IACA,YAAA;IACA,uBAAA;IACA,gBAAA;CACA;AACA;AACA;QACA,aAAA;CACA;CACA;AACA;IACA,mBAAA;IACA,sBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,kBAAA;IACA,sBAAA;IACA,6BAAA;IACA,8BAAA;IACA,aAAA;IACA,cAAA;IACA,0BAAA;IACA,iBAAA;CACA;AACA;IACA,oBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,oBAAA;IACA,iBAAA;IACA,iBAAA;IACA,gBAAA;IACA,sBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,gBAAA;IACA,oBAAA;IACA,kBAAA;CACA;AACA;IACA,iBAAA;IACA,kBAAA;CACA;AACA;IACA,eAAA;CACA","file":"dbMovie.vue","sourcesContent":["<template>\n    <div class=\"dbMovie\">\n        <div>\n            <div class=\"page\">\n                <div class=\"card\">\n                    <section id=\"movie_showing\">\n                        <header>\n                            <h2>{{name1}}</h2>\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\n                        </header>\n                        <div class=\"section-content\">\n                            <ul class=\"row items\">\n                                <li class=\"item item__movie\" v-for=\"i in item1\"  >\n                                    <a :href=\"'#home/movieDetail/' + i.id\">\n                                    <div class=\"item-poster\" :style=\"'background-image:url(' + i.cover.url + ')'\"></div>\n                                    <span class=\"item-title\">{{i.title}}</span>\n                                        <div class=\"item-rating\">\n                                            <div class=\"rank\">\n                                                <span class=\"rating-stars\" data-rating=\"3.6\"><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-gray\"></span></span>\n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\n                                                <span v-if=\"!i.rating\">暂无评分</span>\n                                                </div>\n                                            </div>\n                                        </a>\n                                </li>\n                            </ul>\n                        </div>\n                    </section>\n                    <section id=\"movie_free_stream\">\n                        <header>\n                            <h2>{{name2}}</h2>\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\n                        </header>\n                        <div class=\"section-content\">\n                            <ul class=\"row items\">\n                                <li class=\"item item__movie\" v-for=\"i in item2\" :id=\"i.id\">\n                                    <a href=\"/movie/subject/27038183?refer=home\" :href=\"'#home/movieDetail/' + i.id\">\n                                    <div class=\"item-poster\" :style=\"'background-image: url(' +i.cover.url+ ')'\"></div>\n                                    <span class=\"item-title\">{{i.title}}</span>\n                                        <div class=\"item-rating\">\n                                            <div class=\"rank\">\n                                                <span class=\"rating-stars\" data-rating=\"3.6\"><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-gray\"></span></span> \n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\n                                                <span v-if=\"!i.rating\">暂无评分</span>\n                                                </div>\n                                            </div>\n                                        </a>\n                                </li>\n                            </ul>\n                        </div>\n                    </section>\n                    <section id=\"movie_latest\">\n                        <header>\n                            <h2>{{name3}}</h2>\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\n                        </header>\n                        <div class=\"section-content\">\n                            <ul class=\"row items\">\n                                <li class=\"item item__movie\" v-for=\"i in item3\" :id=\"i.id\">\n                                    <a :href=\"'#home/movieDetail/' + i.id\">\n                                    <div class=\"item-poster\" :style=\"'background-image: url('+i.cover.url+')'\"></div>\n                                    <span class=\"item-title\">{{i.title}}</span>\n                                        <div class=\"item-rating\">\n                                            <div class=\"rank\">\n                                                <span class=\"rating-stars\" data-rating=\"3.6\"><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-full\"></span><span class=\"rating-star rating-star-small-gray\"></span></span> \n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\n                                                <span v-if=\"!i.rating\">暂无评分</span>\n                                                </div>\n                                            </div>\n                                        </a>\n                                </li>\n                            </ul>\n                        </div>\n                    </section>\n                    <section class=\"interests\">\n                        <header>\n                            <h2>发现好电影</h2>\n                        </header>\n                        <div class=\"section-content\">\n                            <ul>\n                                  <li style=\"border-color: #CC3344;\"><a href=\"https://m.douban.com/doulist/968362/\" style=\"color: #CC3344;\">同时入选IMDB250和豆瓣电影250的电影</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #42BD56;\"><a href=\"https://m.douban.com/doulist/16002/\" style=\"color: #42BD56;\">带你进入不正常的世界</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #2384E8;\"><a href=\"https://m.douban.com/doulist/190343/\" style=\"color: #2384E8;\">用电【影】来祭奠逝去的岁月</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #3BA94D;\"><a href=\"https://m.douban.com/doulist/1125971/\" style=\"color: #3BA94D;\">女孩们的故事【电影】</a></li>\n                                  \n                                  \n                                    <li class=\"line\"></li>\n                                  <li style=\"border-color: #FF4055;\"><a href=\"https://m.douban.com/doulist/4253902/\" style=\"color: #FF4055;\">科幻是未来的钥匙——科幻启示录【科幻题材】</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #4F9DED;\"><a href=\"https://m.douban.com/doulist/121326/\" style=\"color: #4F9DED;\">美国生活面面观</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #FFAC2D;\"><a href=\"https://m.douban.com/doulist/37479562/\" style=\"color: #FFAC2D;\">2015终极期待</a></li>\n                                  \n                                  \n                                  <li style=\"border-color: #FFC46C;\"><a href=\"https://m.douban.com/doulist/458087/\" style=\"color: #FFC46C;\">经典韩国电影——收集100部</a></li>\n                                  \n                              </ul>\n                        </div>\n                    </section>\n        \n                    <section class=\"types\">\n                        <header>\n                            <h2>分类浏览</h2>\n                        </header>\n                        <div class=\"section-content\">\n                          \n                                <a name=\"cate\"></a>\n                                <ul class=\"type-list\">\n                                    <li><a href=\"/movie/classic\">经典<span></span></a></li>\n                                    <li><a href=\"/movie/underrated\">冷门佳片<span></span></a></li>\n                                    <li><a href=\"/movie/doubantop\">豆瓣高分<span></span></a></li>\n                                    <li><a href=\"/movie/action\">动作<span></span></a></li>\n                                    <li><a href=\"/movie/comedy\">喜剧<span></span></a></li>\n                                    <li><a href=\"/movie/love\">爱情<span></span></a></li>\n                                    <li><a href=\"/movie/mystery\">悬疑<span></span></a></li>\n                                    <li><a href=\"/movie/horror\">恐怖<span></span></a></li>\n                                    <li><a href=\"/movie/scifi\">科幻<span></span></a></li>\n                                    <li><a href=\"/movie/sweet\">治愈<span></span></a></li>\n                                    <li><a href=\"/movie/artfilm\">文艺<span></span></a></li>\n                                    <li><a href=\"/movie/youth\">成长<span></span></a></li>\n                                    <li><a href=\"/movie/animation\">动画<span></span></a></li>\n                                    <li><a href=\"/movie/chinese\">华语<span></span></a></li>\n                                    <li><a href=\"/movie/western\">欧美<span></span></a></li>\n                                    <li><a href=\"/movie/korean\">韩国<span></span></a></li>\n                                    <li><a href=\"/movie/japanese\">日本<span></span></a></li>\n\n                                    <li></li>\n                                </ul>\n                            \n                        </div>\n                    </section>\n                </div>\n            </div>\n            <div class=\"download-app\">\n                <div class=\"info\">\n                    <img src=\"https://img3.doubanio.com/f/talion/7837f29dd7deab9416274ae374a59bc17b5f33c6/pics/card/douban-app-logo.png\" width=\"48\">\n                    <div class=\"info-content\">\n                        <strong>豆瓣</strong>\n                        <div>我们的精神角落</div>\n                    </div>\n                </div>\n                    <a href=\"https://www.douban.com/doubanapp/card/log?category=movie_home&amp;cid=&amp;action=click_download&amp;ref=http%3A//www.douban.com/doubanapp/app%3Fchannel%3Dcard_movie_home%26direct_dl%3D1\" rel=\"nofollow\">去 App Store 免费下载 iOS 客户端</a>\n            </div> \n        </div>\n        <!-- <router-view></router-view> -->\n       \n    </div>\n    \n</template>\n<script>\n// import $ from \"jquery\";\n    export default {\n        data(){\n            return {\n                name1:'',\n                name2:'',\n                name3:'',\n                item1:[],\n                item2:[],\n                item3:[],\n                interests:[{\n                    border_color:'#CC3344',\n                    url:'https://m.douban.com/doulist/968362/',\n                    content:'同时入选IMDB250和豆瓣电影250的电影'\n                },{\n                    border_color:'#42BD56',\n                    url:'https://m.douban.com/doulist/16002/',\n                    content:'带你进入不正常的世界'\n                },{\n                    border_color:'#2384E8;',\n                    url:'https://m.douban.com/doulist/190343/',\n                    content:'用电【影】来祭奠逝去的岁月'\n                },{\n                    border_color:'#3BA94D',\n                    url:'https://m.douban.com/doulist/16002/',\n                    content:'女孩们的故事【电影】'\n                },{\n                    border_color:'#FF4055',\n                    url:'https://m.douban.com/doulist/16002/',\n                    content:'科幻是未来的钥匙——科幻启示录【科幻题材】'\n                },{\n                    border_color:'#42BD56',\n                    url:'https://m.douban.com/doulist/16002/',\n                    content:'带你进入不正常的世界'\n                },{\n                    border_color:'#FFC46C',\n                    url:'https://m.douban.com/doulist/458087/',\n                    content:'经典韩国电影——收集100部'\n                }]\n\n            }\n        },\n        methods:{\n            load1:function(){\n                var self = this;\n                $.ajax({\n                    type:'get',\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_showing/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799504',\n                    dataType:'jsonp',\n                    success:function(data){\n                        self.name1 = data.subject_collection.name;\n                        self.item1 = data.subject_collection_items;\n                        console.log(data);\n                        console.log(self.item1[0].rating.value);\n                    }\n                })\n            },\n            load2:function(){\n                var self = this;\n                $.ajax({\n                    type:'get',\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_free_stream/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799506',\n                    dataType:'jsonp',\n                    success:function(data){\n                        self.name2 = data.subject_collection.name;\n                        self.item2 = data.subject_collection_items;\n\n                        console.log(self.name2);\n                    }\n                })\n            },\n            load3:function(){\n                var self = this;\n                $.ajax({\n                    type:'get',\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_latest/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799513',\n                    dataType:'jsonp',\n                    success:function(data){\n                        self.name3 = data.subject_collection.name;\n                        console.log(self.name3);\n                        self.item3 = data.subject_collection_items;\n\n                    }\n                })\n            }\n        },\n        mounted:function(data){\n            this.load1();\n            this.load2();\n            this.load3();\n\n\n        },\n        computed:{\n            s(){\n            }\n\n        }\n\n    }\n</script>\n<style scoped>\n    .page {\n    padding-top: 47px;\n    max-width: 650px;\n    background: #fff;\n    margin: 0 auto;\n    overflow-x: hidden;\n    font-size: 12px;\n}\n.card {\n    margin: 0;\n}\nsection:first-child {\n    padding-top: 10px;\n}\nsection {\n    margin: 0;\n    overflow: hidden;\n    background-color: #fff;\n}\nsection header {\n    padding: 0 1.12rem;\n}\nsection h2 {\n    display: inline-block;\n    min-width: 4em;\n    margin-bottom: 0;\n    color: #111;\n    padding-left: 0;\n    padding-bottom: 0;\n    font-size: 1.06rem;\n    margin: 0 0 15px;\n}\na {\n    color: #42bd56;\n    text-decoration: none;\n}\nsection .section-content {\n    margin-bottom: -1.12rem;\n}\n.row {\n    border-bottom: 1px solid #F2F2F2;\n    padding: 15px 0 43px 0;\n}\n.items {\n    font-size: 0;\n    white-space: nowrap;\n    overflow-x: auto;\n}\n.item {\n    display: inline-block;\n    vertical-align: top;\n    width: 100px;\n    text-align: center;\n    margin-left: 0.48rem;\n}\n.item a {\n    color: #111;\n    display:block;\n}\n.item:first-child {\n    margin-left: 1.12rem;\n}\n.item-poster {\n    width: 100%;\n    display:block;\n    overflow: hidden;\n    background-size: cover;\n    background-position: center;\n}\n.items>* {\n    font-size: .94rem;\n    white-space: normal;\n}\n.item__movie .item-title {\n    max-width: 100%;\n    word-wrap: normal;\n}\n.item-title {\n    display: block;\n    margin-top: .6rem;\n    line-height: .94rem;\n}\n.item:not(.item__celebrity) .item-title {\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n}\n.item-poster:before {\n    content: \"\";\n    float: left;\n    margin-top: 142.85714%;\n}\n.item-rating {\n    color: #aaa;\n    line-height: .94rem;\n    margin-top: .3rem;\n    font-size: .72rem;\n}\nsection header a {\n    float: right;\n    font-size: .9rem;\n    line-height: 1.5rem;\n}\n.interests a {\n    height: 50px;\n    line-height: 50px;\n    padding: 0 1.55rem;\n    letter-spacing: .1em;\n    overflow: auto;\n    display: block;\n    text-align: center;\n}\n.clearfix:after, .card section>header:after {\n    content: '';\n    clear: both;\n    display: block;\n}\n.interests li {\n    margin: 0 0 8px 8px;\n    font-size: .94rem;\n    display: inline-block;\n    border-radius: .25rem;\n    border: solid 1px;\n    vertical-align: middle;\n    border-color: #CC3344;\n}\n.interests ul {\n    white-space: nowrap;\n    overflow-x: auto;\n    padding: 15px 15px 43px 15px;\n    font-size: 0;\n    margin-left: -5px;\n}\n.interests li.line {\n    width: 100%;\n    display: block;\n    height: 1px;\n    border: 0;\n    margin: 0;\n}\n.types .section-content {\n    margin-bottom: 0;\n}\n.types .section-content {\n    margin-left: .94rem;\n}\n.type-list {\n    padding: 1.12rem 0 1.88rem;\n    color: #eee;\n    font-size: .9rem;\n    overflow: hidden;\n}\n.type-list a {\n    float: left;\n    display: inline-block;\n    width: 100%;\n    line-height: 2.64rem;\n}\n.type-list li {\n    border-top: solid 1px #eee;\n    border-right: solid 1px #eee;\n    float: left;\n    padding-right: 1.12rem;\n    height: 2.64rem;\n}\n@media (max-width: 399px) and (min-width: 360px){\n    .type-list li {\n        width: 40.5%;\n    }\n}\n.type-list li:nth-child(even) {\n    border-right: none;\n    padding-left: 1.12rem;\n}\n.type-list span {\n    color: #ccc;\n    float: right;\n    font-weight: bold;\n    display: inline-block;\n    border-right: solid 1px #ccc;\n    border-bottom: solid 1px #ccc;\n    width: .5rem;\n    height: .5rem;\n    transform: rotate(-45deg);\n    margin-top: 1rem;\n}\n.download-app {\n    padding: 0 0 20px 0;\n    margin-top: 50px;\n    margin-bottom: 30px;\n    text-align: center;\n    font-size: 15px;\n}\n.download-app .info {\n    margin: 0 auto 15px;\n    overflow: hidden;\n    text-align: left;\n    font-size: 14px;\n    display: inline-block;\n    color: #111;\n}\n.download-app .info img {\n    float: left;\n    margin-right: 12px;\n}\n.download-app .info-content {\n    overflow: hidden;\n}\n.download-app .info strong {\n    font-size: 24px;\n    font-weight: normal;\n    line-height: 28px;\n}\n.download-app .info .info-content div {\n    white-space: pre;\n    line-height: 20px;\n}\n.download-app .info+a {\n    display: block;\n}\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.download-app {\n    padding: 0 0 20px 0;\n    margin-top: 50px;\n    margin-bottom: 30px;\n    text-align: center;\n    font-size: 15px;\n}\n.download-app .info {\n    margin: 0 auto 15px;\n    overflow: hidden;\n    text-align: left;\n    font-size: 14px;\n    display: inline-block;\n    color: #111;\n}\n.download-app .info img {\n    float: left;\n    margin-right: 12px;\n}\n.download-app .info-content {\n    overflow: hidden;\n}\n.download-app .info strong {\n    font-size: 24px;\n    font-weight: normal;\n    line-height: 28px;\n}\n.download-app .info .info-content div {\n    white-space: pre;\n    line-height: 20px;\n}\n.download-app .info+a {\n    display: block;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douban/douBanSix/components/lantao/components/lantao/downLoad.vue?5a6a421f"],"names":[],"mappings":";AAcA;IACA,oBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,oBAAA;IACA,iBAAA;IACA,iBAAA;IACA,gBAAA;IACA,sBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,gBAAA;IACA,oBAAA;IACA,kBAAA;CACA;AACA;IACA,iBAAA;IACA,kBAAA;CACA;AACA;IACA,eAAA;CACA","file":"downLoad.vue","sourcesContent":["<template>\n    <div class=\"download-app\">\n            <div class=\"info\">\n                <img src=\"https://img3.doubanio.com/f/talion/7837f29dd7deab9416274ae374a59bc17b5f33c6/pics/card/douban-app-logo.png\" width=\"48\">\n                <div class=\"info-content\">\n                    <strong>豆瓣</strong>\n                    <div>我们的精神角落</div>\n                </div>\n            </div>\n                <a href=\"https://www.douban.com/doubanapp/card/log?category=movie_home&amp;cid=&amp;action=click_download&amp;ref=http%3A//www.douban.com/doubanapp/app%3Fchannel%3Dcard_movie_home%26direct_dl%3D1\" rel=\"nofollow\">去 App Store 免费下载 iOS 客户端</a>\n        </div> \n</template>\n\n<style type=\"text/css\">\n.download-app {\n    padding: 0 0 20px 0;\n    margin-top: 50px;\n    margin-bottom: 30px;\n    text-align: center;\n    font-size: 15px;\n}\n.download-app .info {\n    margin: 0 auto 15px;\n    overflow: hidden;\n    text-align: left;\n    font-size: 14px;\n    display: inline-block;\n    color: #111;\n}\n.download-app .info img {\n    float: left;\n    margin-right: 12px;\n}\n.download-app .info-content {\n    overflow: hidden;\n}\n.download-app .info strong {\n    font-size: 24px;\n    font-weight: normal;\n    line-height: 28px;\n}\n.download-app .info .info-content div {\n    white-space: pre;\n    line-height: 20px;\n}\n.download-app .info+a {\n    display: block;\n}\n</style>"],"sourceRoot":""}]);
 
 // exports
 
@@ -25588,6 +24977,160 @@ module.exports = function listToStyles (parentId, list) {
 
 /***/ }),
 /* 16 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _vm._m(0)
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "download-app" }, [
+      _c("div", { staticClass: "info" }, [
+        _c("img", {
+          attrs: {
+            src:
+              "https://img3.doubanio.com/f/talion/7837f29dd7deab9416274ae374a59bc17b5f33c6/pics/card/douban-app-logo.png",
+            width: "48"
+          }
+        }),
+        _vm._v(" "),
+        _c("div", { staticClass: "info-content" }, [
+          _c("strong", [_vm._v("豆瓣")]),
+          _vm._v(" "),
+          _c("div", [_vm._v("我们的精神角落")])
+        ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "a",
+        {
+          attrs: {
+            href:
+              "https://www.douban.com/doubanapp/card/log?category=movie_home&cid=&action=click_download&ref=http%3A//www.douban.com/doubanapp/app%3Fchannel%3Dcard_movie_home%26direct_dl%3D1",
+            rel: "nofollow"
+          }
+        },
+        [_vm._v("去 App Store 免费下载 iOS 客户端")]
+      )
+    ])
+  }
+]
+render._withStripped = true
+var esExports = { render: render, staticRenderFns: staticRenderFns }
+/* harmony default export */ __webpack_exports__["a"] = (esExports);
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-6cd60c96", esExports)
+  }
+}
+
+/***/ }),
+/* 17 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue__ = __webpack_require__(20);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4ed459d5_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovie_vue__ = __webpack_require__(21);
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(18)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+
+/* template */
+
+/* template functional */
+  var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-4ed459d5"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovie_vue___default.a,
+  __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_4ed459d5_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovie_vue__["a" /* default */],
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "components\\lantao\\dbMovie.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-4ed459d5", Component.options)
+  } else {
+    hotAPI.reload("data-v-4ed459d5", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+/* harmony default export */ __webpack_exports__["default"] = (Component.exports);
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(19);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("79a5f11c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4ed459d5\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./dbMovie.vue", function() {
+     var newContent = require("!!../../node_modules/css-loader/index.js?sourceMap!../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-4ed459d5\",\"scoped\":true,\"hasInlineConfig\":false}!../../node_modules/vue-loader/lib/selector.js?type=styles&index=0&bustCache!./dbMovie.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(true);
+// imports
+
+
+// module
+exports.push([module.i, "\n.page[data-v-4ed459d5] {\n    padding-top: 47px;\n    max-width: 650px;\n    background: #fff;\n    margin: 0 auto;\n    overflow-x: hidden;\n    font-size: 12px;\n}\n.card[data-v-4ed459d5] {\n    margin: 0;\n}\nsection[data-v-4ed459d5]:first-child {\n    padding-top: 10px;\n}\nsection[data-v-4ed459d5] {\n    margin: 0;\n    overflow: hidden;\n    background-color: #fff;\n}\nsection header[data-v-4ed459d5] {\n    padding: 0 1.12rem;\n}\nsection h2[data-v-4ed459d5] {\n    display: inline-block;\n    min-width: 4em;\n    margin-bottom: 0;\n    color: #111;\n    padding-left: 0;\n    padding-bottom: 0;\n    font-size: 1.06rem;\n    margin: 0 0 15px;\n}\na[data-v-4ed459d5] {\n    color: #42bd56;\n    text-decoration: none;\n}\nsection .section-content[data-v-4ed459d5] {\n    margin-bottom: -1.12rem;\n}\n.row[data-v-4ed459d5] {\n    border-bottom: 1px solid #F2F2F2;\n    padding: 15px 0 43px 0;\n}\n.items[data-v-4ed459d5] {\n    font-size: 0;\n    white-space: nowrap;\n    overflow-x: auto;\n}\n.item[data-v-4ed459d5] {\n    display: inline-block;\n    vertical-align: top;\n    width: 100px;\n    text-align: center;\n    margin-left: 0.48rem;\n}\n.item a[data-v-4ed459d5] {\n    color: #111;\n    display:block;\n}\n.item[data-v-4ed459d5]:first-child {\n    margin-left: 1.12rem;\n}\n.item-poster[data-v-4ed459d5] {\n    width: 100%;\n    display:block;\n    overflow: hidden;\n    background-size: cover;\n    background-position: center;\n}\n.items>*[data-v-4ed459d5] {\n    font-size: .94rem;\n    white-space: normal;\n}\n.item__movie .item-title[data-v-4ed459d5] {\n    max-width: 100%;\n    word-wrap: normal;\n}\n.item-title[data-v-4ed459d5] {\n    display: block;\n    margin-top: .6rem;\n    line-height: .94rem;\n}\n.item:not(.item__celebrity) .item-title[data-v-4ed459d5] {\n    overflow: hidden;\n    white-space: nowrap;\n    text-overflow: ellipsis;\n}\n.item-poster[data-v-4ed459d5]:before {\n    content: \"\";\n    float: left;\n    margin-top: 142.85714%;\n}\n.item-rating[data-v-4ed459d5] {\n    color: #aaa;\n    line-height: .94rem;\n    margin-top: .3rem;\n    font-size: .72rem;\n}\nsection header a[data-v-4ed459d5] {\n    float: right;\n    font-size: .9rem;\n    line-height: 1.5rem;\n}\n.interests a[data-v-4ed459d5] {\n    height: 50px;\n    line-height: 50px;\n    padding: 0 1.55rem;\n    letter-spacing: .1em;\n    overflow: auto;\n    display: block;\n    text-align: center;\n}\n.clearfix[data-v-4ed459d5]:after, .card section>header[data-v-4ed459d5]:after {\n    content: '';\n    clear: both;\n    display: block;\n}\n.interests li[data-v-4ed459d5] {\n    margin: 0 0 8px 8px;\n    font-size: .94rem;\n    display: inline-block;\n    border-radius: .25rem;\n    border: solid 1px;\n    vertical-align: middle;\n    border-color: #CC3344;\n}\n.interests ul[data-v-4ed459d5] {\n    white-space: nowrap;\n    overflow-x: auto;\n    padding: 15px 15px 43px 15px;\n    font-size: 0;\n    margin-left: -5px;\n}\n.interests li.line[data-v-4ed459d5] {\n    width: 100%;\n    display: block;\n    height: 1px;\n    border: 0;\n    margin: 0;\n}\n.types .section-content[data-v-4ed459d5] {\n    margin-bottom: 0;\n}\n.types .section-content[data-v-4ed459d5] {\n    margin-left: .94rem;\n}\n.type-list[data-v-4ed459d5] {\n    padding: 1.12rem 0 1.88rem;\n    color: #eee;\n    font-size: .9rem;\n    overflow: hidden;\n}\n.type-list a[data-v-4ed459d5] {\n    float: left;\n    display: inline-block;\n    width: 100%;\n    line-height: 2.64rem;\n}\n.type-list li[data-v-4ed459d5] {\n    border-top: solid 1px #eee;\n    border-right: solid 1px #eee;\n    float: left;\n    padding-right: 1.12rem;\n    height: 2.64rem;\n}\n@media (max-width: 399px) and (min-width: 360px){\n.type-list li[data-v-4ed459d5] {\n        width: 40.5%;\n}\n}\n.type-list li[data-v-4ed459d5]:nth-child(even) {\n    border-right: none;\n    padding-left: 1.12rem;\n}\n.type-list span[data-v-4ed459d5] {\n    color: #ccc;\n    float: right;\n    font-weight: bold;\n    display: inline-block;\n    border-right: solid 1px #ccc;\n    border-bottom: solid 1px #ccc;\n    width: .5rem;\n    height: .5rem;\n    transform: rotate(-45deg);\n    margin-top: 1rem;\n}\n.rate[data-v-4ed459d5]{\n    display:block;\n    float:left;\n    width: 55px;\n    height: 11px;\n    margin-left: 10px;\n    margin-top: 1px;\n}\n.rate1[data-v-4ed459d5]{\n    background-position: 0 99px;\n}\n.rate2[data-v-4ed459d5]{\n    background-position: 0 0;\n}\n.rate3[data-v-4ed459d5]{\n    background-position: 0 -165px;\n}\n.rate4[data-v-4ed459d5]{\n    background-position: 0 55px;\n}\n.rate5[data-v-4ed459d5]{\n    background-position: 0 33px;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douban/douBanSix/components/lantao/components/lantao/dbMovie.vue?916d51ca"],"names":[],"mappings":";AAgRA;IACA,kBAAA;IACA,iBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,UAAA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,UAAA;IACA,iBAAA;IACA,uBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,eAAA;IACA,iBAAA;IACA,YAAA;IACA,gBAAA;IACA,kBAAA;IACA,mBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;IACA,sBAAA;CACA;AACA;IACA,wBAAA;CACA;AACA;IACA,iCAAA;IACA,uBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;IACA,oBAAA;IACA,aAAA;IACA,mBAAA;IACA,qBAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;CACA;AACA;IACA,qBAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;IACA,iBAAA;IACA,uBAAA;IACA,4BAAA;CACA;AACA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,kBAAA;CACA;AACA;IACA,eAAA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,iBAAA;IACA,oBAAA;IACA,wBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,uBAAA;CACA;AACA;IACA,YAAA;IACA,oBAAA;IACA,kBAAA;IACA,kBAAA;CACA;AACA;IACA,aAAA;IACA,iBAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,kBAAA;IACA,mBAAA;IACA,qBAAA;IACA,eAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,eAAA;CACA;AACA;IACA,oBAAA;IACA,kBAAA;IACA,sBAAA;IACA,sBAAA;IACA,kBAAA;IACA,uBAAA;IACA,sBAAA;CACA;AACA;IACA,oBAAA;IACA,iBAAA;IACA,6BAAA;IACA,aAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,eAAA;IACA,YAAA;IACA,UAAA;IACA,UAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,2BAAA;IACA,YAAA;IACA,iBAAA;IACA,iBAAA;CACA;AACA;IACA,YAAA;IACA,sBAAA;IACA,YAAA;IACA,qBAAA;CACA;AACA;IACA,2BAAA;IACA,6BAAA;IACA,YAAA;IACA,uBAAA;IACA,gBAAA;CACA;AACA;AACA;QACA,aAAA;CACA;CACA;AACA;IACA,mBAAA;IACA,sBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,kBAAA;IACA,sBAAA;IACA,6BAAA;IACA,8BAAA;IACA,aAAA;IACA,cAAA;IACA,0BAAA;IACA,iBAAA;CACA;AACA;IACA,cAAA;IACA,WAAA;IACA,YAAA;IACA,aAAA;IACA,kBAAA;IACA,gBAAA;CACA;AACA;IACA,4BAAA;CACA;AACA;IACA,yBAAA;CACA;AACA;IACA,8BAAA;CACA;AACA;IACA,4BAAA;CACA;AACA;IACA,4BAAA;CACA","file":"dbMovie.vue","sourcesContent":["<template>\r\n    <div class=\"dbMovie\">\r\n        <div>\r\n            <div class=\"page\">\r\n                <div class=\"card\">\r\n                    <section id=\"movie_showing\">\r\n                        <header>\r\n                            <h2>{{name1}}</h2>\r\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\r\n                        </header>\r\n                        <div class=\"section-content\">\r\n                            <ul class=\"row items\">\r\n                                <li class=\"item item__movie\" v-for=\"i in item1\"  >\r\n                                    <a :href=\"'#home/movieDetail/' + i.id\">\r\n                                    <div class=\"item-poster\" :style=\"'background-image:url(' + i.cover.url + ')'\"></div>\r\n                                    <span class=\"item-title\">{{i.title}}</span>\r\n                                        <div class=\"item-rating\">\r\n                                            <div class=\"rank\">\r\n                                            <div v-if=\"i.rating\">\r\n                                                <span class=\"rate rate1\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==4\"></span>\r\n                                                <span class=\"rate rate2\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==5\"></span>\r\n                                                <span class=\"rate rate3\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==3\"></span>\r\n                                                <span class=\"rate rate4\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==2\"></span>\r\n                                                <span class=\"rate rate5\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==1\"></span>\r\n                                            </div>\r\n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\r\n                                                <span v-if=\"!i.rating\">暂无评分</span>\r\n                                                </div>\r\n                                            </div>\r\n                                        </a>\r\n                                </li>\r\n                            </ul>\r\n                        </div>\r\n                    </section>\r\n                    <section id=\"movie_free_stream\">\r\n                        <header>\r\n                            <h2>{{name2}}</h2>\r\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\r\n                        </header>\r\n                        <div class=\"section-content\">\r\n                            <ul class=\"row items\">\r\n                                <li class=\"item item__movie\" v-for=\"i in item2\" :id=\"i.id\">\r\n                                    <a href=\"/movie/subject/27038183?refer=home\" :href=\"'#home/movieDetail/' + i.id\">\r\n                                    <div class=\"item-poster\" :style=\"'background-image: url(' +i.cover.url+ ')'\"></div>\r\n                                    <span class=\"item-title\">{{i.title}}</span>\r\n                                        <div class=\"item-rating\">\r\n                                            <div class=\"rank\">\r\n                                                <div v-if=\"i.rating\">\r\n                                                <span class=\"rate rate1\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==4\"></span>\r\n                                                <span class=\"rate rate2\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==5\"></span>\r\n                                                <span class=\"rate rate3\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==3\"></span>\r\n                                                <span class=\"rate rate4\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==2\"></span>\r\n                                                <span class=\"rate rate5\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==1\"></span>\r\n                                            </div>\r\n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\r\n                                                <span v-if=\"!i.rating\">暂无评分</span>\r\n                                                </div>\r\n                                            </div>\r\n                                        </a>\r\n                                </li>\r\n                            </ul>\r\n                        </div>\r\n                    </section>\r\n                    <section id=\"movie_latest\">\r\n                        <header>\r\n                            <h2>{{name3}}</h2>\r\n                            <a href=\"/movie/nowintheater?loc_id=108288\">更多</a>\r\n                        </header>\r\n                        <div class=\"section-content\">\r\n                            <ul class=\"row items\">\r\n                                <li class=\"item item__movie\" v-for=\"i in item3\" :id=\"i.id\">\r\n                                    <a :href=\"'#home/movieDetail/' + i.id\">\r\n                                    <div class=\"item-poster\" :style=\"'background-image: url('+i.cover.url+')'\"></div>\r\n                                    <span class=\"item-title\">{{i.title}}</span>\r\n                                        <div class=\"item-rating\">\r\n                                            <div class=\"rank\">\r\n                                                <div v-if=\"i.rating\">\r\n                                                <span class=\"rate rate1\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==4\"></span>\r\n                                                <span class=\"rate rate2\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==5\"></span>\r\n                                                <span class=\"rate rate3\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==3\"></span>\r\n                                                <span class=\"rate rate4\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==2\"></span>\r\n                                                <span class=\"rate rate5\" :style=\"'background-image:url(./star/ic_rating_s.png)'\" v-if=\"Math.ceil(i.rating.value/2)==1\"></span>\r\n                                            </div>\r\n                                                <span v-if=\"i.rating\">{{i.rating.value}}</span>\r\n                                                <span v-if=\"!i.rating\">暂无评分</span>\r\n                                                </div>\r\n                                            </div>\r\n                                        </a>\r\n                                </li>\r\n                            </ul>\r\n                        </div>\r\n                    </section>\r\n                    <section class=\"interests\">\r\n                        <header>\r\n                            <h2>发现好电影</h2>\r\n                        </header>\r\n                        <div class=\"section-content\">\r\n                            <ul>\r\n                                  <li style=\"border-color: #CC3344;\"><a href=\"https://m.douban.com/doulist/968362/\" style=\"color: #CC3344;\">同时入选IMDB250和豆瓣电影250的电影</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #42BD56;\"><a href=\"https://m.douban.com/doulist/16002/\" style=\"color: #42BD56;\">带你进入不正常的世界</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #2384E8;\"><a href=\"https://m.douban.com/doulist/190343/\" style=\"color: #2384E8;\">用电【影】来祭奠逝去的岁月</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #3BA94D;\"><a href=\"https://m.douban.com/doulist/1125971/\" style=\"color: #3BA94D;\">女孩们的故事【电影】</a></li>\r\n                                  \r\n                                  \r\n                                    <li class=\"line\"></li>\r\n                                  <li style=\"border-color: #FF4055;\"><a href=\"https://m.douban.com/doulist/4253902/\" style=\"color: #FF4055;\">科幻是未来的钥匙——科幻启示录【科幻题材】</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #4F9DED;\"><a href=\"https://m.douban.com/doulist/121326/\" style=\"color: #4F9DED;\">美国生活面面观</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #FFAC2D;\"><a href=\"https://m.douban.com/doulist/37479562/\" style=\"color: #FFAC2D;\">2015终极期待</a></li>\r\n                                  \r\n                                  \r\n                                  <li style=\"border-color: #FFC46C;\"><a href=\"https://m.douban.com/doulist/458087/\" style=\"color: #FFC46C;\">经典韩国电影——收集100部</a></li>\r\n                                  \r\n                              </ul>\r\n                        </div>\r\n                    </section>\r\n        \r\n                    <section class=\"types\">\r\n                        <header>\r\n                            <h2>分类浏览</h2>\r\n                        </header>\r\n                        <div class=\"section-content\">\r\n                          \r\n                                <a name=\"cate\"></a>\r\n                                <ul class=\"type-list\">\r\n                                    <li><a href=\"/movie/classic\">经典<span></span></a></li>\r\n                                    <li><a href=\"/movie/underrated\">冷门佳片<span></span></a></li>\r\n                                    <li><a href=\"/movie/doubantop\">豆瓣高分<span></span></a></li>\r\n                                    <li><a href=\"/movie/action\">动作<span></span></a></li>\r\n                                    <li><a href=\"/movie/comedy\">喜剧<span></span></a></li>\r\n                                    <li><a href=\"/movie/love\">爱情<span></span></a></li>\r\n                                    <li><a href=\"/movie/mystery\">悬疑<span></span></a></li>\r\n                                    <li><a href=\"/movie/horror\">恐怖<span></span></a></li>\r\n                                    <li><a href=\"/movie/scifi\">科幻<span></span></a></li>\r\n                                    <li><a href=\"/movie/sweet\">治愈<span></span></a></li>\r\n                                    <li><a href=\"/movie/artfilm\">文艺<span></span></a></li>\r\n                                    <li><a href=\"/movie/youth\">成长<span></span></a></li>\r\n                                    <li><a href=\"/movie/animation\">动画<span></span></a></li>\r\n                                    <li><a href=\"/movie/chinese\">华语<span></span></a></li>\r\n                                    <li><a href=\"/movie/western\">欧美<span></span></a></li>\r\n                                    <li><a href=\"/movie/korean\">韩国<span></span></a></li>\r\n                                    <li><a href=\"/movie/japanese\">日本<span></span></a></li>\r\n\r\n                                    <li></li>\r\n                                </ul>\r\n                            \r\n                        </div>\r\n                    </section>\r\n                </div>\r\n            </div>\r\n            <download></download>\r\n        </div>\r\n        <!-- <router-view></router-view> -->\r\n       \r\n    </div>\r\n    \r\n</template>\r\n<script>\r\nimport download from \"./downLoad.vue\";\r\n    export default {\r\n        data(){\r\n            return {\r\n                name1:'',\r\n                name2:'',\r\n                name3:'',\r\n                item1:[],\r\n                item2:[],\r\n                item3:[],\r\n                interests:[{\r\n                    border_color:'#CC3344',\r\n                    url:'https://m.douban.com/doulist/968362/',\r\n                    content:'同时入选IMDB250和豆瓣电影250的电影'\r\n                },{\r\n                    border_color:'#42BD56',\r\n                    url:'https://m.douban.com/doulist/16002/',\r\n                    content:'带你进入不正常的世界'\r\n                },{\r\n                    border_color:'#2384E8;',\r\n                    url:'https://m.douban.com/doulist/190343/',\r\n                    content:'用电【影】来祭奠逝去的岁月'\r\n                },{\r\n                    border_color:'#3BA94D',\r\n                    url:'https://m.douban.com/doulist/16002/',\r\n                    content:'女孩们的故事【电影】'\r\n                },{\r\n                    border_color:'#FF4055',\r\n                    url:'https://m.douban.com/doulist/16002/',\r\n                    content:'科幻是未来的钥匙——科幻启示录【科幻题材】'\r\n                },{\r\n                    border_color:'#42BD56',\r\n                    url:'https://m.douban.com/doulist/16002/',\r\n                    content:'带你进入不正常的世界'\r\n                },{\r\n                    border_color:'#FFC46C',\r\n                    url:'https://m.douban.com/doulist/458087/',\r\n                    content:'经典韩国电影——收集100部'\r\n                }]\r\n\r\n            }\r\n        },\r\n        methods:{\r\n            load1:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_showing/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799504',\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        self.name1 = data.subject_collection.name;\r\n                        self.item1 = data.subject_collection_items;\r\n                        console.log(data);\r\n                        console.log(self.item1[0].rating.value);\r\n                    }\r\n                })\r\n            },\r\n            load2:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_free_stream/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799506',\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        self.name2 = data.subject_collection.name;\r\n                        self.item2 = data.subject_collection_items;\r\n\r\n                        console.log(self.name2);\r\n                    }\r\n                })\r\n            },\r\n            load3:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'https://m.douban.com/rexxar/api/v2/subject_collection/movie_latest/items?os=ios&start=0&count=8&loc_id=108288&_=1507862799513',\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        self.name3 = data.subject_collection.name;\r\n                        console.log(self.name3);\r\n                        self.item3 = data.subject_collection_items;\r\n\r\n                    }\r\n                })\r\n            }\r\n        },\r\n        mounted:function(data){\r\n            this.load1();\r\n            this.load2();\r\n            this.load3();\r\n\r\n\r\n        },\r\n        computed:{\r\n            s(){\r\n            }\r\n\r\n        },\r\n        components:{\r\n            'download':download\r\n        }\r\n\r\n    }\r\n</script>\r\n<style scoped>\r\n    .page {\r\n    padding-top: 47px;\r\n    max-width: 650px;\r\n    background: #fff;\r\n    margin: 0 auto;\r\n    overflow-x: hidden;\r\n    font-size: 12px;\r\n}\r\n.card {\r\n    margin: 0;\r\n}\r\nsection:first-child {\r\n    padding-top: 10px;\r\n}\r\nsection {\r\n    margin: 0;\r\n    overflow: hidden;\r\n    background-color: #fff;\r\n}\r\nsection header {\r\n    padding: 0 1.12rem;\r\n}\r\nsection h2 {\r\n    display: inline-block;\r\n    min-width: 4em;\r\n    margin-bottom: 0;\r\n    color: #111;\r\n    padding-left: 0;\r\n    padding-bottom: 0;\r\n    font-size: 1.06rem;\r\n    margin: 0 0 15px;\r\n}\r\na {\r\n    color: #42bd56;\r\n    text-decoration: none;\r\n}\r\nsection .section-content {\r\n    margin-bottom: -1.12rem;\r\n}\r\n.row {\r\n    border-bottom: 1px solid #F2F2F2;\r\n    padding: 15px 0 43px 0;\r\n}\r\n.items {\r\n    font-size: 0;\r\n    white-space: nowrap;\r\n    overflow-x: auto;\r\n}\r\n.item {\r\n    display: inline-block;\r\n    vertical-align: top;\r\n    width: 100px;\r\n    text-align: center;\r\n    margin-left: 0.48rem;\r\n}\r\n.item a {\r\n    color: #111;\r\n    display:block;\r\n}\r\n.item:first-child {\r\n    margin-left: 1.12rem;\r\n}\r\n.item-poster {\r\n    width: 100%;\r\n    display:block;\r\n    overflow: hidden;\r\n    background-size: cover;\r\n    background-position: center;\r\n}\r\n.items>* {\r\n    font-size: .94rem;\r\n    white-space: normal;\r\n}\r\n.item__movie .item-title {\r\n    max-width: 100%;\r\n    word-wrap: normal;\r\n}\r\n.item-title {\r\n    display: block;\r\n    margin-top: .6rem;\r\n    line-height: .94rem;\r\n}\r\n.item:not(.item__celebrity) .item-title {\r\n    overflow: hidden;\r\n    white-space: nowrap;\r\n    text-overflow: ellipsis;\r\n}\r\n.item-poster:before {\r\n    content: \"\";\r\n    float: left;\r\n    margin-top: 142.85714%;\r\n}\r\n.item-rating {\r\n    color: #aaa;\r\n    line-height: .94rem;\r\n    margin-top: .3rem;\r\n    font-size: .72rem;\r\n}\r\nsection header a {\r\n    float: right;\r\n    font-size: .9rem;\r\n    line-height: 1.5rem;\r\n}\r\n.interests a {\r\n    height: 50px;\r\n    line-height: 50px;\r\n    padding: 0 1.55rem;\r\n    letter-spacing: .1em;\r\n    overflow: auto;\r\n    display: block;\r\n    text-align: center;\r\n}\r\n.clearfix:after, .card section>header:after {\r\n    content: '';\r\n    clear: both;\r\n    display: block;\r\n}\r\n.interests li {\r\n    margin: 0 0 8px 8px;\r\n    font-size: .94rem;\r\n    display: inline-block;\r\n    border-radius: .25rem;\r\n    border: solid 1px;\r\n    vertical-align: middle;\r\n    border-color: #CC3344;\r\n}\r\n.interests ul {\r\n    white-space: nowrap;\r\n    overflow-x: auto;\r\n    padding: 15px 15px 43px 15px;\r\n    font-size: 0;\r\n    margin-left: -5px;\r\n}\r\n.interests li.line {\r\n    width: 100%;\r\n    display: block;\r\n    height: 1px;\r\n    border: 0;\r\n    margin: 0;\r\n}\r\n.types .section-content {\r\n    margin-bottom: 0;\r\n}\r\n.types .section-content {\r\n    margin-left: .94rem;\r\n}\r\n.type-list {\r\n    padding: 1.12rem 0 1.88rem;\r\n    color: #eee;\r\n    font-size: .9rem;\r\n    overflow: hidden;\r\n}\r\n.type-list a {\r\n    float: left;\r\n    display: inline-block;\r\n    width: 100%;\r\n    line-height: 2.64rem;\r\n}\r\n.type-list li {\r\n    border-top: solid 1px #eee;\r\n    border-right: solid 1px #eee;\r\n    float: left;\r\n    padding-right: 1.12rem;\r\n    height: 2.64rem;\r\n}\r\n@media (max-width: 399px) and (min-width: 360px){\r\n    .type-list li {\r\n        width: 40.5%;\r\n    }\r\n}\r\n.type-list li:nth-child(even) {\r\n    border-right: none;\r\n    padding-left: 1.12rem;\r\n}\r\n.type-list span {\r\n    color: #ccc;\r\n    float: right;\r\n    font-weight: bold;\r\n    display: inline-block;\r\n    border-right: solid 1px #ccc;\r\n    border-bottom: solid 1px #ccc;\r\n    width: .5rem;\r\n    height: .5rem;\r\n    transform: rotate(-45deg);\r\n    margin-top: 1rem;\r\n}\r\n.rate{\r\n    display:block;\r\n    float:left;\r\n    width: 55px;\r\n    height: 11px;\r\n    margin-left: 10px;\r\n    margin-top: 1px;\r\n}\r\n.rate1{\r\n    background-position: 0 99px;\r\n}\r\n.rate2{\r\n    background-position: 0 0;\r\n}\r\n.rate3{\r\n    background-position: 0 -165px;\r\n}\r\n.rate4{\r\n    background-position: 0 55px;\r\n}\r\n.rate5{\r\n    background-position: 0 33px;\r\n}\r\n</style>"],"sourceRoot":""}]);
+
+// exports
+
+
+/***/ }),
+/* 20 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -25596,165 +25139,13 @@ module.exports = function listToStyles (parentId, list) {
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
-// import $ from "jquery";
+var _downLoad = __webpack_require__(4);
+
+var _downLoad2 = _interopRequireDefault(_downLoad);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
 exports.default = {
     data: function data() {
         return {
@@ -25847,12 +25238,180 @@ exports.default = {
     },
     computed: {
         s: function s() {}
+    },
+    components: {
+        'download': _downLoad2.default
     }
 
-};
+}; //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /***/ }),
-/* 17 */
+/* 21 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -25861,141 +25420,35 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "dbMovie" }, [
-    _c("div", [
-      _c("div", { staticClass: "page" }, [
-        _c("div", { staticClass: "card" }, [
-          _c("section", { attrs: { id: "movie_showing" } }, [
-            _c("header", [
-              _c("h2", [_vm._v(_vm._s(_vm.name1))]),
+    _c(
+      "div",
+      [
+        _c("div", { staticClass: "page" }, [
+          _c("div", { staticClass: "card" }, [
+            _c("section", { attrs: { id: "movie_showing" } }, [
+              _c("header", [
+                _c("h2", [_vm._v(_vm._s(_vm.name1))]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
+                  [_vm._v("更多")]
+                )
+              ]),
               _vm._v(" "),
-              _c(
-                "a",
-                { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
-                [_vm._v("更多")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "section-content" }, [
-              _c(
-                "ul",
-                { staticClass: "row items" },
-                _vm._l(_vm.item1, function(i) {
-                  return _c("li", { staticClass: "item item__movie" }, [
-                    _c("a", { attrs: { href: "#home/movieDetail/" + i.id } }, [
-                      _c("div", {
-                        staticClass: "item-poster",
-                        style: "background-image:url(" + i.cover.url + ")"
-                      }),
-                      _vm._v(" "),
-                      _c("span", { staticClass: "item-title" }, [
-                        _vm._v(_vm._s(i.title))
-                      ]),
-                      _vm._v(" "),
-                      _c("div", { staticClass: "item-rating" }, [
-                        _c("div", { staticClass: "rank" }, [
-                          _vm._m(0, true),
-                          _vm._v(" "),
-                          i.rating
-                            ? _c("span", [_vm._v(_vm._s(i.rating.value))])
-                            : _vm._e(),
-                          _vm._v(" "),
-                          !i.rating ? _c("span", [_vm._v("暂无评分")]) : _vm._e()
-                        ])
-                      ])
-                    ])
-                  ])
-                })
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("section", { attrs: { id: "movie_free_stream" } }, [
-            _c("header", [
-              _c("h2", [_vm._v(_vm._s(_vm.name2))]),
-              _vm._v(" "),
-              _c(
-                "a",
-                { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
-                [_vm._v("更多")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "section-content" }, [
-              _c(
-                "ul",
-                { staticClass: "row items" },
-                _vm._l(_vm.item2, function(i) {
-                  return _c(
-                    "li",
-                    { staticClass: "item item__movie", attrs: { id: i.id } },
-                    [
-                      _c(
-                        "a",
-                        {
-                          attrs: {
-                            href: "/movie/subject/27038183?refer=home",
-                            href: "#home/movieDetail/" + i.id
-                          }
-                        },
-                        [
-                          _c("div", {
-                            staticClass: "item-poster",
-                            style: "background-image: url(" + i.cover.url + ")"
-                          }),
-                          _vm._v(" "),
-                          _c("span", { staticClass: "item-title" }, [
-                            _vm._v(_vm._s(i.title))
-                          ]),
-                          _vm._v(" "),
-                          _c("div", { staticClass: "item-rating" }, [
-                            _c("div", { staticClass: "rank" }, [
-                              _vm._m(1, true),
-                              _vm._v(" "),
-                              i.rating
-                                ? _c("span", [_vm._v(_vm._s(i.rating.value))])
-                                : _vm._e(),
-                              _vm._v(" "),
-                              !i.rating
-                                ? _c("span", [_vm._v("暂无评分")])
-                                : _vm._e()
-                            ])
-                          ])
-                        ]
-                      )
-                    ]
-                  )
-                })
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _c("section", { attrs: { id: "movie_latest" } }, [
-            _c("header", [
-              _c("h2", [_vm._v(_vm._s(_vm.name3))]),
-              _vm._v(" "),
-              _c(
-                "a",
-                { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
-                [_vm._v("更多")]
-              )
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "section-content" }, [
-              _c(
-                "ul",
-                { staticClass: "row items" },
-                _vm._l(_vm.item3, function(i) {
-                  return _c(
-                    "li",
-                    { staticClass: "item item__movie", attrs: { id: i.id } },
-                    [
+              _c("div", { staticClass: "section-content" }, [
+                _c(
+                  "ul",
+                  { staticClass: "row items" },
+                  _vm._l(_vm.item1, function(i) {
+                    return _c("li", { staticClass: "item item__movie" }, [
                       _c(
                         "a",
                         { attrs: { href: "#home/movieDetail/" + i.id } },
                         [
                           _c("div", {
                             staticClass: "item-poster",
-                            style: "background-image: url(" + i.cover.url + ")"
+                            style: "background-image:url(" + i.cover.url + ")"
                           }),
                           _vm._v(" "),
                           _c("span", { staticClass: "item-title" }, [
@@ -26004,7 +25457,49 @@ var render = function() {
                           _vm._v(" "),
                           _c("div", { staticClass: "item-rating" }, [
                             _c("div", { staticClass: "rank" }, [
-                              _vm._m(2, true),
+                              i.rating
+                                ? _c("div", [
+                                    Math.ceil(i.rating.value / 2) == 4
+                                      ? _c("span", {
+                                          staticClass: "rate rate1",
+                                          style:
+                                            "background-image:url(./star/ic_rating_s.png)"
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    Math.ceil(i.rating.value / 2) == 5
+                                      ? _c("span", {
+                                          staticClass: "rate rate2",
+                                          style:
+                                            "background-image:url(./star/ic_rating_s.png)"
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    Math.ceil(i.rating.value / 2) == 3
+                                      ? _c("span", {
+                                          staticClass: "rate rate3",
+                                          style:
+                                            "background-image:url(./star/ic_rating_s.png)"
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    Math.ceil(i.rating.value / 2) == 2
+                                      ? _c("span", {
+                                          staticClass: "rate rate4",
+                                          style:
+                                            "background-image:url(./star/ic_rating_s.png)"
+                                        })
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    Math.ceil(i.rating.value / 2) == 1
+                                      ? _c("span", {
+                                          staticClass: "rate rate5",
+                                          style:
+                                            "background-image:url(./star/ic_rating_s.png)"
+                                        })
+                                      : _vm._e()
+                                  ])
+                                : _vm._e(),
                               _vm._v(" "),
                               i.rating
                                 ? _c("span", [_vm._v(_vm._s(i.rating.value))])
@@ -26017,72 +25512,226 @@ var render = function() {
                           ])
                         ]
                       )
-                    ]
-                  )
-                })
-              )
-            ])
-          ]),
-          _vm._v(" "),
-          _vm._m(3),
-          _vm._v(" "),
-          _vm._m(4)
-        ])
-      ]),
-      _vm._v(" "),
-      _vm._m(5)
-    ])
+                    ])
+                  })
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("section", { attrs: { id: "movie_free_stream" } }, [
+              _c("header", [
+                _c("h2", [_vm._v(_vm._s(_vm.name2))]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
+                  [_vm._v("更多")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "section-content" }, [
+                _c(
+                  "ul",
+                  { staticClass: "row items" },
+                  _vm._l(_vm.item2, function(i) {
+                    return _c(
+                      "li",
+                      { staticClass: "item item__movie", attrs: { id: i.id } },
+                      [
+                        _c(
+                          "a",
+                          {
+                            attrs: {
+                              href: "/movie/subject/27038183?refer=home",
+                              href: "#home/movieDetail/" + i.id
+                            }
+                          },
+                          [
+                            _c("div", {
+                              staticClass: "item-poster",
+                              style:
+                                "background-image: url(" + i.cover.url + ")"
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "item-title" }, [
+                              _vm._v(_vm._s(i.title))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "item-rating" }, [
+                              _c("div", { staticClass: "rank" }, [
+                                i.rating
+                                  ? _c("div", [
+                                      Math.ceil(i.rating.value / 2) == 4
+                                        ? _c("span", {
+                                            staticClass: "rate rate1",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 5
+                                        ? _c("span", {
+                                            staticClass: "rate rate2",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 3
+                                        ? _c("span", {
+                                            staticClass: "rate rate3",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 2
+                                        ? _c("span", {
+                                            staticClass: "rate rate4",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 1
+                                        ? _c("span", {
+                                            staticClass: "rate rate5",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e()
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                i.rating
+                                  ? _c("span", [_vm._v(_vm._s(i.rating.value))])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                !i.rating
+                                  ? _c("span", [_vm._v("暂无评分")])
+                                  : _vm._e()
+                              ])
+                            ])
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _c("section", { attrs: { id: "movie_latest" } }, [
+              _c("header", [
+                _c("h2", [_vm._v(_vm._s(_vm.name3))]),
+                _vm._v(" "),
+                _c(
+                  "a",
+                  { attrs: { href: "/movie/nowintheater?loc_id=108288" } },
+                  [_vm._v("更多")]
+                )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "section-content" }, [
+                _c(
+                  "ul",
+                  { staticClass: "row items" },
+                  _vm._l(_vm.item3, function(i) {
+                    return _c(
+                      "li",
+                      { staticClass: "item item__movie", attrs: { id: i.id } },
+                      [
+                        _c(
+                          "a",
+                          { attrs: { href: "#home/movieDetail/" + i.id } },
+                          [
+                            _c("div", {
+                              staticClass: "item-poster",
+                              style:
+                                "background-image: url(" + i.cover.url + ")"
+                            }),
+                            _vm._v(" "),
+                            _c("span", { staticClass: "item-title" }, [
+                              _vm._v(_vm._s(i.title))
+                            ]),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "item-rating" }, [
+                              _c("div", { staticClass: "rank" }, [
+                                i.rating
+                                  ? _c("div", [
+                                      Math.ceil(i.rating.value / 2) == 4
+                                        ? _c("span", {
+                                            staticClass: "rate rate1",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 5
+                                        ? _c("span", {
+                                            staticClass: "rate rate2",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 3
+                                        ? _c("span", {
+                                            staticClass: "rate rate3",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 2
+                                        ? _c("span", {
+                                            staticClass: "rate rate4",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      Math.ceil(i.rating.value / 2) == 1
+                                        ? _c("span", {
+                                            staticClass: "rate rate5",
+                                            style:
+                                              "background-image:url(./star/ic_rating_s.png)"
+                                          })
+                                        : _vm._e()
+                                    ])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                i.rating
+                                  ? _c("span", [_vm._v(_vm._s(i.rating.value))])
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                !i.rating
+                                  ? _c("span", [_vm._v("暂无评分")])
+                                  : _vm._e()
+                              ])
+                            ])
+                          ]
+                        )
+                      ]
+                    )
+                  })
+                )
+              ])
+            ]),
+            _vm._v(" "),
+            _vm._m(0),
+            _vm._v(" "),
+            _vm._m(1)
+          ])
+        ]),
+        _vm._v(" "),
+        _c("download")
+      ],
+      1
+    )
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "rating-stars", attrs: { "data-rating": "3.6" } },
-      [
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-gray" })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "rating-stars", attrs: { "data-rating": "3.6" } },
-      [
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-gray" })
-      ]
-    )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "span",
-      { staticClass: "rating-stars", attrs: { "data-rating": "3.6" } },
-      [
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-full" }),
-        _c("span", { staticClass: "rating-star rating-star-small-gray" })
-      ]
-    )
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -26319,40 +25968,6 @@ var staticRenderFns = [
         ])
       ])
     ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "download-app" }, [
-      _c("div", { staticClass: "info" }, [
-        _c("img", {
-          attrs: {
-            src:
-              "https://img3.doubanio.com/f/talion/7837f29dd7deab9416274ae374a59bc17b5f33c6/pics/card/douban-app-logo.png",
-            width: "48"
-          }
-        }),
-        _vm._v(" "),
-        _c("div", { staticClass: "info-content" }, [
-          _c("strong", [_vm._v("豆瓣")]),
-          _vm._v(" "),
-          _c("div", [_vm._v("我们的精神角落")])
-        ])
-      ]),
-      _vm._v(" "),
-      _c(
-        "a",
-        {
-          attrs: {
-            href:
-              "https://www.douban.com/doubanapp/card/log?category=movie_home&cid=&action=click_download&ref=http%3A//www.douban.com/doubanapp/app%3Fchannel%3Dcard_movie_home%26direct_dl%3D1",
-            rel: "nofollow"
-          }
-        },
-        [_vm._v("去 App Store 免费下载 iOS 客户端")]
-      )
-    ])
   }
 ]
 render._withStripped = true
@@ -26366,18 +25981,18 @@ if (false) {
 }
 
 /***/ }),
-/* 18 */
+/* 22 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovieDetail_vue__ = __webpack_require__(21);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovieDetail_vue__ = __webpack_require__(25);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovieDetail_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbMovieDetail_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dd06c7f4_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovieDetail_vue__ = __webpack_require__(22);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_dd06c7f4_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbMovieDetail_vue__ = __webpack_require__(26);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(19)
+  __webpack_require__(23)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
@@ -26413,7 +26028,7 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-dd06c7f4", Component.options)
   } else {
     hotAPI.reload("data-v-dd06c7f4", Component.options)
-' + '  }
+  }
   module.hot.dispose(function (data) {
     disposed = true
   })
@@ -26423,13 +26038,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 19 */
+/* 23 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(20);
+var content = __webpack_require__(24);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -26449,7 +26064,7 @@ if(false) {
 }
 
 /***/ }),
-/* 20 */
+/* 24 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(true);
@@ -26457,13 +26072,13 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.promo_top_banner+.card[data-v-dd06c7f4] {\n    margin-top: 0px;\n}\n.card[data-v-dd06c7f4] {\n    margin: 0 18px;\n}\n.promo_top_banner[data-v-dd06c7f4] {\n    margin-bottom: 0;\n    max-width: 100%;\n    overflow: hidden;\n    text-align: left;\n    position: relative;\n}\n.promo_top_banner .banner_bg[data-v-dd06c7f4] {\n    font-size: 0;\n    padding-bottom: 21.33333%;\n    position: relative;\n}\n.promo_top_banner .banner_bg .img[data-v-dd06c7f4] {\n    width: 100%;\n    position: absolute;\n    top: 0;\n    left: 0;\n}\n.promo_top_banner .banner_wrapper[data-v-dd06c7f4] {\n    position: absolute;\n    left: 18px;\n    top: 0;\n    bottom: 0;\n    right: 10px;\n}\n.promo_top_banner .banner_wrapper .banner_inner[data-v-dd06c7f4]{\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n}\n.promo_top_banner .banner_wrapper .banner_inner>*[data-v-dd06c7f4] {\n    vertical-align: middle;\n}\n.promo_top_banner .button_wrapper[data-v-dd06c7f4] {\n    white-space: nowrap;\n    font-size: 0;\n    padding-left: 12px;\n    flex:1;\n    margin-left:50px;\n}\n.button_wrapper[data-v-dd06c7f4] {\n    margin: 0;\n    flex:1;\n}\n.promo_top_banner .promo_title_text[data-v-dd06c7f4] {\n    font-size: 14px;\n    font-weight: normal;\n    line-height: 22px;\n    color: #2CA532;\n}\n.page[data-v-dd06c7f4] {\n    padding-top: 47px;\n    max-width: 650px;\n    background: #fff;\n    margin: 0 auto;\n    overflow-x: hidden;\n}\n@media (max-width: 413px) and (min-width: 375px){\n.promo_title[data-v-dd06c7f4], .promo_text[data-v-dd06c7f4] {\n        font-size: 21px;\n}\n}\n.promo_button.download_app[data-v-dd06c7f4] {\n    color: #fff;\n    border: 1px solid #42bd56;\n    background: #42bd56;\n}\n.promo_top_banner .promo_button[data-v-dd06c7f4] {\n    font-size: 13px;\n    font-weight: bold;\n    width: auto;\n    padding: 0 14px;\n    position: relative;\n}\n.promo_top_banner .promo_title[data-v-dd06c7f4] {\n    margin: 0;\n}\n.promo_button[data-v-dd06c7f4] {\n    display: inline-block;\n    border-radius: 3px;\n    line-height: 2;\n}\n.promo_top_banner .promo_button[data-v-dd06c7f4]:after {\n    content: '';\n    position: absolute;\n    left: -4px;\n    right: -4px;\n    top: -10px;\n    bottom: -10px;\n}\n.promo_button.open_app[data-v-dd06c7f4] {\n    color: #42bd56;\n    border: 1px solid #42bd56;\n    margin-left:10px;\n}\n.subject-mark .mark-item[data-v-dd06c7f4] {\n    margin-bottom: 30px;\n    display: flex;\n    align-items: center;\n}\n.subject-mark .mark-item a[data-v-dd06c7f4] {\n    height: 30px;\n    line-height: 30px;\n    display: block;\n    border: 1px solid #ffb712;\n    border-radius: 3px;\n    margin-right: 10px;\n    color: #ffb712;\n    font-size: 15px;\n    text-align: center;\n    flex: 1;\n}\n.list[data-v-dd06c7f4] {\n    margin-right: -18px;\n}\n.list li[data-v-dd06c7f4]:first-child {\n    padding-top: 0;\n}\n.list li[data-v-dd06c7f4] {\n    position: relative;\n    padding: 15px 18px 15px 0;\n    word-wrap: break-word;\n    overflow: hidden;\n}\n.comment-list li .desc[data-v-dd06c7f4] {\n    font-size: 0;\n    line-height: normal;\n    margin: 0 0 11px;\n    color: #494949;\n    position: relative;\n}\n.comment-list li p[data-v-dd06c7f4] {\n    padding: 0 0 0 40px;\n    line-height: 22px;\n    color: #494949;\n}\n.list a[data-v-dd06c7f4] {\n    display: block;\n    overflow: hidden;\n    text-decoration: none;\n    color: #494949;\n}\n.list li .desc>a[data-v-dd06c7f4] {\n    display: inline;\n}\n.comment-list li .desc strong[data-v-dd06c7f4] {\n    font-size: 15px;\n    display: inline-block;\n    vertical-align: text-top;\n    margin-right: 6px;\n}\n.comment-list li .desc .date[data-v-dd06c7f4] {\n    margin-top: 6px;\n    font-size: 12px;\n    color: #aaa;\n}\n.comment-list li .desc img[data-v-dd06c7f4], .comment-list li .desc .avatar[data-v-dd06c7f4] {\n    width: 36px;\n    border-radius: 50%;\n    vertical-align: text-top;\n    margin-right: 10px;\n    float: left;\n}\n.list a[data-v-dd06c7f4] {\n    color: #494949;\n}\nh2[data-v-dd06c7f4] {\n    color: #aaa;\n    margin: 0 0 15px;\n    font-size: 15px;\n}\n.ic-btn .text[data-v-dd06c7f4] {\n    color: #ccc;\n    margin-left: 3px;\n    position: relative;\n    left: 0;\n    top: -3px;\n}\n.comment-list li .btn-info[data-v-dd06c7f4] {\n    height: 22px;\n    margin: 10px 0 0 40px;\n}\n.list li[data-v-dd06c7f4]::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.ic-btn[data-v-dd06c7f4] {\n    display: inline-block;\n    margin-right: 20px;\n    font-size: 14px;\n    cursor: pointer;\n}\n.ic-btn i[data-v-dd06c7f4]{\n    width:20px;\n    height:20px;\n    background-position: center center;\n    background-repeat: no-repeat;\n    display: inline-block;\n    margin-bottom: -2px;\n}\n.items[data-v-dd06c7f4] {\n    font-size: 0;\n    white-space: nowrap;\n    overflow-x: auto;\n}\n.item__celebrity[data-v-dd06c7f4]:first-child {\n    margin-left: 0;\n}\n.item__celebrity[data-v-dd06c7f4] {\n    font-size: 14px;\n    width: 75px;\n}\n.item a[data-v-dd06c7f4] {\n    color: #111;\n    display:block;\n}\n.item-poster[data-v-dd06c7f4] {\n    width: 100%;\n    overflow: hidden;\n    background-size: cover;\n    background-position: center;\n}\n.item__celebrity .item-title[data-v-dd06c7f4] {\n    overflow: hidden;\n    font-size: 14px;\n    line-height: 1.5;\n    white-space: normal;\n    text-align: center;\n    color: #494949;\n    margin-top: 8px;\n    display:block;\n}\n.item__celebrity .item-title.role[data-v-dd06c7f4] {\n    color: #aaa;\n}\n.item[data-v-dd06c7f4] {\n    display: inline-block;\n    vertical-align: top;\n}\n.item__celebrity[data-v-dd06c7f4] {\n    width: 75px;\n}\n.items>*[data-v-dd06c7f4] {\n    font-size: .94rem;\n    white-space: normal;\n}\n.item[data-v-dd06c7f4] {\n    margin-left: 0.48rem;\n}\nsection[data-v-dd06c7f4] {\n    margin-bottom: 30px;\n}\n.item-poster[data-v-dd06c7f4]:before {\n    content: \"\";\n    float: left;\n    margin-top: 142.85714%;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douBanSix/components/lantao/components/lantao/dbMovieDetail.vue?0984337e"],"names":[],"mappings":";AA8HA;IACA,gBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,iBAAA;IACA,gBAAA;IACA,iBAAA;IACA,iBAAA;IACA,mBAAA;CACA;AACA;IACA,aAAA;IACA,0BAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,OAAA;IACA,QAAA;CACA;AACA;IACA,mBAAA;IACA,WAAA;IACA,OAAA;IACA,UAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;IACA,aAAA;IACA,mBAAA;IACA,OAAA;IACA,iBAAA;CACA;AACA;IACA,UAAA;IACA,OAAA;CACA;AACA;IACA,gBAAA;IACA,oBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,kBAAA;IACA,iBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;AACA;QACA,gBAAA;CACA;CACA;AACA;IACA,YAAA;IACA,0BAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,kBAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,UAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,eAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,WAAA;IACA,YAAA;IACA,WAAA;IACA,cAAA;CACA;AACA;IACA,eAAA;IACA,0BAAA;IACA,iBAAA;CACA;AACA;IACA,oBAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,kBAAA;IACA,eAAA;IACA,0BAAA;IACA,mBAAA;IACA,mBAAA;IACA,eAAA;IACA,gBAAA;IACA,mBAAA;IACA,QAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,0BAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,oBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,eAAA;IACA,iBAAA;IACA,sBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,gBAAA;IACA,sBAAA;IACA,yBAAA;IACA,kBAAA;CACA;AACA;IACA,gBAAA;IACA,gBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,yBAAA;IACA,mBAAA;IACA,YAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,gBAAA;CACA;AAEA;IACA,YAAA;IACA,iBAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;CACA;AACA;IACA,aAAA;IACA,sBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,WAAA;IACA,YAAA;IACA,mCAAA;IACA,6BAAA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,gBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,uBAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,gBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;IACA,eAAA;IACA,gBAAA;IACA,cAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,qBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,uBAAA;CACA","file":"dbMovieDetail.vue","sourcesContent":["<template>\n    <div class=\"dbMovieDetail\">\n        <div class=\"page\">\n            <section class=\"promo_top_banner\" style=\"display: block !important\">\n                  <div class=\"banner_bg\">\n                    <img src=\"https://img3.doubanio.com/f/talion/fbcb08987a36258354c6037211d94286bef9716c/pics/card/promotion_bg.jpg\" class=\"img\">\n                  </div>\n                  <div class=\"banner_wrapper\">\n                    <div class=\"banner_inner\">\n                      <div class=\"promo_title\">\n                        \n                        <span class=\"promo_title_text\">用 App 打开</span><br>\n                        <span class=\"promo_title_text\">查看主演的其它电影</span>\n                      </div>\n\n                      <div class=\"button_wrapper\">\n                        <a href=\"https://www.douban.com/doubanapp/app?model=B&amp;copy=1&amp;page=movie&amp;channel=card_movie&amp;direct_dl=1\" rel=\"nofollow\" onclick=\"ga('send', 'event', 'ios', 'click', 'subject banner download')\" class=\"promo_button download_app\">极速下载</a>\n                        <a href=\"https://www.douban.com/doubanapp/dispatch?from=mdouban&amp;download=1&amp;model=B&amp;copy=1&amp;page=movie&amp;channel=card_movie&amp;uri=%2Fmovie%2F27038183\" rel=\"nofollow\" onclick=\"ga('send', 'event', 'ios', 'click', 'card more link')\" class=\"promo_button open_app\">打开</a>\n                      </div>\n                    </div>\n                  </div>\n            </section>\n        <div class=\"card\">\n                \n                <section class=\"subject-mark\" data-type=\"movie\" data-id=\"27038183\">\n                    <div class=\"mark-item\">\n                        <a href=\"javascript:;\" rel=\"nofollow\" name=\"pbtn-27038183-wish\" class=\"\">\n                            <span>想看</span>\n                        </a>\n                        <a href=\"javascript:;\" rel=\"nofollow\" name=\"pbtn-27038183-collect\">\n                            <span>看过</span>\n                        </a>\n                    </div>\n                </section>\n                <section class=\"\" id=\"celebrities\">\n                    <header>\n                        <h2>影人</h2>\n                    </header>\n                    <div class=\"section-content\">\n                            <ul class=\"row items\">\n                                <li class=\"item item__celebrity\" v-for=\"c in credits\">\n                                  <a href=\"https://movie.douban.com/celebrity/1350407/\">\n                                    <div class=\"item-poster\" :style=\"'background-image: url('+c.cover_url+')'\">\n                                    </div>\n                                    <span class=\"item-title name\">{{c.name}}</span>\n                                    <span class=\"item-title role\">{{c.roles[0]}}</span>\n                                  </a>\n                                </li>\n                            </ul>\n                    </div>\n                </section>\n                <section class=\"subject-comments\">\n                    <h2>的短评({{total}})</h2>\n                    <div class=\"bd\" id=\"comment-list\">\n                        <ul data-reactroot=\"\" class=\"list comment-list\">\n                            <li class=\"\" v-for=\"i in interests\">\n                                <div class=\"desc\">\n                                    <a href=\"/people/151784886/\"><img :src=\"i.user.avatar\" alt=\"辣眼看电视\"></a><div class=\"user-info\">\n                                        <strong>{{i.user.name}}</strong>\n                                        <span class=\"rating-stars\" data-rating=\"4\">\n                                        <span class=\"rating-star rating-star-medium-full\"></span>\n                                        <span class=\"rating-star rating-star-medium-full\"></span><span class=\"rating-star rating-star-medium-full\"></span>\n                                        <span class=\"rating-star rating-star-medium-full\"></span><span class=\"rating-star rating-star-medium-gray\"></span></span>\n                                        <div class=\"date\">{{i.create_time}}</div></div></div>\n                                        <p>{{i.comment}}</p><div class=\"btn-info\"><div class=\"ic-btn ic-btn-like  left \">\n                                            <i style=\"background-image:url(https://img3.doubanio.com/f/talion/7a0756b3b6e67b59ea88653bc0cfa14f61ff219d/pics/card/ic_like_gray.svg)\"></i><span class=\"text\">{{i.vote_count}}</span></div>\n                                        <div class=\"ic-btn ic-btn-more right\"></div></div>\n                                        </li>\n                        </ul>\n                    </div>\n                </section>\n            </div>\n        </div>\n    </div>\n</template>\n\n<script type=\"text/javascript\">\n    export default {\n        data(){\n            return{\n                id:'',\n                interests:[],\n                total:0,\n                credits:[]\n            }\n        },\n        methods:{\n            load:function(){\n                var self = this;\n                $.ajax({\n                    type:'get',\n                    url:'https://m.douban.com/rexxar/api/v2/movie/'+self.id+'/interests?count=4&order_by=hot&start=0&ck=DQxl&for_mobile=1',\n                    dataType:'jsonp',\n                    success:function(data){\n                        self.total = data.total;\n                        self.interests = data.interests;\n\n                        console.log(data);\n                    }\n                })\n            },\n            loadCredits:function(){\n                var self = this;\n                $.ajax({\n                    type:'get',\n                    url:'https://m.douban.com/rexxar/api/v2/movie/'+self.id+'/credits',\n\n                    dataType:'jsonp',\n                    success:function(data){\n                        self.credits = data.credits[1].celebrities;\n                        console.log(data.credits);\n                    }\n                })\n            }\n        },\n        mounted:function(data){\n            var idarr = window.location.hash.split('/');\n            this.id = idarr[idarr.length-1];\n            console.log(this.id);\n            this.load();\n            this.loadCredits();\n        }\n    }\n</script>\n\n<style scoped>\n.promo_top_banner+.card {\n    margin-top: 0px;\n}\n.card {\n    margin: 0 18px;\n}\n.promo_top_banner {\n    margin-bottom: 0;\n    max-width: 100%;\n    overflow: hidden;\n    text-align: left;\n    position: relative;\n}\n.promo_top_banner .banner_bg {\n    font-size: 0;\n    padding-bottom: 21.33333%;\n    position: relative;\n}\n.promo_top_banner .banner_bg .img {\n    width: 100%;\n    position: absolute;\n    top: 0;\n    left: 0;\n}\n.promo_top_banner .banner_wrapper {\n    position: absolute;\n    left: 18px;\n    top: 0;\n    bottom: 0;\n    right: 10px;\n}\n.promo_top_banner .banner_wrapper .banner_inner{\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n}\n.promo_top_banner .banner_wrapper .banner_inner>* {\n    vertical-align: middle;\n}\n.promo_top_banner .button_wrapper {\n    white-space: nowrap;\n    font-size: 0;\n    padding-left: 12px;\n    flex:1;\n    margin-left:50px;\n}\n.button_wrapper {\n    margin: 0;\n    flex:1;\n}\n.promo_top_banner .promo_title_text {\n    font-size: 14px;\n    font-weight: normal;\n    line-height: 22px;\n    color: #2CA532;\n}\n.page {\n    padding-top: 47px;\n    max-width: 650px;\n    background: #fff;\n    margin: 0 auto;\n    overflow-x: hidden;\n}\n@media (max-width: 413px) and (min-width: 375px){\n    .promo_title, .promo_text {\n        font-size: 21px;\n    }\n}\n.promo_button.download_app {\n    color: #fff;\n    border: 1px solid #42bd56;\n    background: #42bd56;\n}\n.promo_top_banner .promo_button {\n    font-size: 13px;\n    font-weight: bold;\n    width: auto;\n    padding: 0 14px;\n    position: relative;\n}\n.promo_top_banner .promo_title {\n    margin: 0;\n}\n.promo_button {\n    display: inline-block;\n    border-radius: 3px;\n    line-height: 2;\n}\n.promo_top_banner .promo_button:after {\n    content: '';\n    position: absolute;\n    left: -4px;\n    right: -4px;\n    top: -10px;\n    bottom: -10px;\n}\n.promo_button.open_app {\n    color: #42bd56;\n    border: 1px solid #42bd56;\n    margin-left:10px;\n}\n.subject-mark .mark-item {\n    margin-bottom: 30px;\n    display: flex;\n    align-items: center;\n}\n.subject-mark .mark-item a {\n    height: 30px;\n    line-height: 30px;\n    display: block;\n    border: 1px solid #ffb712;\n    border-radius: 3px;\n    margin-right: 10px;\n    color: #ffb712;\n    font-size: 15px;\n    text-align: center;\n    flex: 1;\n}\n.list {\n    margin-right: -18px;\n}\n.list li:first-child {\n    padding-top: 0;\n}\n.list li {\n    position: relative;\n    padding: 15px 18px 15px 0;\n    word-wrap: break-word;\n    overflow: hidden;\n}\n.comment-list li .desc {\n    font-size: 0;\n    line-height: normal;\n    margin: 0 0 11px;\n    color: #494949;\n    position: relative;\n}\n.comment-list li p {\n    padding: 0 0 0 40px;\n    line-height: 22px;\n    color: #494949;\n}\n.list a {\n    display: block;\n    overflow: hidden;\n    text-decoration: none;\n    color: #494949;\n}\n.list li .desc>a {\n    display: inline;\n}\n.comment-list li .desc strong {\n    font-size: 15px;\n    display: inline-block;\n    vertical-align: text-top;\n    margin-right: 6px;\n}\n.comment-list li .desc .date {\n    margin-top: 6px;\n    font-size: 12px;\n    color: #aaa;\n}\n.comment-list li .desc img, .comment-list li .desc .avatar {\n    width: 36px;\n    border-radius: 50%;\n    vertical-align: text-top;\n    margin-right: 10px;\n    float: left;\n}\n.list a {\n    color: #494949;\n}\nh2 {\n    color: #aaa;\n    margin: 0 0 15px;\n    font-size: 15px;\n}\n\n.ic-btn .text {\n    color: #ccc;\n    margin-left: 3px;\n    position: relative;\n    left: 0;\n    top: -3px;\n}\n.comment-list li .btn-info {\n    height: 22px;\n    margin: 10px 0 0 40px;\n}\n.list li::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.ic-btn {\n    display: inline-block;\n    margin-right: 20px;\n    font-size: 14px;\n    cursor: pointer;\n}\n.ic-btn i{\n    width:20px;\n    height:20px;\n    background-position: center center;\n    background-repeat: no-repeat;\n    display: inline-block;\n    margin-bottom: -2px;\n}\n.items {\n    font-size: 0;\n    white-space: nowrap;\n    overflow-x: auto;\n}\n.item__celebrity:first-child {\n    margin-left: 0;\n}\n.item__celebrity {\n    font-size: 14px;\n    width: 75px;\n}\n.item a {\n    color: #111;\n    display:block;\n}\n.item-poster {\n    width: 100%;\n    overflow: hidden;\n    background-size: cover;\n    background-position: center;\n}\n.item__celebrity .item-title {\n    overflow: hidden;\n    font-size: 14px;\n    line-height: 1.5;\n    white-space: normal;\n    text-align: center;\n    color: #494949;\n    margin-top: 8px;\n    display:block;\n}\n.item__celebrity .item-title.role {\n    color: #aaa;\n}\n.item {\n    display: inline-block;\n    vertical-align: top;\n}\n.item__celebrity {\n    width: 75px;\n}\n.items>* {\n    font-size: .94rem;\n    white-space: normal;\n}\n.item {\n    margin-left: 0.48rem;\n}\nsection {\n    margin-bottom: 30px;\n}\n.item-poster:before {\n    content: \"\";\n    float: left;\n    margin-top: 142.85714%;\n}\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.promo_top_banner+.card[data-v-dd06c7f4] {\r\n    margin-top: 0px;\n}\n.card[data-v-dd06c7f4] {\r\n    margin: 0 18px;\n}\n.promo_top_banner[data-v-dd06c7f4] {\r\n    margin-bottom: 0;\r\n    max-width: 100%;\r\n    overflow: hidden;\r\n    text-align: left;\r\n    position: relative;\n}\n.promo_top_banner .banner_bg[data-v-dd06c7f4] {\r\n    font-size: 0;\r\n    padding-bottom: 21.33333%;\r\n    position: relative;\n}\n.promo_top_banner .banner_bg .img[data-v-dd06c7f4] {\r\n    width: 100%;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\n}\n.promo_top_banner .banner_wrapper[data-v-dd06c7f4] {\r\n    position: absolute;\r\n    left: 18px;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 10px;\n}\n.promo_top_banner .banner_wrapper .banner_inner[data-v-dd06c7f4]{\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\n}\n.promo_top_banner .banner_wrapper .banner_inner>*[data-v-dd06c7f4] {\r\n    vertical-align: middle;\n}\n.promo_top_banner .button_wrapper[data-v-dd06c7f4] {\r\n    white-space: nowrap;\r\n    font-size: 0;\r\n    padding-left: 12px;\r\n    flex:1;\r\n    margin-left:50px;\n}\n.button_wrapper[data-v-dd06c7f4] {\r\n    margin: 0;\r\n    flex:1;\n}\n.promo_top_banner .promo_title_text[data-v-dd06c7f4] {\r\n    font-size: 14px;\r\n    font-weight: normal;\r\n    line-height: 22px;\r\n    color: #2CA532;\n}\n.page[data-v-dd06c7f4] {\r\n    padding-top: 47px;\r\n    max-width: 650px;\r\n    background: #fff;\r\n    margin: 0 auto;\r\n    overflow-x: hidden;\n}\n@media (max-width: 413px) and (min-width: 375px){\n.promo_title[data-v-dd06c7f4], .promo_text[data-v-dd06c7f4] {\r\n        font-size: 21px;\n}\n}\n.promo_button.download_app[data-v-dd06c7f4] {\r\n    color: #fff;\r\n    border: 1px solid #42bd56;\r\n    background: #42bd56;\n}\n.promo_top_banner .promo_button[data-v-dd06c7f4] {\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    width: auto;\r\n    padding: 0 14px;\r\n    position: relative;\n}\n.promo_top_banner .promo_title[data-v-dd06c7f4] {\r\n    margin: 0;\n}\n.promo_button[data-v-dd06c7f4] {\r\n    display: inline-block;\r\n    border-radius: 3px;\r\n    line-height: 2;\n}\n.promo_top_banner .promo_button[data-v-dd06c7f4]:after {\r\n    content: '';\r\n    position: absolute;\r\n    left: -4px;\r\n    right: -4px;\r\n    top: -10px;\r\n    bottom: -10px;\n}\n.promo_button.open_app[data-v-dd06c7f4] {\r\n    color: #42bd56;\r\n    border: 1px solid #42bd56;\r\n    margin-left:10px;\n}\n.subject-mark .mark-item[data-v-dd06c7f4] {\r\n    margin-bottom: 30px;\r\n    display: flex;\r\n    align-items: center;\n}\n.subject-mark .mark-item a[data-v-dd06c7f4] {\r\n    height: 30px;\r\n    line-height: 30px;\r\n    display: block;\r\n    border: 1px solid #ffb712;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n    color: #ffb712;\r\n    font-size: 15px;\r\n    text-align: center;\r\n    flex: 1;\n}\n.list[data-v-dd06c7f4] {\r\n    margin-right: -18px;\n}\n.list li[data-v-dd06c7f4]:first-child {\r\n    padding-top: 0;\n}\n.list li[data-v-dd06c7f4] {\r\n    position: relative;\r\n    padding: 15px 18px 15px 0;\r\n    word-wrap: break-word;\r\n    overflow: hidden;\n}\n.comment-list li .desc[data-v-dd06c7f4] {\r\n    font-size: 0;\r\n    line-height: normal;\r\n    margin: 0 0 11px;\r\n    color: #494949;\r\n    position: relative;\n}\n.comment-list li p[data-v-dd06c7f4] {\r\n    padding: 0 0 0 40px;\r\n    line-height: 22px;\r\n    color: #494949;\n}\n.list a[data-v-dd06c7f4] {\r\n    display: block;\r\n    overflow: hidden;\r\n    text-decoration: none;\r\n    color: #494949;\n}\n.list li .desc>a[data-v-dd06c7f4] {\r\n    display: inline;\n}\n.comment-list li .desc strong[data-v-dd06c7f4] {\r\n    font-size: 15px;\r\n    display: inline-block;\r\n    vertical-align: text-top;\r\n    margin-right: 6px;\n}\n.comment-list li .desc .date[data-v-dd06c7f4] {\r\n    margin-top: 6px;\r\n    font-size: 12px;\r\n    color: #aaa;\n}\n.comment-list li .desc img[data-v-dd06c7f4], .comment-list li .desc .avatar[data-v-dd06c7f4] {\r\n    width: 36px;\r\n    border-radius: 50%;\r\n    vertical-align: text-top;\r\n    margin-right: 10px;\r\n    float: left;\n}\n.list a[data-v-dd06c7f4] {\r\n    color: #494949;\n}\nh2[data-v-dd06c7f4] {\r\n    color: #aaa;\r\n    margin: 0 0 15px;\r\n    font-size: 15px;\n}\n.ic-btn .text[data-v-dd06c7f4] {\r\n    color: #ccc;\r\n    margin-left: 3px;\r\n    position: relative;\r\n    left: 0;\r\n    top: -3px;\n}\n.comment-list li .btn-info[data-v-dd06c7f4] {\r\n    height: 22px;\r\n    margin: 10px 0 0 40px;\n}\n.list li[data-v-dd06c7f4]::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.ic-btn[data-v-dd06c7f4] {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n    font-size: 14px;\r\n    cursor: pointer;\n}\n.ic-btn i[data-v-dd06c7f4]{\r\n    width:20px;\r\n    height:20px;\r\n    background-position: center center;\r\n    background-repeat: no-repeat;\r\n    display: inline-block;\r\n    margin-bottom: -2px;\n}\n.items[data-v-dd06c7f4] {\r\n    font-size: 0;\r\n    white-space: nowrap;\r\n    overflow-x: auto;\n}\n.item__celebrity[data-v-dd06c7f4]:first-child {\r\n    margin-left: 0;\n}\n.item__celebrity[data-v-dd06c7f4] {\r\n    font-size: 14px;\r\n    width: 75px;\n}\n.item a[data-v-dd06c7f4] {\r\n    color: #111;\r\n    display:block;\n}\n.item-poster[data-v-dd06c7f4] {\r\n    width: 100%;\r\n    overflow: hidden;\r\n    background-size: cover;\r\n    background-position: center;\n}\n.item__celebrity .item-title[data-v-dd06c7f4] {\r\n    overflow: hidden;\r\n    font-size: 14px;\r\n    line-height: 1.5;\r\n    white-space: normal;\r\n    text-align: center;\r\n    color: #494949;\r\n    margin-top: 8px;\r\n    display:block;\n}\n.item__celebrity .item-title.role[data-v-dd06c7f4] {\r\n    color: #aaa;\n}\n.item[data-v-dd06c7f4] {\r\n    display: inline-block;\r\n    vertical-align: top;\n}\n.item__celebrity[data-v-dd06c7f4] {\r\n    width: 75px;\n}\n.items>*[data-v-dd06c7f4] {\r\n    font-size: .94rem;\r\n    white-space: normal;\n}\n.item[data-v-dd06c7f4] {\r\n    margin-left: 0.48rem;\n}\nsection[data-v-dd06c7f4] {\r\n    margin-bottom: 30px;\n}\n.item-poster[data-v-dd06c7f4]:before {\r\n    content: \"\";\r\n    float: left;\r\n    margin-top: 142.85714%;\n}\r\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douban/douBanSix/components/lantao/components/lantao/dbMovieDetail.vue?27b5763e"],"names":[],"mappings":";AA8HA;IACA,gBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,iBAAA;IACA,gBAAA;IACA,iBAAA;IACA,iBAAA;IACA,mBAAA;CACA;AACA;IACA,aAAA;IACA,0BAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,OAAA;IACA,QAAA;CACA;AACA;IACA,mBAAA;IACA,WAAA;IACA,OAAA;IACA,UAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,uBAAA;CACA;AACA;IACA,oBAAA;IACA,aAAA;IACA,mBAAA;IACA,OAAA;IACA,iBAAA;CACA;AACA;IACA,UAAA;IACA,OAAA;CACA;AACA;IACA,gBAAA;IACA,oBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,kBAAA;IACA,iBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;AACA;QACA,gBAAA;CACA;CACA;AACA;IACA,YAAA;IACA,0BAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,kBAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,UAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,eAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,WAAA;IACA,YAAA;IACA,WAAA;IACA,cAAA;CACA;AACA;IACA,eAAA;IACA,0BAAA;IACA,iBAAA;CACA;AACA;IACA,oBAAA;IACA,cAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,kBAAA;IACA,eAAA;IACA,0BAAA;IACA,mBAAA;IACA,mBAAA;IACA,eAAA;IACA,gBAAA;IACA,mBAAA;IACA,QAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,0BAAA;IACA,sBAAA;IACA,iBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;CACA;AACA;IACA,oBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,eAAA;IACA,iBAAA;IACA,sBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,gBAAA;IACA,sBAAA;IACA,yBAAA;IACA,kBAAA;CACA;AACA;IACA,gBAAA;IACA,gBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,yBAAA;IACA,mBAAA;IACA,YAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,gBAAA;CACA;AAEA;IACA,YAAA;IACA,iBAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;CACA;AACA;IACA,aAAA;IACA,sBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,WAAA;IACA,YAAA;IACA,mCAAA;IACA,6BAAA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,gBAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,cAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,uBAAA;IACA,4BAAA;CACA;AACA;IACA,iBAAA;IACA,gBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;IACA,eAAA;IACA,gBAAA;IACA,cAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,kBAAA;IACA,oBAAA;CACA;AACA;IACA,qBAAA;CACA;AACA;IACA,oBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,uBAAA;CACA","file":"dbMovieDetail.vue","sourcesContent":["<template>\r\n    <div class=\"dbMovieDetail\">\r\n        <div class=\"page\">\r\n            <section class=\"promo_top_banner\" style=\"display: block !important\">\r\n                  <div class=\"banner_bg\">\r\n                    <img src=\"https://img3.doubanio.com/f/talion/fbcb08987a36258354c6037211d94286bef9716c/pics/card/promotion_bg.jpg\" class=\"img\">\r\n                  </div>\r\n                  <div class=\"banner_wrapper\">\r\n                    <div class=\"banner_inner\">\r\n                      <div class=\"promo_title\">\r\n                        \r\n                        <span class=\"promo_title_text\">用 App 打开</span><br>\r\n                        <span class=\"promo_title_text\">查看主演的其它电影</span>\r\n                      </div>\r\n\r\n                      <div class=\"button_wrapper\">\r\n                        <a href=\"https://www.douban.com/doubanapp/app?model=B&amp;copy=1&amp;page=movie&amp;channel=card_movie&amp;direct_dl=1\" rel=\"nofollow\" onclick=\"ga('send', 'event', 'ios', 'click', 'subject banner download')\" class=\"promo_button download_app\">极速下载</a>\r\n                        <a href=\"https://www.douban.com/doubanapp/dispatch?from=mdouban&amp;download=1&amp;model=B&amp;copy=1&amp;page=movie&amp;channel=card_movie&amp;uri=%2Fmovie%2F27038183\" rel=\"nofollow\" onclick=\"ga('send', 'event', 'ios', 'click', 'card more link')\" class=\"promo_button open_app\">打开</a>\r\n                      </div>\r\n                    </div>\r\n                  </div>\r\n            </section>\r\n        <div class=\"card\">\r\n                \r\n                <section class=\"subject-mark\" data-type=\"movie\" data-id=\"27038183\">\r\n                    <div class=\"mark-item\">\r\n                        <a href=\"javascript:;\" rel=\"nofollow\" name=\"pbtn-27038183-wish\" class=\"\">\r\n                            <span>想看</span>\r\n                        </a>\r\n                        <a href=\"javascript:;\" rel=\"nofollow\" name=\"pbtn-27038183-collect\">\r\n                            <span>看过</span>\r\n                        </a>\r\n                    </div>\r\n                </section>\r\n                <section class=\"\" id=\"celebrities\">\r\n                    <header>\r\n                        <h2>影人</h2>\r\n                    </header>\r\n                    <div class=\"section-content\">\r\n                            <ul class=\"row items\">\r\n                                <li class=\"item item__celebrity\" v-for=\"c in credits\">\r\n                                  <a href=\"https://movie.douban.com/celebrity/1350407/\">\r\n                                    <div class=\"item-poster\" :style=\"'background-image: url('+c.cover_url+')'\">\r\n                                    </div>\r\n                                    <span class=\"item-title name\">{{c.name}}</span>\r\n                                    <span class=\"item-title role\">{{c.roles[0]}}</span>\r\n                                  </a>\r\n                                </li>\r\n                            </ul>\r\n                    </div>\r\n                </section>\r\n                <section class=\"subject-comments\">\r\n                    <h2>的短评({{total}})</h2>\r\n                    <div class=\"bd\" id=\"comment-list\">\r\n                        <ul data-reactroot=\"\" class=\"list comment-list\">\r\n                            <li class=\"\" v-for=\"i in interests\">\r\n                                <div class=\"desc\">\r\n                                    <a href=\"/people/151784886/\"><img :src=\"i.user.avatar\" alt=\"辣眼看电视\"></a><div class=\"user-info\">\r\n                                        <strong>{{i.user.name}}</strong>\r\n                                        <span class=\"rating-stars\" data-rating=\"4\">\r\n                                        <span class=\"rating-star rating-star-medium-full\"></span>\r\n                                        <span class=\"rating-star rating-star-medium-full\"></span><span class=\"rating-star rating-star-medium-full\"></span>\r\n                                        <span class=\"rating-star rating-star-medium-full\"></span><span class=\"rating-star rating-star-medium-gray\"></span></span>\r\n                                        <div class=\"date\">{{i.create_time}}</div></div></div>\r\n                                        <p>{{i.comment}}</p><div class=\"btn-info\"><div class=\"ic-btn ic-btn-like  left \">\r\n                                            <i style=\"background-image:url(https://img3.doubanio.com/f/talion/7a0756b3b6e67b59ea88653bc0cfa14f61ff219d/pics/card/ic_like_gray.svg)\"></i><span class=\"text\">{{i.vote_count}}</span></div>\r\n                                        <div class=\"ic-btn ic-btn-more right\"></div></div>\r\n                                        </li>\r\n                        </ul>\r\n                    </div>\r\n                </section>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>\r\n\r\n<script type=\"text/javascript\">\r\n    export default {\r\n        data(){\r\n            return{\r\n                id:'',\r\n                interests:[],\r\n                total:0,\r\n                credits:[]\r\n            }\r\n        },\r\n        methods:{\r\n            load:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'https://m.douban.com/rexxar/api/v2/movie/'+self.id+'/interests?count=4&order_by=hot&start=0&ck=DQxl&for_mobile=1',\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        self.total = data.total;\r\n                        self.interests = data.interests;\r\n\r\n                        console.log(data);\r\n                    }\r\n                })\r\n            },\r\n            loadCredits:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'https://m.douban.com/rexxar/api/v2/movie/'+self.id+'/credits',\r\n\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        self.credits = data.credits[1].celebrities;\r\n                        console.log(data.credits);\r\n                    }\r\n                })\r\n            }\r\n        },\r\n        mounted:function(data){\r\n            var idarr = window.location.hash.split('/');\r\n            this.id = idarr[idarr.length-1];\r\n            console.log(this.id);\r\n            this.load();\r\n            this.loadCredits();\r\n        }\r\n    }\r\n</script>\r\n\r\n<style scoped>\r\n.promo_top_banner+.card {\r\n    margin-top: 0px;\r\n}\r\n.card {\r\n    margin: 0 18px;\r\n}\r\n.promo_top_banner {\r\n    margin-bottom: 0;\r\n    max-width: 100%;\r\n    overflow: hidden;\r\n    text-align: left;\r\n    position: relative;\r\n}\r\n.promo_top_banner .banner_bg {\r\n    font-size: 0;\r\n    padding-bottom: 21.33333%;\r\n    position: relative;\r\n}\r\n.promo_top_banner .banner_bg .img {\r\n    width: 100%;\r\n    position: absolute;\r\n    top: 0;\r\n    left: 0;\r\n}\r\n.promo_top_banner .banner_wrapper {\r\n    position: absolute;\r\n    left: 18px;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 10px;\r\n}\r\n.promo_top_banner .banner_wrapper .banner_inner{\r\n    width: 100%;\r\n    height: 100%;\r\n    display: flex;\r\n    align-items: center;\r\n}\r\n.promo_top_banner .banner_wrapper .banner_inner>* {\r\n    vertical-align: middle;\r\n}\r\n.promo_top_banner .button_wrapper {\r\n    white-space: nowrap;\r\n    font-size: 0;\r\n    padding-left: 12px;\r\n    flex:1;\r\n    margin-left:50px;\r\n}\r\n.button_wrapper {\r\n    margin: 0;\r\n    flex:1;\r\n}\r\n.promo_top_banner .promo_title_text {\r\n    font-size: 14px;\r\n    font-weight: normal;\r\n    line-height: 22px;\r\n    color: #2CA532;\r\n}\r\n.page {\r\n    padding-top: 47px;\r\n    max-width: 650px;\r\n    background: #fff;\r\n    margin: 0 auto;\r\n    overflow-x: hidden;\r\n}\r\n@media (max-width: 413px) and (min-width: 375px){\r\n    .promo_title, .promo_text {\r\n        font-size: 21px;\r\n    }\r\n}\r\n.promo_button.download_app {\r\n    color: #fff;\r\n    border: 1px solid #42bd56;\r\n    background: #42bd56;\r\n}\r\n.promo_top_banner .promo_button {\r\n    font-size: 13px;\r\n    font-weight: bold;\r\n    width: auto;\r\n    padding: 0 14px;\r\n    position: relative;\r\n}\r\n.promo_top_banner .promo_title {\r\n    margin: 0;\r\n}\r\n.promo_button {\r\n    display: inline-block;\r\n    border-radius: 3px;\r\n    line-height: 2;\r\n}\r\n.promo_top_banner .promo_button:after {\r\n    content: '';\r\n    position: absolute;\r\n    left: -4px;\r\n    right: -4px;\r\n    top: -10px;\r\n    bottom: -10px;\r\n}\r\n.promo_button.open_app {\r\n    color: #42bd56;\r\n    border: 1px solid #42bd56;\r\n    margin-left:10px;\r\n}\r\n.subject-mark .mark-item {\r\n    margin-bottom: 30px;\r\n    display: flex;\r\n    align-items: center;\r\n}\r\n.subject-mark .mark-item a {\r\n    height: 30px;\r\n    line-height: 30px;\r\n    display: block;\r\n    border: 1px solid #ffb712;\r\n    border-radius: 3px;\r\n    margin-right: 10px;\r\n    color: #ffb712;\r\n    font-size: 15px;\r\n    text-align: center;\r\n    flex: 1;\r\n}\r\n.list {\r\n    margin-right: -18px;\r\n}\r\n.list li:first-child {\r\n    padding-top: 0;\r\n}\r\n.list li {\r\n    position: relative;\r\n    padding: 15px 18px 15px 0;\r\n    word-wrap: break-word;\r\n    overflow: hidden;\r\n}\r\n.comment-list li .desc {\r\n    font-size: 0;\r\n    line-height: normal;\r\n    margin: 0 0 11px;\r\n    color: #494949;\r\n    position: relative;\r\n}\r\n.comment-list li p {\r\n    padding: 0 0 0 40px;\r\n    line-height: 22px;\r\n    color: #494949;\r\n}\r\n.list a {\r\n    display: block;\r\n    overflow: hidden;\r\n    text-decoration: none;\r\n    color: #494949;\r\n}\r\n.list li .desc>a {\r\n    display: inline;\r\n}\r\n.comment-list li .desc strong {\r\n    font-size: 15px;\r\n    display: inline-block;\r\n    vertical-align: text-top;\r\n    margin-right: 6px;\r\n}\r\n.comment-list li .desc .date {\r\n    margin-top: 6px;\r\n    font-size: 12px;\r\n    color: #aaa;\r\n}\r\n.comment-list li .desc img, .comment-list li .desc .avatar {\r\n    width: 36px;\r\n    border-radius: 50%;\r\n    vertical-align: text-top;\r\n    margin-right: 10px;\r\n    float: left;\r\n}\r\n.list a {\r\n    color: #494949;\r\n}\r\nh2 {\r\n    color: #aaa;\r\n    margin: 0 0 15px;\r\n    font-size: 15px;\r\n}\r\n\r\n.ic-btn .text {\r\n    color: #ccc;\r\n    margin-left: 3px;\r\n    position: relative;\r\n    left: 0;\r\n    top: -3px;\r\n}\r\n.comment-list li .btn-info {\r\n    height: 22px;\r\n    margin: 10px 0 0 40px;\r\n}\r\n.list li::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.ic-btn {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n    font-size: 14px;\r\n    cursor: pointer;\r\n}\r\n.ic-btn i{\r\n    width:20px;\r\n    height:20px;\r\n    background-position: center center;\r\n    background-repeat: no-repeat;\r\n    display: inline-block;\r\n    margin-bottom: -2px;\r\n}\r\n.items {\r\n    font-size: 0;\r\n    white-space: nowrap;\r\n    overflow-x: auto;\r\n}\r\n.item__celebrity:first-child {\r\n    margin-left: 0;\r\n}\r\n.item__celebrity {\r\n    font-size: 14px;\r\n    width: 75px;\r\n}\r\n.item a {\r\n    color: #111;\r\n    display:block;\r\n}\r\n.item-poster {\r\n    width: 100%;\r\n    overflow: hidden;\r\n    background-size: cover;\r\n    background-position: center;\r\n}\r\n.item__celebrity .item-title {\r\n    overflow: hidden;\r\n    font-size: 14px;\r\n    line-height: 1.5;\r\n    white-space: normal;\r\n    text-align: center;\r\n    color: #494949;\r\n    margin-top: 8px;\r\n    display:block;\r\n}\r\n.item__celebrity .item-title.role {\r\n    color: #aaa;\r\n}\r\n.item {\r\n    display: inline-block;\r\n    vertical-align: top;\r\n}\r\n.item__celebrity {\r\n    width: 75px;\r\n}\r\n.items>* {\r\n    font-size: .94rem;\r\n    white-space: normal;\r\n}\r\n.item {\r\n    margin-left: 0.48rem;\r\n}\r\nsection {\r\n    margin-bottom: 30px;\r\n}\r\n.item-poster:before {\r\n    content: \"\";\r\n    float: left;\r\n    margin-top: 142.85714%;\r\n}\r\n</style>"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 21 */
+/* 25 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26598,7 +26213,7 @@ exports.default = {
 };
 
 /***/ }),
-/* 22 */
+/* 26 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -26848,18 +26463,18 @@ if (false) {
 }
 
 /***/ }),
-/* 23 */
+/* 27 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbRadio_vue__ = __webpack_require__(26);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbRadio_vue__ = __webpack_require__(30);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbRadio_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbRadio_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_63925dc0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbRadio_vue__ = __webpack_require__(27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_63925dc0_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbRadio_vue__ = __webpack_require__(31);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(24)
+  __webpack_require__(28)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
@@ -26895,7 +26510,7 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-63925dc0", Component.options)
   } else {
     hotAPI.reload("data-v-63925dc0", Component.options)
-' + '  }
+  }
   module.hot.dispose(function (data) {
     disposed = true
   })
@@ -26905,13 +26520,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 24 */
+/* 28 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(25);
+var content = __webpack_require__(29);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -26931,7 +26546,7 @@ if(false) {
 }
 
 /***/ }),
-/* 25 */
+/* 29 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(true);
@@ -26939,13 +26554,13 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.promo_top_banner+.card[data-v-63925dc0] {\n    margin-top: 0px;\n}\n.card[data-v-63925dc0]{\n    margin: 0 18px;\n}\n.pull-refresh-container[data-v-63925dc0] {\n    position: relative;\n}\n.status-editor-bar[data-v-63925dc0] {\n    position: relative;\n    margin: 0 -18px 5px;\n    padding: 10px 18px;\n    cursor: pointer;\n    overflow: hidden;\n}\n.pull-refresh-loading[data-v-63925dc0] {\n    /*background: url(/f/talion/bf2ef8c…/pics/card/loading_grey.gif) no-repeat;*/\n    background-position: center;\n    background-size: 24px;\n    width: 100%;\n    height: 48px;\n    z-index: -1;\n    position: absolute;\n    left: 0;\n    top: 60px;\n    opacity: 0;\n}\n.status-list[data-v-63925dc0] {\n    overflow: hidden;\n}\n.status-list li[data-v-63925dc0] {\n    position: relative;\n    padding-bottom: 20px;\n    margin-top: 20px;\n    margin-bottom: 20px;\n    padding-left: 50px;\n}\n.status-list li .desc[data-v-63925dc0] {\n    margin-left: -50px;\n    display: flex;\n        font-size: 0;\n    line-height: normal;\n    margin: 0 0 11px;\n    color: #494949;\n    position: relative;\n    align-items: center;\n}\na[data-v-63925dc0] {\n    color: #42bd56;\n    text-decoration: none;\n}\n.status-list li .desc img[data-v-63925dc0] {\n    width: 40px;\n    height: 40px;\n    margin-right: 10px;\n}\n.comment-list li .desc img[data-v-63925dc0], .comment-list li .desc .avatar[data-v-63925dc0] {\n    border-radius: 50%;\n    vertical-align: text-top;\n}\n.status-list li .desc .user-info[data-v-63925dc0] {\n    flex: auto;\n}\n.status-list li .content[data-v-63925dc0] {\n    font-size: 17px;\n}\n.comment-list li .content[data-v-63925dc0] {\n    padding-left: 0;\n    margin-top: 10px;\n    line-height: 22px;\n    color: #494949;\n}\n.status-list li .content>div[data-v-63925dc0] {\n    display: inline;\n}\n.feed-images[data-v-63925dc0] {\n    margin-top: 15px;\n}\n.feed-images.single .item[data-v-63925dc0] {\n    display: inline-block;\n    max-height: 300px;\n    overflow: hidden;\n}\n.feed-images .item[data-v-63925dc0] {\n    position: relative;\n    cursor: pointer;\n    overflow: hidden;\n}\n.feed-images.single .item.portrait img[data-v-63925dc0] {\n    max-width: 100%;\n}\n.feed-images.single .item img[data-v-63925dc0] {\n    display: block;\n}\n.comment-list li .info[data-v-63925dc0] {\n    padding-left: 0;\n    margin-top: 13px;\n    margin-right: -20px;\n    overflow: auto;\n}\n.status-list li[data-v-63925dc0]::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.comment-list li[data-v-63925dc0]::before, .comment-list li[data-v-63925dc0]::after {\n    margin-left: 46px;\n}\n.ic-btn.left[data-v-63925dc0] {\n    float: left;\n}\n.ic-btn[data-v-63925dc0] {\n    display: inline-block;\n    margin-right: 20px;\n    font-size: 14px;\n    cursor: pointer;\n}\n.ic-btn[data-v-63925dc0]::before {\n    content: '';\n    width: 20px;\n    height: 20px;\n    background-position: center center;\n    background-repeat: no-repeat;\n    display: inline-block;\n    margin-bottom: -2px;\n}\n.ic-btn-like[data-v-63925dc0]::before {\n    /*background-image: url(/f/talion/7a0756b…/pics/card/ic_like_gray.svg);*/\n}\n.ic-btn .text[data-v-63925dc0] {\n    color: #ccc;\n    margin-left: 3px;\n    position: relative;\n    left: 0;\n    top: -3px;\n}\n.ic-btn.left[data-v-63925dc0] {\n    float: left;\n}\n.ic-btn-comment[data-v-63925dc0]::before {\n    /*background-image: url(/f/talion/ac8a7e0…/pics/card/ic_comment.svg);*/\n}\n.ic-btn-retweet[data-v-63925dc0]::before {\n    /*background-image: url(/f/talion/8604ef3…/pics/card/ic_retweet_gray.svg);*/\n}\n.ic-btn.right[data-v-63925dc0] {\n    float: right;\n}\n.ic-btn-more[data-v-63925dc0]::before {\n    /*background-image: url(/f/talion/be268c0…/pics/card/more.svg);*/\n}\n.status-editor-bar .avatar img[data-v-63925dc0] {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n}\n.status-editor-bar .avatar[data-v-63925dc0] {\n    width: 40px;\n    height: 40px;\n    float: left;\n}\n.status-editor-bar .holder[data-v-63925dc0] {\n    color: #aaa;\n    padding-left: 10px;\n    font-size: 15px;\n    line-height: 40px;\n    float: left;\n}\nhtml body .page[data-v-63925dc0] {\n    position: fixed;\n    left: 0;\n    top: 0;\n    bottom: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    overflow-x: hidden;\n    overflow-y: scroll;\n}\n.status-list li .desc[data-v-63925dc0] {\n    margin-left: -50px;\n}\n.status-list li .desc .user-info strong[data-v-63925dc0] {\n    font-size: 17px;\n    line-height: 1;\n    color: #494949;\n}\n.comment-list li .desc .user-info strong[data-v-63925dc0] {\n    display: inline-block;\n    vertical-align: text-top;\n    margin-right: 6px;\n}\n.status-list li .desc .user-info strong span[data-v-63925dc0] {\n    color: #aaa;\n    font-weight: normal;\n}\n.status-list li .desc .user-info .timestamp[data-v-63925dc0] {\n    font-size: 14px;\n    margin-top: 6px;\n    line-height: 1;\n        color: #aaa;\n}\n.feed-images.single .item.portrait img[data-v-63925dc0] {\n    max-width: 100%;\n}\n.feed-images .item[data-v-63925dc0] {\n    position: relative;\n    cursor: pointer;\n    overflow:hidden;\n}\n.status-editor-bar .icon[data-v-63925dc0] {\n    width: 24px;\n    height: 24px;\n    padding: 8px;\n    margin-right: 10px;\n    position: relative;\n    float: right;\n    box-sizing: border-box;\n    margin-top:7px;\n}\n.status-editor-bar .icon.icon-camera[data-v-63925dc0] {\n    margin-right: 0;\n}\n.status-editor-bar .icon.icon-pen[data-v-63925dc0]{\n    margin-right: 32px;\n}\n.status-editor-bar[data-v-63925dc0]::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douBanSix/components/lantao/components/lantao/dbRadio.vue?90507cb2"],"names":[],"mappings":";AAgEA;IACA,gBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;IACA,iBAAA;CACA;AACA;IACA,6EAAA;IACA,4BAAA;IACA,sBAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;IACA,WAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,mBAAA;IACA,qBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,cAAA;QACA,aAAA;IACA,oBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,oBAAA;CACA;AACA;IACA,eAAA;IACA,sBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,yBAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,gBAAA;IACA,iBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;IACA,kBAAA;IACA,iBAAA;CACA;AACA;IACA,mBAAA;IACA,gBAAA;IACA,iBAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,gBAAA;IACA,iBAAA;IACA,oBAAA;IACA,eAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,YAAA;IACA,YAAA;IACA,aAAA;IACA,mCAAA;IACA,6BAAA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,yEAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,uEAAA;CACA;AACA;IACA,4EAAA;CACA;AACA;IACA,aAAA;CACA;AACA;IACA,iEAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,gBAAA;IACA,kBAAA;IACA,YAAA;CACA;AACA;IACA,gBAAA;IACA,QAAA;IACA,OAAA;IACA,UAAA;IACA,SAAA;IACA,YAAA;IACA,aAAA;IACA,uBAAA;IACA,mBAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,gBAAA;IACA,eAAA;IACA,eAAA;CACA;AACA;IACA,sBAAA;IACA,yBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,gBAAA;IACA,eAAA;QACA,YAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,aAAA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,uBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA","file":"dbRadio.vue","sourcesContent":["<template>\n    <div class=\"dbRadio\">\n        <div class=\"page\">\n            <div class=\"card\">\n                <div data-reactroot=\"\" class=\"pull-refresh-container\">\n                    <div class=\"status-editor-bar\"><div class=\"avatar\"><img src=\"https://img1.doubanio.com/icon/user_normal.jpg\" alt=\"未登陆\"></div><div class=\"holder\">登录发广播</div><div class=\"icon icon-camera\" style=\"background-image:url(../svg/ic_status_camera.svg)\"></div><a class=\"icon icon-pen\" style=\"background-image:url(../svg/ic_status_pen.svg);background-size: contain;\n    background-position: center;\n    background-repeat: no-repeat;\" :href=\"'#/home/sendRadio'\"></a></div>\n                    <ul class=\"status-list comment-list\">\n                        <li v-for=\"i in item\">\n                            <div>\n                                <div class=\"desc\">\n                                    <a href=\"/people/95805238/\">\n                                        <img data-type=\"avatar\" alt=\"豆瓣\" src=\"https://img3.doubanio.com/icon/up95805238-16.jpg\">\n                                    </a>\n                                        <a href=\"/people/95805238/status/2045165796/\">\n                                        <div class=\"user-info\">\n                                            <strong><!-- react-text: 23 -->{{i.status.author.name}}<!-- /react-text --><!-- react-text: 24 --> <!-- /react-text --><span>说：</span></strong>\n                                        <div class=\"timestamp\">{{i.status.create_time}}</div>\n                                        </div>\n                                        </a>\n                                        </div>\n                                    <a href=\"/people/95805238/status/2045165796/\"><div class=\"content\"><div>{{i.status.text}} <a href=\"https://www.douban.com/biz/photograph/2017-autumn?source=dbbroadcast\">https://dou.bz/3werya</a></div></div></a></div><div class=\"feed-images single\">\n                                    <div v-if=\"i.status.images[0]\" class=\"item portrait\" :style=\"'background-image: url(&quot;'+i.status.images[0].normal.url+'&quot;);'\">\n                                        <!-- <div v-if=\"i.status.images[0]\">\n                                            <img :src=\"i.status.images[0].large.url\">\n                                            <img v-if=\"i.status.images[1]\" data-type=\"cover\" :src=\"i.status.images[1].large.url\">\n                                        </div> -->\n                                            \n                        </div><!-- react-empty: 33 --></div><div class=\"info\"><div class=\"ic-btn ic-btn-like  left \"><span class=\"text\">398</span></div><div class=\"ic-btn ic-btn-comment  left \"><span class=\"text\">54</span></div><div class=\"ic-btn ic-btn-retweet  left \"><span class=\"text\">113</span></div><div class=\"ic-btn ic-btn-more   right\"></div></div></li>\n                    </ul>\n                </div>\n            </div>\n        </div>\n    </div>\n</template>\n<script>\n    export default {\n        data(){\n            return {\n                item:[]\n            }\n        },\n        methods:{\n            load:function(){\n                var self = this;\n                $.ajax({\n                    url:'https://m.douban.com/rexxar/api/v2/status/anonymous_timeline?max_id=&ck=DQxl&for_mobile=1',\n                    type:'get',\n                    dataType:'jsonp',\n                    success:function(data){\n                        console.log(data);\n                        self.item = data.items;\n                        console.log(self.item[14].status.images[0].normal.url);\n                    }\n                })\n            }\n        },\n        mounted:function(){\n            this.load();\n        }\n    }\n</script>\n<style scoped>\n.promo_top_banner+.card {\n    margin-top: 0px;\n}\n.card{\n    margin: 0 18px;\n}\n.pull-refresh-container {\n    position: relative;\n}\n.status-editor-bar {\n    position: relative;\n    margin: 0 -18px 5px;\n    padding: 10px 18px;\n    cursor: pointer;\n    overflow: hidden;\n}\n.pull-refresh-loading {\n    /*background: url(/f/talion/bf2ef8c…/pics/card/loading_grey.gif) no-repeat;*/\n    background-position: center;\n    background-size: 24px;\n    width: 100%;\n    height: 48px;\n    z-index: -1;\n    position: absolute;\n    left: 0;\n    top: 60px;\n    opacity: 0;\n}\n.status-list {\n    overflow: hidden;\n}\n.status-list li {\n    position: relative;\n    padding-bottom: 20px;\n    margin-top: 20px;\n    margin-bottom: 20px;\n    padding-left: 50px;\n}\n.status-list li .desc {\n    margin-left: -50px;\n    display: flex;\n        font-size: 0;\n    line-height: normal;\n    margin: 0 0 11px;\n    color: #494949;\n    position: relative;\n    align-items: center;\n}\na {\n    color: #42bd56;\n    text-decoration: none;\n}\n.status-list li .desc img {\n    width: 40px;\n    height: 40px;\n    margin-right: 10px;\n}\n.comment-list li .desc img, .comment-list li .desc .avatar {\n    border-radius: 50%;\n    vertical-align: text-top;\n}\n.status-list li .desc .user-info {\n    flex: auto;\n}\n.status-list li .content {\n    font-size: 17px;\n}\n.comment-list li .content {\n    padding-left: 0;\n    margin-top: 10px;\n    line-height: 22px;\n    color: #494949;\n}\n.status-list li .content>div {\n    display: inline;\n}\n.feed-images {\n    margin-top: 15px;\n}\n.feed-images.single .item {\n    display: inline-block;\n    max-height: 300px;\n    overflow: hidden;\n}\n.feed-images .item {\n    position: relative;\n    cursor: pointer;\n    overflow: hidden;\n}\n.feed-images.single .item.portrait img {\n    max-width: 100%;\n}\n.feed-images.single .item img {\n    display: block;\n}\n.comment-list li .info {\n    padding-left: 0;\n    margin-top: 13px;\n    margin-right: -20px;\n    overflow: auto;\n}\n.status-list li::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.comment-list li::before, .comment-list li::after {\n    margin-left: 46px;\n}\n.ic-btn.left {\n    float: left;\n}\n.ic-btn {\n    display: inline-block;\n    margin-right: 20px;\n    font-size: 14px;\n    cursor: pointer;\n}\n.ic-btn::before {\n    content: '';\n    width: 20px;\n    height: 20px;\n    background-position: center center;\n    background-repeat: no-repeat;\n    display: inline-block;\n    margin-bottom: -2px;\n}\n.ic-btn-like::before {\n    /*background-image: url(/f/talion/7a0756b…/pics/card/ic_like_gray.svg);*/\n}\n.ic-btn .text {\n    color: #ccc;\n    margin-left: 3px;\n    position: relative;\n    left: 0;\n    top: -3px;\n}\n.ic-btn.left {\n    float: left;\n}\n.ic-btn-comment::before {\n    /*background-image: url(/f/talion/ac8a7e0…/pics/card/ic_comment.svg);*/\n}\n.ic-btn-retweet::before {\n    /*background-image: url(/f/talion/8604ef3…/pics/card/ic_retweet_gray.svg);*/\n}\n.ic-btn.right {\n    float: right;\n}\n.ic-btn-more::before {\n    /*background-image: url(/f/talion/be268c0…/pics/card/more.svg);*/\n}\n.status-editor-bar .avatar img {\n    width: 100%;\n    height: 100%;\n    border-radius: 50%;\n}\n.status-editor-bar .avatar {\n    width: 40px;\n    height: 40px;\n    float: left;\n}\n.status-editor-bar .holder {\n    color: #aaa;\n    padding-left: 10px;\n    font-size: 15px;\n    line-height: 40px;\n    float: left;\n}\nhtml body .page {\n    position: fixed;\n    left: 0;\n    top: 0;\n    bottom: 0;\n    right: 0;\n    width: 100%;\n    height: 100%;\n    box-sizing: border-box;\n    overflow-x: hidden;\n    overflow-y: scroll;\n}\n.status-list li .desc {\n    margin-left: -50px;\n}\n.status-list li .desc .user-info strong {\n    font-size: 17px;\n    line-height: 1;\n    color: #494949;\n}\n.comment-list li .desc .user-info strong {\n    display: inline-block;\n    vertical-align: text-top;\n    margin-right: 6px;\n}\n.status-list li .desc .user-info strong span {\n    color: #aaa;\n    font-weight: normal;\n}\n.status-list li .desc .user-info .timestamp {\n    font-size: 14px;\n    margin-top: 6px;\n    line-height: 1;\n        color: #aaa;\n}\n.feed-images.single .item.portrait img {\n    max-width: 100%;\n}\n.feed-images .item {\n    position: relative;\n    cursor: pointer;\n    overflow:hidden;\n}\n.status-editor-bar .icon {\n    width: 24px;\n    height: 24px;\n    padding: 8px;\n    margin-right: 10px;\n    position: relative;\n    float: right;\n    box-sizing: border-box;\n    margin-top:7px;\n}\n.status-editor-bar .icon.icon-camera {\n    margin-right: 0;\n}\n.status-editor-bar .icon.icon-pen{\n    margin-right: 32px;\n}\n.status-editor-bar::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.promo_top_banner+.card[data-v-63925dc0] {\r\n    margin-top: 0px;\n}\n.card[data-v-63925dc0]{\r\n    margin: 0 18px;\n}\n.pull-refresh-container[data-v-63925dc0] {\r\n    position: relative;\n}\n.status-editor-bar[data-v-63925dc0] {\r\n    position: relative;\r\n    margin: 0 -18px 5px;\r\n    padding: 10px 18px;\r\n    cursor: pointer;\r\n    overflow: hidden;\n}\n.pull-refresh-loading[data-v-63925dc0] {\r\n    /*background: url(/f/talion/bf2ef8c…/pics/card/loading_grey.gif) no-repeat;*/\r\n    background-position: center;\r\n    background-size: 24px;\r\n    width: 100%;\r\n    height: 48px;\r\n    z-index: -1;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 60px;\r\n    opacity: 0;\n}\n.status-list[data-v-63925dc0] {\r\n    overflow: hidden;\n}\n.status-list li[data-v-63925dc0] {\r\n    position: relative;\r\n    padding-bottom: 20px;\r\n    margin-top: 20px;\r\n    margin-bottom: 20px;\r\n    padding-left: 50px;\n}\n.status-list li .desc[data-v-63925dc0] {\r\n    margin-left: -50px;\r\n    display: flex;\r\n        font-size: 0;\r\n    line-height: normal;\r\n    margin: 0 0 11px;\r\n    color: #494949;\r\n    position: relative;\r\n    align-items: center;\n}\na[data-v-63925dc0] {\r\n    color: #42bd56;\r\n    text-decoration: none;\n}\n.status-list li .desc img[data-v-63925dc0] {\r\n    width: 40px;\r\n    height: 40px;\r\n    margin-right: 10px;\n}\n.comment-list li .desc img[data-v-63925dc0], .comment-list li .desc .avatar[data-v-63925dc0] {\r\n    border-radius: 50%;\r\n    vertical-align: text-top;\n}\n.status-list li .desc .user-info[data-v-63925dc0] {\r\n    flex: auto;\n}\n.status-list li .content[data-v-63925dc0] {\r\n    font-size: 17px;\n}\n.comment-list li .content[data-v-63925dc0] {\r\n    padding-left: 0;\r\n    margin-top: 10px;\r\n    line-height: 22px;\r\n    color: #494949;\n}\n.status-list li .content>div[data-v-63925dc0] {\r\n    display: inline;\n}\n.feed-images[data-v-63925dc0] {\r\n    margin-top: 15px;\n}\n.feed-images.single .item[data-v-63925dc0] {\r\n    display: inline-block;\r\n    max-height: 300px;\r\n    overflow: hidden;\n}\n.feed-images.single .item img[data-v-63925dc0] {\r\n    display: block;\n}\n.comment-list li .info[data-v-63925dc0] {\r\n    padding-left: 0;\r\n    margin-top: 13px;\r\n    margin-right: -20px;\r\n    overflow: auto;\n}\n.status-list li[data-v-63925dc0]::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.comment-list li[data-v-63925dc0]::before, .comment-list li[data-v-63925dc0]::after {\r\n    margin-left: 46px;\n}\n.ic-btn.left[data-v-63925dc0] {\r\n    float: left;\n}\n.ic-btn[data-v-63925dc0] {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n    font-size: 14px;\r\n    cursor: pointer;\n}\n.ic-btn i[data-v-63925dc0]{\r\n    width: 20px;\r\n    height: 20px;\r\n    background-position: center center;\r\n    background-repeat: no-repeat;\r\n    display: inline-block;\r\n    margin-bottom: -2px;\n}\n.ic-btn-like[data-v-63925dc0]::before {\r\n    /*background-image: url(/f/talion/7a0756b…/pics/card/ic_like_gray.svg);*/\n}\n.ic-btn .text[data-v-63925dc0] {\r\n    color: #ccc;\r\n    margin-left: 3px;\r\n    position: relative;\r\n    left: 0;\r\n    top: -3px;\n}\n.ic-btn.left[data-v-63925dc0] {\r\n    float: left;\n}\n.ic-btn.right[data-v-63925dc0] {\r\n    float: right;\n}\n.status-editor-bar .avatar img[data-v-63925dc0] {\r\n    width: 100%;\r\n    height: 100%;\r\n    border-radius: 50%;\n}\n.status-editor-bar .avatar[data-v-63925dc0] {\r\n    width: 40px;\r\n    height: 40px;\r\n    float: left;\n}\n.status-editor-bar .holder[data-v-63925dc0] {\r\n    color: #aaa;\r\n    padding-left: 10px;\r\n    font-size: 15px;\r\n    line-height: 40px;\r\n    float: left;\n}\nhtml body .page[data-v-63925dc0] {\r\n    position: fixed;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    box-sizing: border-box;\r\n    overflow-x: hidden;\r\n    overflow-y: scroll;\n}\n.status-list li .desc[data-v-63925dc0] {\r\n    margin-left: -50px;\n}\n.status-list li .desc .user-info strong[data-v-63925dc0] {\r\n    font-size: 17px;\r\n    line-height: 1;\r\n    color: #494949;\n}\n.comment-list li .desc .user-info strong[data-v-63925dc0] {\r\n    display: inline-block;\r\n    vertical-align: text-top;\r\n    margin-right: 6px;\n}\n.status-list li .desc .user-info strong span[data-v-63925dc0] {\r\n    color: #aaa;\r\n    font-weight: normal;\n}\n.status-list li .desc .user-info .timestamp[data-v-63925dc0] {\r\n    font-size: 14px;\r\n    margin-top: 6px;\r\n    line-height: 1;\r\n        color: #aaa;\n}\n.feed-images.single .item.portrait img[data-v-63925dc0] {\r\n    max-width: 100%;\n}\n.feed-images .item[data-v-63925dc0] {\r\n    position: relative;\r\n    cursor: pointer;\r\n    overflow:hidden;\n}\n.status-editor-bar .icon[data-v-63925dc0] {\r\n    width: 24px;\r\n    height: 24px;\r\n    padding: 8px;\r\n    margin-right: 10px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n    margin-top:7px;\n}\n.status-editor-bar .icon.icon-camera[data-v-63925dc0] {\r\n    margin-right: 0;\n}\n.status-editor-bar .icon.icon-pen[data-v-63925dc0]{\r\n    margin-right: 32px;\n}\n.status-editor-bar[data-v-63925dc0]::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.feed-card[data-v-63925dc0] {\r\n    padding: 15px;\r\n    margin: 10px 0 20px;\r\n    border-radius: 2px;\r\n    background: #f9f9f9;\n}\n.feed-card .title[data-v-63925dc0] {\r\n    font-size: 17px;\r\n    font-weight: 500;\r\n    line-height: 1.4;\r\n    color: #494949;\r\n    margin-bottom: 5px;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\n}\n.feed-card .text[data-v-63925dc0] {\r\n    font-size: 12px;\r\n    line-height: 16px;\r\n    color: #aaa;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\n}\n.has-cover .cover[data-v-63925dc0] {\r\n    width: 75px;\r\n    height: 48px;\r\n    background-size: cover;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    position: absolute;\r\n    top: 0;\r\n    right: 0;\n}\n.has-cover[data-v-63925dc0]{\r\n    height: 48px;\r\n    padding-right: 90px;\r\n    position: relative;\n}\n.feed-images img[data-v-63925dc0]{\r\n    width: 93px;\r\n    height: 93px;\n}\n.feed-images .big[data-v-63925dc0]{\r\n    width: 100%;\r\n    height: 100%;\n}\r\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douban/douBanSix/components/lantao/components/lantao/dbRadio.vue?a0639540"],"names":[],"mappings":";AA2KA;IACA,gBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;IACA,iBAAA;CACA;AACA;IACA,6EAAA;IACA,4BAAA;IACA,sBAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;IACA,WAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,mBAAA;IACA,qBAAA;IACA,iBAAA;IACA,oBAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,cAAA;QACA,aAAA;IACA,oBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,oBAAA;CACA;AACA;IACA,eAAA;IACA,sBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,yBAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,gBAAA;IACA,iBAAA;IACA,kBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,iBAAA;CACA;AACA;IACA,sBAAA;IACA,kBAAA;IACA,iBAAA;CACA;AACA;IACA,eAAA;CACA;AACA;IACA,gBAAA;IACA,iBAAA;IACA,oBAAA;IACA,eAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,kBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,sBAAA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,mCAAA;IACA,6BAAA;IACA,sBAAA;IACA,oBAAA;CACA;AACA;IACA,yEAAA;CACA;AACA;IACA,YAAA;IACA,iBAAA;IACA,mBAAA;IACA,QAAA;IACA,UAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,aAAA;CACA;AAEA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,YAAA;CACA;AACA;IACA,YAAA;IACA,mBAAA;IACA,gBAAA;IACA,kBAAA;IACA,YAAA;CACA;AACA;IACA,gBAAA;IACA,QAAA;IACA,OAAA;IACA,UAAA;IACA,SAAA;IACA,YAAA;IACA,aAAA;IACA,uBAAA;IACA,mBAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,gBAAA;IACA,eAAA;IACA,eAAA;CACA;AACA;IACA,sBAAA;IACA,yBAAA;IACA,kBAAA;CACA;AACA;IACA,YAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,gBAAA;IACA,eAAA;QACA,YAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,mBAAA;IACA,gBAAA;IACA,gBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,aAAA;IACA,mBAAA;IACA,mBAAA;IACA,aAAA;IACA,uBAAA;IACA,eAAA;CACA;AACA;IACA,gBAAA;CACA;AACA;IACA,mBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,cAAA;IACA,oBAAA;IACA,mBAAA;IACA,oBAAA;CACA;AACA;IACA,gBAAA;IACA,iBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,iBAAA;IACA,wBAAA;CACA;AACA;IACA,gBAAA;IACA,kBAAA;IACA,YAAA;IACA,iBAAA;IACA,wBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,uBAAA;IACA,4BAAA;IACA,6BAAA;IACA,mBAAA;IACA,OAAA;IACA,SAAA;CACA;AACA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;CACA","file":"dbRadio.vue","sourcesContent":["<template>\r\n    <div class=\"dbRadio\">\r\n        <div class=\"page\">\r\n            <div class=\"card\">\r\n                <div data-reactroot=\"\" class=\"pull-refresh-container\">\r\n                    <div class=\"status-editor-bar\">\r\n                        <div class=\"avatar\">\r\n                            <img src=\"https://img1.doubanio.com/icon/user_normal.jpg\">\r\n                        </div>\r\n                            <div class=\"holder\">登录发广播</div>\r\n                            <div class=\"icon icon-camera\" style=\"background-image:url(../svg/ic_status_camera.svg)\"></div>\r\n                            <a class=\"icon icon-pen\" style=\"background-image:url(../svg/ic_status_pen.svg);background-size: contain;background-position: center;background-repeat: no-repeat;\" :href=\"'#/home/sendRadio'\"></a></div>\r\n                    <ul class=\"status-list comment-list\">\r\n                        <li v-for=\"i in item\">\r\n                            <div>\r\n                                <div class=\"desc\">\r\n                                    <a href=\"/people/95805238/\">\r\n                                        <img alt=\"豆瓣\" src=\"https://img3.doubanio.com/icon/up95805238-16.jpg\">\r\n                                    </a>\r\n                                    <a href=\"/people/95805238/status/2045165796/\">\r\n                                        <div class=\"user-info\">\r\n                                            <strong>\r\n                                                {{i.status.author.name}} \r\n                                                <span>{{i.status.activity}}</span>\r\n                                            </strong>\r\n                                            <div class=\"timestamp\">{{i.status.create_time}}</div>\r\n                                        </div>\r\n                                    </a>\r\n                                </div>\r\n                                    <a>\r\n                                        <div class=\"content\">\r\n                                            <div>{{i.status.text}} \r\n                                                <a v-if=\"i.status.entities[0]\" :href=\"i.status.entities[0].uri\">{{i.status.entities[0].title}}</a>\r\n                                            </div>\r\n                                        </div>\r\n                                    </a>\r\n                            </div>\r\n                            <div class=\"feed-images single\" v-if=\"i.status.activity=='说：'\">\r\n                                <div v-if=\"!i.status.images[1]\" class=\"item portrait\" style=\"background-image:url(./radioImage/3VFkZE.jpg);height:300px;width:290px;background-size:290px auto\">\r\n                                </div>\r\n                                \r\n                                <div v-if=\"i.status.images[1]\">\r\n                                    <div class=\"item portrait\" style=\"background-image:url(./radioImage/1cp0vh.jpg);height:92px;width:92px;background-size:92px auto\">\r\n                                    </div>\r\n                                    <div class=\"item portrait\" style=\"background-image:url(./radioImage/1cp0vh.jpg);height:92px;width:92px;background-size:92px auto\">\r\n                                    </div>\r\n                                </div>\r\n                            </div>\r\n                            <div class=\"feed-card article-card  has-subtitle\" v-if=\"i.status.activity=='写了日记'\">\r\n                                <a href=\"https://www.douban.com/note/637408669/\">\r\n                                    <div class=\"title\">{{i.status.card.title}}</div>\r\n                                    <div class=\"detail\" :class=\"{'has-cover':i.status.card.image}\">\r\n                                        <div class=\"text\">{{i.status.card.subtitle}}</div>\r\n                                        <div v-if=\"i.status.card.image\" class=\"cover\" style=\"background-image: url(./radioImage/p44530630.jpg);height:48px;width:75px;background-size:75px auto\"></div>\r\n                                    </div>\r\n                                </a>\r\n                            </div>\r\n                            <div class=\"info\">\r\n                                <div class=\"ic-btn ic-btn-like left\" >\r\n                                    <i :style=\"'background-image:url(./svg/ic_like_gray.svg)'\"></i>\r\n                                    <span class=\"text\">{{i.status.like_count}}</span>\r\n                                </div>\r\n                                <div class=\"ic-btn ic-btn-comment left\">\r\n                                    <i :style=\"'background-image:url(./svg/ic_comment.svg)'\"></i>\r\n                                    <span class=\"text\">{{i.status.comments_count}}</span>\r\n                                </div>\r\n                                <div class=\"ic-btn ic-btn-retweet left\">\r\n                                    <i :style=\"'background-image:url(./svg/ic_retweet_gray.svg)'\"></i>\r\n                                    <span class=\"text\">{{i.status.reshares_count}}</span>\r\n                                </div>\r\n                                <div class=\"ic-btn ic-btn-more right\"></div>\r\n                            </div>\r\n                        </li>\r\n                    </ul>\r\n                </div>\r\n            </div>\r\n            <div class=\"card\" v-if=\"eternal\">\r\n                <ul class=\"status-list comment-list\">\r\n                    <li v-for=\"e in eternal\">\r\n                        <div>\r\n                            <div class=\"desc\">\r\n                                <a href=\"/people/95805238/\">\r\n                                    <img alt=\"豆瓣\" src=\"https://img3.doubanio.com/icon/up95805238-16.jpg\">\r\n                                </a>\r\n                                <a>\r\n                                    <div class=\"user-info\">\r\n                                        <strong>\r\n                                            lmm\r\n                                            <span>说： </span>\r\n                                        </strong>\r\n                                        <div class=\"timestamp\">{{e.time}}</div>\r\n                                    </div>\r\n                                </a>\r\n                                \r\n                            </div>\r\n                            <a href=\"/people/3186129/status/2052193615/\">\r\n                                <div class=\"content\">\r\n                                    <div>{{e.eternal}}</div>\r\n                                </div>\r\n                            </a>\r\n                            <div class=\"feed-images single\">\r\n                                <img v-if=\"e.img[0]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[0]\" :class=\"{'big':e.img.length<2}\"/>\r\n                                <img v-if=\"e.img[1]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[1]\"/>\r\n                                <img v-if=\"e.img[2]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[2]\"/>\r\n                                <img v-if=\"e.img[3]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[3]\"/>\r\n                                <img v-if=\"e.img[4]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[4]\"/>\r\n                                <img v-if=\"e.img[5]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[5]\"/>\r\n                                <img v-if=\"e.img[6]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[6]\"/>\r\n                                <img v-if=\"e.img[7]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[7]\"/>\r\n                                <img v-if=\"e.img[8]\" :src=\"'../addImage/eternal/phone18124092479/' + e.img[8]\"/>\r\n                            </div>\r\n                        </div>\r\n\r\n                    </li>\r\n                </ul>\r\n                <div >\r\n                    <!-- {{e.eternal}} -->\r\n                    \r\n                </div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n</template>\r\n<script>\r\n    export default {\r\n        data(){\r\n            return {\r\n                item:[],\r\n                eternal:[]\r\n            }\r\n        },\r\n        methods:{\r\n            load:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    url:'https://m.douban.com/rexxar/api/v2/status/anonymous_timeline?max_id=&ck=DQxl&for_mobile=1',\r\n                    type:'get',\r\n                    dataType:'jsonp',\r\n                    success:function(data){\r\n                        if(C.get('eternal')  != ''){\r\n                            self.eternal = JSON.parse(C.get('eternal'));\r\n                            console.log(self.eternal)\r\n                        }else{\r\n                            self.item = data.items;\r\n                        }\r\n\r\n                        // console.log(data);\r\n                        \r\n                        // console.log(self.item[14].status.images[0].normal.url);\r\n                        // console.log(JSON.parse(C.get('eternal')));\r\n                        // console.log(data.items.concat(JSON.parse(C.get('eternal'))));\r\n                    }\r\n                })\r\n            },\r\n            mountedImage:function(){\r\n                console.log(C.get('eternal'));\r\n                // console.log(JSON.parse(C.get('eternal')));\r\n             \r\n            }\r\n        },\r\n        mounted:function(){\r\n            this.load();\r\n            this.mountedImage();\r\n\r\n        },\r\n        components:{\r\n            'download':download\r\n        }\r\n    }\r\n</script>\r\n<style scoped>\r\n.promo_top_banner+.card {\r\n    margin-top: 0px;\r\n}\r\n.card{\r\n    margin: 0 18px;\r\n}\r\n.pull-refresh-container {\r\n    position: relative;\r\n}\r\n.status-editor-bar {\r\n    position: relative;\r\n    margin: 0 -18px 5px;\r\n    padding: 10px 18px;\r\n    cursor: pointer;\r\n    overflow: hidden;\r\n}\r\n.pull-refresh-loading {\r\n    /*background: url(/f/talion/bf2ef8c…/pics/card/loading_grey.gif) no-repeat;*/\r\n    background-position: center;\r\n    background-size: 24px;\r\n    width: 100%;\r\n    height: 48px;\r\n    z-index: -1;\r\n    position: absolute;\r\n    left: 0;\r\n    top: 60px;\r\n    opacity: 0;\r\n}\r\n.status-list {\r\n    overflow: hidden;\r\n}\r\n.status-list li {\r\n    position: relative;\r\n    padding-bottom: 20px;\r\n    margin-top: 20px;\r\n    margin-bottom: 20px;\r\n    padding-left: 50px;\r\n}\r\n.status-list li .desc {\r\n    margin-left: -50px;\r\n    display: flex;\r\n        font-size: 0;\r\n    line-height: normal;\r\n    margin: 0 0 11px;\r\n    color: #494949;\r\n    position: relative;\r\n    align-items: center;\r\n}\r\na {\r\n    color: #42bd56;\r\n    text-decoration: none;\r\n}\r\n.status-list li .desc img {\r\n    width: 40px;\r\n    height: 40px;\r\n    margin-right: 10px;\r\n}\r\n.comment-list li .desc img, .comment-list li .desc .avatar {\r\n    border-radius: 50%;\r\n    vertical-align: text-top;\r\n}\r\n.status-list li .desc .user-info {\r\n    flex: auto;\r\n}\r\n.status-list li .content {\r\n    font-size: 17px;\r\n}\r\n.comment-list li .content {\r\n    padding-left: 0;\r\n    margin-top: 10px;\r\n    line-height: 22px;\r\n    color: #494949;\r\n}\r\n.status-list li .content>div {\r\n    display: inline;\r\n}\r\n.feed-images {\r\n    margin-top: 15px;\r\n}\r\n.feed-images.single .item {\r\n    display: inline-block;\r\n    max-height: 300px;\r\n    overflow: hidden;\r\n}\r\n.feed-images.single .item img {\r\n    display: block;\r\n}\r\n.comment-list li .info {\r\n    padding-left: 0;\r\n    margin-top: 13px;\r\n    margin-right: -20px;\r\n    overflow: auto;\r\n}\r\n.status-list li::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.comment-list li::before, .comment-list li::after {\r\n    margin-left: 46px;\r\n}\r\n.ic-btn.left {\r\n    float: left;\r\n}\r\n.ic-btn {\r\n    display: inline-block;\r\n    margin-right: 20px;\r\n    font-size: 14px;\r\n    cursor: pointer;\r\n}\r\n.ic-btn i{\r\n    width: 20px;\r\n    height: 20px;\r\n    background-position: center center;\r\n    background-repeat: no-repeat;\r\n    display: inline-block;\r\n    margin-bottom: -2px;\r\n}\r\n.ic-btn-like::before {\r\n    /*background-image: url(/f/talion/7a0756b…/pics/card/ic_like_gray.svg);*/\r\n}\r\n.ic-btn .text {\r\n    color: #ccc;\r\n    margin-left: 3px;\r\n    position: relative;\r\n    left: 0;\r\n    top: -3px;\r\n}\r\n.ic-btn.left {\r\n    float: left;\r\n}\r\n.ic-btn.right {\r\n    float: right;\r\n}\r\n\r\n.status-editor-bar .avatar img {\r\n    width: 100%;\r\n    height: 100%;\r\n    border-radius: 50%;\r\n}\r\n.status-editor-bar .avatar {\r\n    width: 40px;\r\n    height: 40px;\r\n    float: left;\r\n}\r\n.status-editor-bar .holder {\r\n    color: #aaa;\r\n    padding-left: 10px;\r\n    font-size: 15px;\r\n    line-height: 40px;\r\n    float: left;\r\n}\r\nhtml body .page {\r\n    position: fixed;\r\n    left: 0;\r\n    top: 0;\r\n    bottom: 0;\r\n    right: 0;\r\n    width: 100%;\r\n    height: 100%;\r\n    box-sizing: border-box;\r\n    overflow-x: hidden;\r\n    overflow-y: scroll;\r\n}\r\n.status-list li .desc {\r\n    margin-left: -50px;\r\n}\r\n.status-list li .desc .user-info strong {\r\n    font-size: 17px;\r\n    line-height: 1;\r\n    color: #494949;\r\n}\r\n.comment-list li .desc .user-info strong {\r\n    display: inline-block;\r\n    vertical-align: text-top;\r\n    margin-right: 6px;\r\n}\r\n.status-list li .desc .user-info strong span {\r\n    color: #aaa;\r\n    font-weight: normal;\r\n}\r\n.status-list li .desc .user-info .timestamp {\r\n    font-size: 14px;\r\n    margin-top: 6px;\r\n    line-height: 1;\r\n        color: #aaa;\r\n}\r\n.feed-images.single .item.portrait img {\r\n    max-width: 100%;\r\n}\r\n.feed-images .item {\r\n    position: relative;\r\n    cursor: pointer;\r\n    overflow:hidden;\r\n}\r\n.status-editor-bar .icon {\r\n    width: 24px;\r\n    height: 24px;\r\n    padding: 8px;\r\n    margin-right: 10px;\r\n    position: relative;\r\n    float: right;\r\n    box-sizing: border-box;\r\n    margin-top:7px;\r\n}\r\n.status-editor-bar .icon.icon-camera {\r\n    margin-right: 0;\r\n}\r\n.status-editor-bar .icon.icon-pen{\r\n    margin-right: 32px;\r\n}\r\n.status-editor-bar::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.feed-card {\r\n    padding: 15px;\r\n    margin: 10px 0 20px;\r\n    border-radius: 2px;\r\n    background: #f9f9f9;\r\n}\r\n.feed-card .title {\r\n    font-size: 17px;\r\n    font-weight: 500;\r\n    line-height: 1.4;\r\n    color: #494949;\r\n    margin-bottom: 5px;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\r\n}\r\n.feed-card .text {\r\n    font-size: 12px;\r\n    line-height: 16px;\r\n    color: #aaa;\r\n    overflow: hidden;\r\n    text-overflow: ellipsis;\r\n}\r\n.has-cover .cover {\r\n    width: 75px;\r\n    height: 48px;\r\n    background-size: cover;\r\n    background-position: center;\r\n    background-repeat: no-repeat;\r\n    position: absolute;\r\n    top: 0;\r\n    right: 0;\r\n}\r\n.has-cover{\r\n    height: 48px;\r\n    padding-right: 90px;\r\n    position: relative;\r\n}\r\n.feed-images img{\r\n    width: 93px;\r\n    height: 93px;\r\n}\r\n.feed-images .big{\r\n    width: 100%;\r\n    height: 100%;\r\n}\r\n</style>"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 26 */
+/* 30 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -26990,11 +26605,99 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 exports.default = {
     data: function data() {
         return {
-            item: []
+            item: [],
+            eternal: []
         };
     },
 
@@ -27006,20 +26709,37 @@ exports.default = {
                 type: 'get',
                 dataType: 'jsonp',
                 success: function success(data) {
-                    console.log(data);
-                    self.item = data.items;
-                    console.log(self.item[14].status.images[0].normal.url);
+                    if (C.get('eternal') != '') {
+                        self.eternal = JSON.parse(C.get('eternal'));
+                        console.log(self.eternal);
+                    } else {
+                        self.item = data.items;
+                    }
+
+                    // console.log(data);
+
+                    // console.log(self.item[14].status.images[0].normal.url);
+                    // console.log(JSON.parse(C.get('eternal')));
+                    // console.log(data.items.concat(JSON.parse(C.get('eternal'))));
                 }
             });
+        },
+        mountedImage: function mountedImage() {
+            console.log(C.get('eternal'));
+            // console.log(JSON.parse(C.get('eternal')));
         }
     },
     mounted: function mounted() {
         this.load();
+        this.mountedImage();
+    },
+    components: {
+        'download': download
     }
 };
 
 /***/ }),
-/* 27 */
+/* 31 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27039,13 +26759,16 @@ var render = function() {
           [
             _c("div", { staticClass: "status-editor-bar" }, [
               _vm._m(0),
+              _vm._v(" "),
               _c("div", { staticClass: "holder" }, [_vm._v("登录发广播")]),
+              _vm._v(" "),
               _c("div", {
                 staticClass: "icon icon-camera",
                 staticStyle: {
                   "background-image": "url(../svg/ic_status_camera.svg)"
                 }
               }),
+              _vm._v(" "),
               _c("a", {
                 staticClass: "icon icon-pen",
                 staticStyle: {
@@ -27075,9 +26798,12 @@ var render = function() {
                         [
                           _c("div", { staticClass: "user-info" }, [
                             _c("strong", [
-                              _vm._v(_vm._s(i.status.author.name)),
-                              _vm._v(" "),
-                              _c("span", [_vm._v("说：")])
+                              _vm._v(
+                                "\n                                            " +
+                                  _vm._s(i.status.author.name) +
+                                  " \n                                            "
+                              ),
+                              _c("span", [_vm._v(_vm._s(i.status.activity))])
                             ]),
                             _vm._v(" "),
                             _c("div", { staticClass: "timestamp" }, [
@@ -27088,48 +26814,288 @@ var render = function() {
                       )
                     ]),
                     _vm._v(" "),
-                    _c(
-                      "a",
-                      {
-                        attrs: { href: "/people/95805238/status/2045165796/" }
-                      },
-                      [
-                        _c("div", { staticClass: "content" }, [
-                          _c("div", [
-                            _vm._v(_vm._s(i.status.text) + " "),
-                            _c(
-                              "a",
-                              {
-                                attrs: {
-                                  href:
-                                    "https://www.douban.com/biz/photograph/2017-autumn?source=dbbroadcast"
-                                }
-                              },
-                              [_vm._v("https://dou.bz/3werya")]
-                            )
-                          ])
+                    _c("a", [
+                      _c("div", { staticClass: "content" }, [
+                        _c("div", [
+                          _vm._v(
+                            _vm._s(i.status.text) +
+                              " \n                                            "
+                          ),
+                          i.status.entities[0]
+                            ? _c(
+                                "a",
+                                { attrs: { href: i.status.entities[0].uri } },
+                                [_vm._v(_vm._s(i.status.entities[0].title))]
+                              )
+                            : _vm._e()
                         ])
-                      ]
-                    )
+                      ])
+                    ])
                   ]),
-                  _c("div", { staticClass: "feed-images single" }, [
-                    i.status.images[0]
-                      ? _c("div", {
-                          staticClass: "item portrait",
-                          style:
-                            'background-image: url("' +
-                            i.status.images[0].normal.url +
-                            '");'
-                        })
-                      : _vm._e()
-                  ]),
-                  _vm._m(2, true)
+                  _vm._v(" "),
+                  i.status.activity == "说："
+                    ? _c("div", { staticClass: "feed-images single" }, [
+                        !i.status.images[1]
+                          ? _c("div", {
+                              staticClass: "item portrait",
+                              staticStyle: {
+                                "background-image":
+                                  "url(./radioImage/3VFkZE.jpg)",
+                                height: "300px",
+                                width: "290px",
+                                "background-size": "290px auto"
+                              }
+                            })
+                          : _vm._e(),
+                        _vm._v(" "),
+                        i.status.images[1]
+                          ? _c("div", [
+                              _c("div", {
+                                staticClass: "item portrait",
+                                staticStyle: {
+                                  "background-image":
+                                    "url(./radioImage/1cp0vh.jpg)",
+                                  height: "92px",
+                                  width: "92px",
+                                  "background-size": "92px auto"
+                                }
+                              }),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass: "item portrait",
+                                staticStyle: {
+                                  "background-image":
+                                    "url(./radioImage/1cp0vh.jpg)",
+                                  height: "92px",
+                                  width: "92px",
+                                  "background-size": "92px auto"
+                                }
+                              })
+                            ])
+                          : _vm._e()
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  i.status.activity == "写了日记"
+                    ? _c(
+                        "div",
+                        { staticClass: "feed-card article-card  has-subtitle" },
+                        [
+                          _c(
+                            "a",
+                            {
+                              attrs: {
+                                href: "https://www.douban.com/note/637408669/"
+                              }
+                            },
+                            [
+                              _c("div", { staticClass: "title" }, [
+                                _vm._v(_vm._s(i.status.card.title))
+                              ]),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "detail",
+                                  class: { "has-cover": i.status.card.image }
+                                },
+                                [
+                                  _c("div", { staticClass: "text" }, [
+                                    _vm._v(_vm._s(i.status.card.subtitle))
+                                  ]),
+                                  _vm._v(" "),
+                                  i.status.card.image
+                                    ? _c("div", {
+                                        staticClass: "cover",
+                                        staticStyle: {
+                                          "background-image":
+                                            "url(./radioImage/p44530630.jpg)",
+                                          height: "48px",
+                                          width: "75px",
+                                          "background-size": "75px auto"
+                                        }
+                                      })
+                                    : _vm._e()
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      )
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "info" }, [
+                    _c("div", { staticClass: "ic-btn ic-btn-like left" }, [
+                      _c("i", {
+                        style: "background-image:url(./svg/ic_like_gray.svg)"
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text" }, [
+                        _vm._v(_vm._s(i.status.like_count))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "ic-btn ic-btn-comment left" }, [
+                      _c("i", {
+                        style: "background-image:url(./svg/ic_comment.svg)"
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text" }, [
+                        _vm._v(_vm._s(i.status.comments_count))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "ic-btn ic-btn-retweet left" }, [
+                      _c("i", {
+                        style: "background-image:url(./svg/ic_retweet_gray.svg)"
+                      }),
+                      _vm._v(" "),
+                      _c("span", { staticClass: "text" }, [
+                        _vm._v(_vm._s(i.status.reshares_count))
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "ic-btn ic-btn-more right" })
+                  ])
                 ])
               })
             )
           ]
         )
-      ])
+      ]),
+      _vm._v(" "),
+      _vm.eternal
+        ? _c("div", { staticClass: "card" }, [
+            _c(
+              "ul",
+              { staticClass: "status-list comment-list" },
+              _vm._l(_vm.eternal, function(e) {
+                return _c("li", [
+                  _c("div", [
+                    _c("div", { staticClass: "desc" }, [
+                      _vm._m(2, true),
+                      _vm._v(" "),
+                      _c("a", [
+                        _c("div", { staticClass: "user-info" }, [
+                          _vm._m(3, true),
+                          _vm._v(" "),
+                          _c("div", { staticClass: "timestamp" }, [
+                            _vm._v(_vm._s(e.time))
+                          ])
+                        ])
+                      ])
+                    ]),
+                    _vm._v(" "),
+                    _c(
+                      "a",
+                      { attrs: { href: "/people/3186129/status/2052193615/" } },
+                      [
+                        _c("div", { staticClass: "content" }, [
+                          _c("div", [_vm._v(_vm._s(e.eternal))])
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "feed-images single" }, [
+                      e.img[0]
+                        ? _c("img", {
+                            class: { big: e.img.length < 2 },
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[0]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[1]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[1]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[2]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[2]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[3]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[3]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[4]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[4]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[5]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[5]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[6]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[6]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[7]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[7]
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(" "),
+                      e.img[8]
+                        ? _c("img", {
+                            attrs: {
+                              src:
+                                "../addImage/eternal/phone18124092479/" +
+                                e.img[8]
+                            }
+                          })
+                        : _vm._e()
+                    ])
+                  ])
+                ])
+              })
+            ),
+            _vm._v(" "),
+            _c("div")
+          ])
+        : _vm._e()
     ])
   ])
 }
@@ -27140,9 +27106,19 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "avatar" }, [
       _c("img", {
+        attrs: { src: "https://img1.doubanio.com/icon/user_normal.jpg" }
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("a", { attrs: { href: "/people/95805238/" } }, [
+      _c("img", {
         attrs: {
-          src: "https://img1.doubanio.com/icon/user_normal.jpg",
-          alt: "未登陆"
+          alt: "豆瓣",
+          src: "https://img3.doubanio.com/icon/up95805238-16.jpg"
         }
       })
     ])
@@ -27154,7 +27130,6 @@ var staticRenderFns = [
     return _c("a", { attrs: { href: "/people/95805238/" } }, [
       _c("img", {
         attrs: {
-          "data-type": "avatar",
           alt: "豆瓣",
           src: "https://img3.doubanio.com/icon/up95805238-16.jpg"
         }
@@ -27165,17 +27140,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "info" }, [
-      _c("div", { staticClass: "ic-btn ic-btn-like  left " }, [
-        _c("span", { staticClass: "text" }, [_vm._v("398")])
-      ]),
-      _c("div", { staticClass: "ic-btn ic-btn-comment  left " }, [
-        _c("span", { staticClass: "text" }, [_vm._v("54")])
-      ]),
-      _c("div", { staticClass: "ic-btn ic-btn-retweet  left " }, [
-        _c("span", { staticClass: "text" }, [_vm._v("113")])
-      ]),
-      _c("div", { staticClass: "ic-btn ic-btn-more   right" })
+    return _c("strong", [
+      _vm._v(
+        "\n                                        lmm\n                                        "
+      ),
+      _c("span", [_vm._v("说： ")])
     ])
   }
 ]
@@ -27190,18 +27159,18 @@ if (false) {
 }
 
 /***/ }),
-/* 28 */
+/* 32 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbSendRadio_vue__ = __webpack_require__(31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbSendRadio_vue__ = __webpack_require__(35);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbSendRadio_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__babel_loader_node_modules_vue_loader_lib_selector_type_script_index_0_bustCache_dbSendRadio_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79074bf8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbSendRadio_vue__ = __webpack_require__(32);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__node_modules_vue_loader_lib_template_compiler_index_id_data_v_79074bf8_hasScoped_true_buble_transforms_node_modules_vue_loader_lib_selector_type_template_index_0_bustCache_dbSendRadio_vue__ = __webpack_require__(36);
 var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(29)
+  __webpack_require__(33)
 }
 var normalizeComponent = __webpack_require__(2)
 /* script */
@@ -27237,7 +27206,7 @@ if (false) {(function () {
     hotAPI.createRecord("data-v-79074bf8", Component.options)
   } else {
     hotAPI.reload("data-v-79074bf8", Component.options)
-' + '  }
+  }
   module.hot.dispose(function (data) {
     disposed = true
   })
@@ -27247,13 +27216,13 @@ if (false) {(function () {
 
 
 /***/ }),
-/* 29 */
+/* 33 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(30);
+var content = __webpack_require__(34);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
@@ -27273,7 +27242,7 @@ if(false) {
 }
 
 /***/ }),
-/* 30 */
+/* 34 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(true);
@@ -27281,13 +27250,13 @@ exports = module.exports = __webpack_require__(0)(true);
 
 
 // module
-exports.push([module.i, "\n.pop-page-header.show[data-v-79074bf8] {\n    display: block;\n}\n.pop-page-header[data-v-79074bf8] {\n    position: relative;\n    position: fixed;\n    left: 0;\n    top: 0;\n    height: 44px;\n    width: 100%;\n    padding: 14px 0;\n    box-sizing: border-box;\n    font-size: 17px;\n    line-height: 17px;\n    background: #fff;\n    z-index: 10002;\n}\n.pop-page-header .title[data-v-79074bf8] {\n    position: absolute;\n    left: 0;\n    top: 0;\n    width: 100%;\n    box-sizing: border-box;\n    padding: inherit;\n    text-align: center;\n}\n.pop-page-header .btn-left[data-v-79074bf8] {\n    float: left;\n}\n.pop-page-header .btn[data-v-79074bf8] {\n    color: #42bd56;\n    cursor: pointer;\n    position: relative;\n    padding: 14px 18px;\n    margin: -14px 0;\n}\n.pop-page-header .btn-right[data-v-79074bf8] {\n    float: right;\n}\n.pop-page-header .btn[data-v-79074bf8] {\n    cursor: pointer;\n    position: relative;\n    padding: 14px 18px;\n}\n.content[data-v-79074bf8]{\n    width:100%;\n}\n.status-editor .editor-wrapper .editor[data-v-79074bf8] {\n    height: 150px;\n    padding:8px;\n    margin-top: 50px;\n    outline: none;\n    border:0 none;\n    overflow-x: hidden;\n    overflow-y: auto;\n    display: block;\n    position: relative;\n    font-size: 17px;\n    width:95%;\n    font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;\n\n    resize: none;\n}\ntextarea[data-v-79074bf8]::-webkit-input-placeholder{\n    color:#ccc;\n}\n.pop-page-header[data-v-79074bf8]::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar[data-v-79074bf8] {\n    position: relative;\n    z-index: 10001;\n    overflow: hidden;\n    height: 44px;\n    /*margin: 0 -18px;*/\n    padding: 10px 18px;\n    margin-top:10px;\n    box-sizing: border-box;\n}\n.status-editor .info-bar .num[data-v-79074bf8] {\n    color: #aaa;\n    font-size: 15px;\n    float: right;\n    line-height: 24px;\n}\n.status-editor .info-bar[data-v-79074bf8]::before{\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar[data-v-79074bf8]::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar .btn[data-v-79074bf8] {\n    background: center/cover no-repeat;\n    width: 24px;\n    height: 24px;\n    float: left;\n    cursor: pointer;\n    margin-right: 25px;\n}\n.status-editor .info-bar .btn.btn-camera input[data-v-79074bf8] {\n    width: 100%;\n    height: 100%;\n    opacity: 0;\n    cursor: pointer;\n}\n.status-editor .info-bar .btn[data-v-79074bf8] {\n    background: center/cover no-repeat;\n    width: 24px;\n    height: 24px;\n    float: left;\n    cursor: pointer;\n    margin-right: 25px;\n}\n.images[data-v-79074bf8]{\n    width:100px;\n    height:100px;\n}\n.images img[data-v-79074bf8]{\n    width:100%;\n    height:100%;\n}\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douBanSix/components/lantao/components/lantao/dbSendRadio.vue?313956cc"],"names":[],"mappings":";AAwFA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,gBAAA;IACA,QAAA;IACA,OAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,uBAAA;IACA,gBAAA;IACA,kBAAA;IACA,iBAAA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,QAAA;IACA,OAAA;IACA,YAAA;IACA,uBAAA;IACA,iBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,eAAA;IACA,gBAAA;IACA,mBAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,aAAA;CACA;AACA;IACA,gBAAA;IACA,mBAAA;IACA,mBAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,cAAA;IACA,YAAA;IACA,iBAAA;IACA,cAAA;IACA,cAAA;IACA,mBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,gBAAA;IACA,UAAA;IACA,gEAAA;;IAEA,aAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,eAAA;IACA,iBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;IACA,uBAAA;CACA;AACA;IACA,YAAA;IACA,gBAAA;IACA,aAAA;IACA,kBAAA;CACA;AACA;IACA,QAAA;IACA,OAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,mCAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,WAAA;IACA,gBAAA;CACA;AACA;IACA,mCAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;CACA;AACA;IACA,WAAA;IACA,YAAA;CACA","file":"dbSendRadio.vue","sourcesContent":["<template>\n    <div class=\"dbSendRadio\">\n        <div class=\"pop-page show status-editor\">\n            <div class=\"content\">\n                <div class=\"editor-wrapper\">\n                    <textarea maxlength='140' name=\"radio\" class=\"editor\" placeholder=\"分享生活点滴...\" ></textarea>\n                </div>\n                <div class=\"info-bar\">\n                    <div class=\"btn btn-camera\" style=\"background-image:url(../svg/ic_status_camera_green.svg);\">\n                        <form action=\"#\" id=\"files\" v-sendToBase=\"upload\">\n                            <input id=\"file\" type=\"file\" accept=\"image/*\" name=\"image\" multiple>\n                        </form>\n                        \n                    </div>\n                    <div class=\"btn btn-at\" style=\"background-image:url(../svg/ic_status_at_green.svg);\"></div>\n                    <div class=\"btn btn-hash\" style=\"background-image:url(../svg/ic_status_hash_green.svg);\"></div>\n                    <div class=\"num \">140</div>\n                </div>\n            </div>\n        </div>\n        <div>\n            <div class=\"pop-page-header header show\">\n                <span class=\"title\">发广播</span>\n                <div class=\"btn btn-left \">取消</div>\n                <div class=\"btn btn-right disable\" v-getRadio>发布</div>\n            </div>\n        </div>\n        <div v-for=\"i in image\" class=\"images\">\n            <img :src=\"'../addImage/tamp/phone18124092479/' + i\" alt=\"\" />\n        </div>\n    </div>\n</template>\n<script>\n    export default {\n        data(){\n            return{\n                image:[]\n            }\n        },\n        methods:{\n            createTmp:function(){\n                $.ajax({\n                    type:'get',\n                    url:'http://localhost:12345/addImage',\n                    success:function(data){\n                        console.log(data);\n                    }\n                })\n            },\n            upload:function(){\n                    var self = this;\n                   $.ajax({\n                        url: 'http://localhost:12345/profile',\n                        type: 'POST',\n                        cache: false,\n                        data: new FormData($('#files')[0]),\n                        processData: false,\n                        contentType: false,\n                        success: function(data) {\n                            self.image = data.slice(0,-1).split(',');\n                        }\n                })\n            }\n        },\n        mounted:function(){\n            this.createTmp();\n        },\n        directives:{\n            getRadio:{\n                bind:function(el,binding){\n                    $(el).on('click',()=>{\n                        console.log($('#files'));\n                    })\n                    \n                }\n            },\n            sendToBase:{\n                bind:function(el,binding){\n                    $(el).on('change',function(){\n                        binding.value();\n                    })\n                }\n                \n            }\n        }\n    }\n</script> \n<style scoped>\n.pop-page-header.show {\n    display: block;\n}\n.pop-page-header {\n    position: relative;\n    position: fixed;\n    left: 0;\n    top: 0;\n    height: 44px;\n    width: 100%;\n    padding: 14px 0;\n    box-sizing: border-box;\n    font-size: 17px;\n    line-height: 17px;\n    background: #fff;\n    z-index: 10002;\n}\n.pop-page-header .title {\n    position: absolute;\n    left: 0;\n    top: 0;\n    width: 100%;\n    box-sizing: border-box;\n    padding: inherit;\n    text-align: center;\n}\n.pop-page-header .btn-left {\n    float: left;\n}\n.pop-page-header .btn {\n    color: #42bd56;\n    cursor: pointer;\n    position: relative;\n    padding: 14px 18px;\n    margin: -14px 0;\n}\n.pop-page-header .btn-right {\n    float: right;\n}\n.pop-page-header .btn {\n    cursor: pointer;\n    position: relative;\n    padding: 14px 18px;\n}\n.content{\n    width:100%;\n}\n.status-editor .editor-wrapper .editor {\n    height: 150px;\n    padding:8px;\n    margin-top: 50px;\n    outline: none;\n    border:0 none;\n    overflow-x: hidden;\n    overflow-y: auto;\n    display: block;\n    position: relative;\n    font-size: 17px;\n    width:95%;\n    font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;\n\n    resize: none;\n}\ntextarea::-webkit-input-placeholder{\n    color:#ccc;\n}\n.pop-page-header::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar {\n    position: relative;\n    z-index: 10001;\n    overflow: hidden;\n    height: 44px;\n    /*margin: 0 -18px;*/\n    padding: 10px 18px;\n    margin-top:10px;\n    box-sizing: border-box;\n}\n.status-editor .info-bar .num {\n    color: #aaa;\n    font-size: 15px;\n    float: right;\n    line-height: 24px;\n}\n.status-editor .info-bar::before{\n    left: 0;\n    top: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar::after {\n    left: 0;\n    bottom: 0;\n    width: 100%;\n    height: 1px;\n    background: #E8E8E8;\n    content: '';\n    position: absolute;\n}\n.status-editor .info-bar .btn {\n    background: center/cover no-repeat;\n    width: 24px;\n    height: 24px;\n    float: left;\n    cursor: pointer;\n    margin-right: 25px;\n}\n.status-editor .info-bar .btn.btn-camera input {\n    width: 100%;\n    height: 100%;\n    opacity: 0;\n    cursor: pointer;\n}\n.status-editor .info-bar .btn {\n    background: center/cover no-repeat;\n    width: 24px;\n    height: 24px;\n    float: left;\n    cursor: pointer;\n    margin-right: 25px;\n}\n.images{\n    width:100px;\n    height:100px;\n}\n.images img{\n    width:100%;\n    height:100%;\n}\n</style>"],"sourceRoot":""}]);
+exports.push([module.i, "\n.pop-page-header.show[data-v-79074bf8] {\r\n    display: block;\n}\n.pop-page-header[data-v-79074bf8] {\r\n    position: relative;\r\n    position: fixed;\r\n    left: 0;\r\n    top: 0;\r\n    height: 44px;\r\n    width: 100%;\r\n    padding: 14px 0;\r\n    box-sizing: border-box;\r\n    font-size: 17px;\r\n    line-height: 17px;\r\n    background: #fff;\r\n    z-index: 10002;\n}\n.pop-page-header .title[data-v-79074bf8] {\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    width: 100%;\r\n    box-sizing: border-box;\r\n    padding: inherit;\r\n    text-align: center;\n}\n.pop-page-header .btn-left[data-v-79074bf8] {\r\n    float: left;\n}\n.pop-page-header .btn[data-v-79074bf8] {\r\n    color: #42bd56;\r\n    cursor: pointer;\r\n    position: relative;\r\n    padding: 14px 18px;\r\n    margin: -14px 0;\n}\n.pop-page-header .btn-right[data-v-79074bf8] {\r\n    float: right;\n}\n.pop-page-header .btn[data-v-79074bf8] {\r\n    cursor: pointer;\r\n    position: relative;\r\n    padding: 14px 18px;\n}\n.content[data-v-79074bf8]{\r\n    width:100%;\n}\n.status-editor .editor-wrapper .editor[data-v-79074bf8] {\r\n    height: 150px;\r\n    padding:8px;\r\n    margin-top: 50px;\r\n    outline: none;\r\n    border:0 none;\r\n    overflow-x: hidden;\r\n    overflow-y: auto;\r\n    display: block;\r\n    position: relative;\r\n    font-size: 17px;\r\n    width:95%;\r\n    font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;\r\n\r\n    resize: none;\n}\ntextarea[data-v-79074bf8]::-webkit-input-placeholder{\r\n    color:#ccc;\n}\n.pop-page-header[data-v-79074bf8]::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.status-editor .info-bar[data-v-79074bf8] {\r\n    position: relative;\r\n    z-index: 10001;\r\n    overflow: hidden;\r\n    height: 44px;\r\n    /*margin: 0 -18px;*/\r\n    padding: 10px 18px;\r\n    margin-top:10px;\r\n    box-sizing: border-box;\n}\n.status-editor .info-bar .num[data-v-79074bf8] {\r\n    color: #aaa;\r\n    font-size: 15px;\r\n    float: right;\r\n    line-height: 24px;\n}\n.status-editor .info-bar[data-v-79074bf8]::before{\r\n    left: 0;\r\n    top: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.status-editor .info-bar[data-v-79074bf8]::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\n}\n.status-editor .info-bar .btn[data-v-79074bf8] {\r\n    background: center/cover no-repeat;\r\n    width: 24px;\r\n    height: 24px;\r\n    float: left;\r\n    cursor: pointer;\r\n    margin-right: 25px;\n}\n.status-editor .info-bar .btn.btn-camera input[data-v-79074bf8] {\r\n    width: 100%;\r\n    height: 100%;\r\n    opacity: 0;\r\n    cursor: pointer;\n}\n.status-editor .info-bar .btn[data-v-79074bf8] {\r\n    background: center/cover no-repeat;\r\n    width: 24px;\r\n    height: 24px;\r\n    float: left;\r\n    cursor: pointer;\r\n    margin-right: 25px;\n}\n.images[data-v-79074bf8]{\r\n    width:80px;\r\n    height:80px;\r\n    border:1px solid #42bd56;;\r\n    float:left;\r\n    margin-left:8px;\r\n    margin-top:5px;\r\n    border-radius: 10px;\r\n    position:relative;\n}\n.images img[data-v-79074bf8]{\r\n    width:100%;\r\n    height:100%;\n}\n.del[data-v-79074bf8]::before {\r\n    content: \"\\D7\";\r\n    font-family: sans-serif;\r\n    font-size: 13px;\r\n    color: #fff;\r\n    font-weight: 200;\r\n    display: block;\n}\n.del[data-v-79074bf8]{\r\n    font-style: normal;\r\n    position: absolute;\r\n    top: 4px;\r\n    right: 4px;\r\n    width: 20px;\r\n    height: 20px;\r\n    text-align: center;\r\n    background-color: rgba(0,0,0,0.7);\r\n    border-radius: 50%;\r\n    display: flex;\r\n    justify-content: center;\n}\r\n", "", {"version":3,"sources":["C:/Users/Administrator/Desktop/douban/douBanSix/components/lantao/components/lantao/dbSendRadio.vue?ecfa4b2a"],"names":[],"mappings":";AA4MA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,gBAAA;IACA,QAAA;IACA,OAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,uBAAA;IACA,gBAAA;IACA,kBAAA;IACA,iBAAA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,QAAA;IACA,OAAA;IACA,YAAA;IACA,uBAAA;IACA,iBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;CACA;AACA;IACA,eAAA;IACA,gBAAA;IACA,mBAAA;IACA,mBAAA;IACA,gBAAA;CACA;AACA;IACA,aAAA;CACA;AACA;IACA,gBAAA;IACA,mBAAA;IACA,mBAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,cAAA;IACA,YAAA;IACA,iBAAA;IACA,cAAA;IACA,cAAA;IACA,mBAAA;IACA,iBAAA;IACA,eAAA;IACA,mBAAA;IACA,gBAAA;IACA,UAAA;IACA,gEAAA;;IAEA,aAAA;CACA;AACA;IACA,WAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,mBAAA;IACA,eAAA;IACA,iBAAA;IACA,aAAA;IACA,oBAAA;IACA,mBAAA;IACA,gBAAA;IACA,uBAAA;CACA;AACA;IACA,YAAA;IACA,gBAAA;IACA,aAAA;IACA,kBAAA;CACA;AACA;IACA,QAAA;IACA,OAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,QAAA;IACA,UAAA;IACA,YAAA;IACA,YAAA;IACA,oBAAA;IACA,YAAA;IACA,mBAAA;CACA;AACA;IACA,mCAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,YAAA;IACA,aAAA;IACA,WAAA;IACA,gBAAA;CACA;AACA;IACA,mCAAA;IACA,YAAA;IACA,aAAA;IACA,YAAA;IACA,gBAAA;IACA,mBAAA;CACA;AACA;IACA,WAAA;IACA,YAAA;IACA,yBAAA;IACA,WAAA;IACA,gBAAA;IACA,eAAA;IACA,oBAAA;IACA,kBAAA;CAEA;AACA;IACA,WAAA;IACA,YAAA;CACA;AACA;IACA,eAAA;IACA,wBAAA;IACA,gBAAA;IACA,YAAA;IACA,iBAAA;IACA,eAAA;CACA;AACA;IACA,mBAAA;IACA,mBAAA;IACA,SAAA;IACA,WAAA;IACA,YAAA;IACA,aAAA;IACA,mBAAA;IACA,kCAAA;IACA,mBAAA;IACA,cAAA;IACA,wBAAA;CACA","file":"dbSendRadio.vue","sourcesContent":["<template>\r\n    <div class=\"dbSendRadio\">\r\n        <div class=\"pop-page show status-editor\">\r\n            <div class=\"content\">\r\n                <div class=\"editor-wrapper\">\r\n                    <textarea v-getRadio maxlength='140' name=\"radio\" class=\"editor\" placeholder=\"分享生活点滴...\" >{{content}}</textarea>\r\n                </div>\r\n                <div class=\"info-bar\">\r\n                    <div class=\"btn btn-camera\" style=\"background-image:url(../svg/ic_status_camera_green.svg);\">\r\n                        <form action=\"#\" id=\"files\" v-sendToBase=\"upload\">\r\n                            <input id=\"file\" type=\"file\" accept=\"image/*\" name=\"image\" multiple>\r\n                        </form>\r\n                        \r\n                    </div>\r\n                    <div class=\"btn btn-at\" style=\"background-image:url(../svg/ic_status_at_green.svg);\"></div>\r\n                    <div class=\"btn btn-hash\" style=\"background-image:url(../svg/ic_status_hash_green.svg);\"></div>\r\n                    <div class=\"num \">{{codelen}}</div>\r\n                </div>\r\n            </div>\r\n        </div>\r\n        <div>\r\n            <div class=\"pop-page-header header show\">\r\n                <span class=\"title\">发广播</span>\r\n                <div class=\"btn btn-left\" v-cancel>取消</div>\r\n                <div class=\"btn btn-right disable\" v-publish>发布</div>\r\n            </div>\r\n        </div>\r\n        <div v-for=\"i in image\" class=\"images\">\r\n            <img :src=\"'../addImage/tamp/phone18124092479/' + i\" :dataid=\"i\"/>\r\n            <i class=\"del\" v-deleImage></i>\r\n        </div>\r\n    </div>\r\n</template>\r\n<script>\r\n    // import C from \"../../js/cookie.js\";\r\n    export default {\r\n        data(){\r\n            return{\r\n                image:[],\r\n                codelen:140,\r\n                content:'',\r\n                eternalContent:[]\r\n            }\r\n        },\r\n        methods:{\r\n            init:function(){\r\n                this.image = [];\r\n                this.content = '';\r\n                this.codelen = 140;\r\n                C.set('content','',null,'/');\r\n                console.log(4555);\r\n            },\r\n            createTmp:function(){\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'http://localhost:12345/addImage',\r\n                    success:function(data){\r\n                        if(!data)return;\r\n                        console.log(\"创建成功\");\r\n                    }\r\n                })\r\n\r\n            },\r\n            mountedImage:function(){\r\n                var self = this;\r\n                $.ajax({\r\n                    type:'get',\r\n                    url:'http://localhost:12345/mountedImage',\r\n                    success:function(data){\r\n                        if(!data)return;\r\n                        \r\n                        self.image = data;\r\n                    }\r\n                })\r\n            },\r\n            upload:function(){\r\n                    var self = this;\r\n                   $.ajax({\r\n                        url: 'http://localhost:12345/profile',\r\n                        type: 'POST',\r\n                        cache: false,\r\n                        data: new FormData($('#files')[0]),\r\n                        processData: false,\r\n                        contentType: false,\r\n                        success: function(data) {\r\n                            if(!data)return;\r\n                            //拼接数组\r\n                            self.image = self.image.concat(data.slice(0,-1).split(','));\r\n                        }\r\n                })\r\n            },\r\n            cancel:function(){\r\n                \r\n            }\r\n\r\n        },\r\n        mounted:function(){\r\n            this.createTmp();\r\n            this.mountedImage();\r\n            this.content = C.get('content');\r\n            this.eternalContent = JSON.parse(C.get('eternal'));\r\n            this.codelen = 140 - this.content.length;\r\n        },\r\n        directives:{\r\n            getRadio:{\r\n                bind:function(el,binding,vnode){\r\n                    $(el).on('input',()=>{\r\n                        var str = $(el).val();\r\n                        //vnode.context指向这个对象\r\n                        vnode.context.codelen = 140 - str.length;\r\n                        // console.log(str);\r\n                        document.cookie = 'content=' + str;\r\n                        vnode.context.content = str;\r\n                        console.log(vnode.context.content);\r\n                        console.log(1234);\r\n                        // console.log(str.length,binding,vnode.context.codelen);\r\n                    })\r\n                    \r\n                }\r\n            },\r\n            publish:{\r\n                bind:function(el,binding,vnode){\r\n                    var self = vnode.context;\r\n                    $(el).on('click',()=>{\r\n                        $.ajax({\r\n                            type:'get',\r\n                            url:'http://localhost:12345/publish',\r\n                            success:function(data){\r\n                                if(!data || self.content == '')return;\r\n                                var now = new Date();\r\n                                now.setDate(now.getDate()+7);\r\n                                // self.eternalContent += self.content+',';\r\n                                var user = {\r\n                                    id:'',\r\n                                    eternal:self.content,\r\n                                    time:new Date().format(\"yyyy-MM-dd hh:mm:ss\"),\r\n                                    img:self.image\r\n                                };\r\n                                self.eternalContent.push(user);\r\n                                C.set('eternal',JSON.stringify(self.eternalContent),now,'/');\r\n                                self.init();\r\n                                $(\".editor\").val('');\r\n                                console.log(self.eternalContent);\r\n                                router.push('radio');\r\n                            }\r\n\r\n                        })\r\n                    })\r\n                    \r\n                }\r\n            },\r\n            sendToBase:{\r\n                bind:function(el,binding){\r\n                    $(el).on('change',function(){\r\n                        binding.value();\r\n                    })\r\n                }\r\n                \r\n            },\r\n            deleImage:{\r\n                bind:function(el,binding){\r\n                    el.onclick = function(){\r\n                        var $par = $(el).parent('.images');\r\n                        var src = $par.children('img').attr('dataid');\r\n                        $.ajax({\r\n                            type:'get',\r\n                            url:'http://localhost:12345/deleImage',\r\n                            data:{'src':src},\r\n                            success:function(res){\r\n                                if(!res)return;\r\n                                $par.remove();\r\n                            }\r\n                        })\r\n                    }\r\n                }\r\n            },\r\n            cancel:{\r\n                bind:function(el,binding,vnode){\r\n                    $(el).on('click',function(){\r\n                        var self = vnode.context;\r\n                        $.ajax({\r\n                            type:'get',\r\n                            url:'http://localhost:12345/delAll',\r\n                            success:function(data){\r\n                                if(!data)return;\r\n                                self.init();\r\n                                C.set('content','',null,'/');\r\n                                $(\".editor\").val('');\r\n                                console.log(4352345)\r\n                            }\r\n                        })\r\n                    })\r\n                    \r\n                }\r\n            }\r\n        },\r\n        computed:{\r\n            s(){\r\n                return this.content;\r\n            }\r\n        }\r\n    }\r\n</script> \r\n<style scoped>\r\n.pop-page-header.show {\r\n    display: block;\r\n}\r\n.pop-page-header {\r\n    position: relative;\r\n    position: fixed;\r\n    left: 0;\r\n    top: 0;\r\n    height: 44px;\r\n    width: 100%;\r\n    padding: 14px 0;\r\n    box-sizing: border-box;\r\n    font-size: 17px;\r\n    line-height: 17px;\r\n    background: #fff;\r\n    z-index: 10002;\r\n}\r\n.pop-page-header .title {\r\n    position: absolute;\r\n    left: 0;\r\n    top: 0;\r\n    width: 100%;\r\n    box-sizing: border-box;\r\n    padding: inherit;\r\n    text-align: center;\r\n}\r\n.pop-page-header .btn-left {\r\n    float: left;\r\n}\r\n.pop-page-header .btn {\r\n    color: #42bd56;\r\n    cursor: pointer;\r\n    position: relative;\r\n    padding: 14px 18px;\r\n    margin: -14px 0;\r\n}\r\n.pop-page-header .btn-right {\r\n    float: right;\r\n}\r\n.pop-page-header .btn {\r\n    cursor: pointer;\r\n    position: relative;\r\n    padding: 14px 18px;\r\n}\r\n.content{\r\n    width:100%;\r\n}\r\n.status-editor .editor-wrapper .editor {\r\n    height: 150px;\r\n    padding:8px;\r\n    margin-top: 50px;\r\n    outline: none;\r\n    border:0 none;\r\n    overflow-x: hidden;\r\n    overflow-y: auto;\r\n    display: block;\r\n    position: relative;\r\n    font-size: 17px;\r\n    width:95%;\r\n    font-family: \"Helvetica Neue\",Helvetica,Roboto,Arial,sans-serif;\r\n\r\n    resize: none;\r\n}\r\ntextarea::-webkit-input-placeholder{\r\n    color:#ccc;\r\n}\r\n.pop-page-header::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.status-editor .info-bar {\r\n    position: relative;\r\n    z-index: 10001;\r\n    overflow: hidden;\r\n    height: 44px;\r\n    /*margin: 0 -18px;*/\r\n    padding: 10px 18px;\r\n    margin-top:10px;\r\n    box-sizing: border-box;\r\n}\r\n.status-editor .info-bar .num {\r\n    color: #aaa;\r\n    font-size: 15px;\r\n    float: right;\r\n    line-height: 24px;\r\n}\r\n.status-editor .info-bar::before{\r\n    left: 0;\r\n    top: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.status-editor .info-bar::after {\r\n    left: 0;\r\n    bottom: 0;\r\n    width: 100%;\r\n    height: 1px;\r\n    background: #E8E8E8;\r\n    content: '';\r\n    position: absolute;\r\n}\r\n.status-editor .info-bar .btn {\r\n    background: center/cover no-repeat;\r\n    width: 24px;\r\n    height: 24px;\r\n    float: left;\r\n    cursor: pointer;\r\n    margin-right: 25px;\r\n}\r\n.status-editor .info-bar .btn.btn-camera input {\r\n    width: 100%;\r\n    height: 100%;\r\n    opacity: 0;\r\n    cursor: pointer;\r\n}\r\n.status-editor .info-bar .btn {\r\n    background: center/cover no-repeat;\r\n    width: 24px;\r\n    height: 24px;\r\n    float: left;\r\n    cursor: pointer;\r\n    margin-right: 25px;\r\n}\r\n.images{\r\n    width:80px;\r\n    height:80px;\r\n    border:1px solid #42bd56;;\r\n    float:left;\r\n    margin-left:8px;\r\n    margin-top:5px;\r\n    border-radius: 10px;\r\n    position:relative;\r\n\r\n}\r\n.images img{\r\n    width:100%;\r\n    height:100%;\r\n}\r\n.del::before {\r\n    content: \"×\";\r\n    font-family: sans-serif;\r\n    font-size: 13px;\r\n    color: #fff;\r\n    font-weight: 200;\r\n    display: block;\r\n}\r\n.del{\r\n    font-style: normal;\r\n    position: absolute;\r\n    top: 4px;\r\n    right: 4px;\r\n    width: 20px;\r\n    height: 20px;\r\n    text-align: center;\r\n    background-color: rgba(0,0,0,0.7);\r\n    border-radius: 50%;\r\n    display: flex;\r\n    justify-content: center;\r\n}\r\n</style>"],"sourceRoot":""}]);
 
 // exports
 
 
 /***/ }),
-/* 31 */
+/* 35 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -27328,21 +27297,46 @@ Object.defineProperty(exports, "__esModule", {
 //
 //
 //
+//
 
+// import C from "../../js/cookie.js";
 exports.default = {
     data: function data() {
         return {
-            image: []
+            image: [],
+            codelen: 140,
+            content: '',
+            eternalContent: []
         };
     },
 
     methods: {
+        init: function init() {
+            this.image = [];
+            this.content = '';
+            this.codelen = 140;
+            C.set('content', '', null, '/');
+            console.log(4555);
+        },
         createTmp: function createTmp() {
             $.ajax({
                 type: 'get',
                 url: 'http://localhost:12345/addImage',
                 success: function success(data) {
-                    console.log(data);
+                    if (!data) return;
+                    console.log("创建成功");
+                }
+            });
+        },
+        mountedImage: function mountedImage() {
+            var self = this;
+            $.ajax({
+                type: 'get',
+                url: 'http://localhost:12345/mountedImage',
+                success: function success(data) {
+                    if (!data) return;
+
+                    self.image = data;
                 }
             });
         },
@@ -27356,19 +27350,65 @@ exports.default = {
                 processData: false,
                 contentType: false,
                 success: function success(data) {
-                    self.image = data.slice(0, -1).split(',');
+                    if (!data) return;
+                    //拼接数组
+                    self.image = self.image.concat(data.slice(0, -1).split(','));
                 }
             });
-        }
+        },
+        cancel: function cancel() {}
+
     },
     mounted: function mounted() {
         this.createTmp();
+        this.mountedImage();
+        this.content = C.get('content');
+        this.eternalContent = JSON.parse(C.get('eternal'));
+        this.codelen = 140 - this.content.length;
     },
     directives: {
         getRadio: {
-            bind: function bind(el, binding) {
+            bind: function bind(el, binding, vnode) {
+                $(el).on('input', function () {
+                    var str = $(el).val();
+                    //vnode.context指向这个对象
+                    vnode.context.codelen = 140 - str.length;
+                    // console.log(str);
+                    document.cookie = 'content=' + str;
+                    vnode.context.content = str;
+                    console.log(vnode.context.content);
+                    console.log(1234);
+                    // console.log(str.length,binding,vnode.context.codelen);
+                });
+            }
+        },
+        publish: {
+            bind: function bind(el, binding, vnode) {
+                var self = vnode.context;
                 $(el).on('click', function () {
-                    console.log($('#files'));
+                    $.ajax({
+                        type: 'get',
+                        url: 'http://localhost:12345/publish',
+                        success: function success(data) {
+                            if (!data || self.content == '') return;
+                            var now = new Date();
+                            now.setDate(now.getDate() + 7);
+                            // self.eternalContent += self.content+',';
+                            var user = {
+                                id: '',
+                                eternal: self.content,
+                                time: new Date().format("yyyy-MM-dd hh:mm:ss"),
+                                img: self.image
+                            };
+                            self.eternalContent.push(user);
+                            C.set('eternal', JSON.stringify(self.eternalContent), now, '/');
+                            self.init();
+                            $(".editor").val('');
+                            console.log(self.eternalContent);
+                            router.push('radio');
+                        }
+
+                    });
                 });
             }
         },
@@ -27379,12 +27419,52 @@ exports.default = {
                 });
             }
 
+        },
+        deleImage: {
+            bind: function bind(el, binding) {
+                el.onclick = function () {
+                    var $par = $(el).parent('.images');
+                    var src = $par.children('img').attr('dataid');
+                    $.ajax({
+                        type: 'get',
+                        url: 'http://localhost:12345/deleImage',
+                        data: { 'src': src },
+                        success: function success(res) {
+                            if (!res) return;
+                            $par.remove();
+                        }
+                    });
+                };
+            }
+        },
+        cancel: {
+            bind: function bind(el, binding, vnode) {
+                $(el).on('click', function () {
+                    var self = vnode.context;
+                    $.ajax({
+                        type: 'get',
+                        url: 'http://localhost:12345/delAll',
+                        success: function success(data) {
+                            if (!data) return;
+                            self.init();
+                            C.set('content', '', null, '/');
+                            $(".editor").val('');
+                            console.log(4352345);
+                        }
+                    });
+                });
+            }
+        }
+    },
+    computed: {
+        s: function s() {
+            return this.content;
         }
     }
 };
 
 /***/ }),
-/* 32 */
+/* 36 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -27398,7 +27478,21 @@ var render = function() {
     [
       _c("div", { staticClass: "pop-page show status-editor" }, [
         _c("div", { staticClass: "content" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "editor-wrapper" }, [
+            _c(
+              "textarea",
+              {
+                directives: [{ name: "getRadio", rawName: "v-getRadio" }],
+                staticClass: "editor",
+                attrs: {
+                  maxlength: "140",
+                  name: "radio",
+                  placeholder: "分享生活点滴..."
+                }
+              },
+              [_vm._v(_vm._s(_vm.content))]
+            )
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "info-bar" }, [
             _c(
@@ -27452,7 +27546,7 @@ var render = function() {
               }
             }),
             _vm._v(" "),
-            _c("div", { staticClass: "num " }, [_vm._v("140")])
+            _c("div", { staticClass: "num " }, [_vm._v(_vm._s(_vm.codelen))])
           ])
         ])
       ]),
@@ -27461,12 +27555,19 @@ var render = function() {
         _c("div", { staticClass: "pop-page-header header show" }, [
           _c("span", { staticClass: "title" }, [_vm._v("发广播")]),
           _vm._v(" "),
-          _c("div", { staticClass: "btn btn-left " }, [_vm._v("取消")]),
+          _c(
+            "div",
+            {
+              directives: [{ name: "cancel", rawName: "v-cancel" }],
+              staticClass: "btn btn-left"
+            },
+            [_vm._v("取消")]
+          ),
           _vm._v(" "),
           _c(
             "div",
             {
-              directives: [{ name: "getRadio", rawName: "v-getRadio" }],
+              directives: [{ name: "publish", rawName: "v-publish" }],
               staticClass: "btn btn-right disable"
             },
             [_vm._v("发布")]
@@ -27477,7 +27578,12 @@ var render = function() {
       _vm._l(_vm.image, function(i) {
         return _c("div", { staticClass: "images" }, [
           _c("img", {
-            attrs: { src: "../addImage/tamp/phone18124092479/" + i, alt: "" }
+            attrs: { src: "../addImage/tamp/phone18124092479/" + i, dataid: i }
+          }),
+          _vm._v(" "),
+          _c("i", {
+            directives: [{ name: "deleImage", rawName: "v-deleImage" }],
+            staticClass: "del"
           })
         ])
       })
@@ -27485,19 +27591,7 @@ var render = function() {
     2
   )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "editor-wrapper" }, [
-      _c("textarea", {
-        staticClass: "editor",
-        attrs: { maxlength: "140", name: "radio", placeholder: "分享生活点滴..." }
-      })
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 var esExports = { render: render, staticRenderFns: staticRenderFns }
 /* harmony default export */ __webpack_exports__["a"] = (esExports);
@@ -27509,13 +27603,13 @@ if (false) {
 }
 
 /***/ }),
-/* 33 */
+/* 37 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(34);
+var content = __webpack_require__(38);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // Prepare cssTransformation
 var transform;
@@ -27523,7 +27617,7 @@ var transform;
 var options = {"hmr":true}
 options.transform = transform
 // add the styles to the DOM
-var update = __webpack_require__(35)(content, options);
+var update = __webpack_require__(39)(content, options);
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -27540,7 +27634,7 @@ if(false) {
 }
 
 /***/ }),
-/* 34 */
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(0)(undefined);
@@ -27548,13 +27642,13 @@ exports = module.exports = __webpack_require__(0)(undefined);
 
 
 // module
-exports.push([module.i, "body,html,div,p,li,nav,header,ul{\n    padding:0;margin:0;\n}\nul,li{\n    list-style:none;\n}\na{\n    text-decoration: none;color:#666;\n}\ni{\n    font-style:normal;\n}\n", ""]);
+exports.push([module.i, "body,html,div,p,li,nav,header,ul{\r\n    padding:0;margin:0;\r\n}\r\nul,li{\r\n    list-style:none;\r\n}\r\na{\r\n    text-decoration: none;color:#666;\r\n}\r\ni{\r\n    font-style:normal;\r\n}\r\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 35 */
+/* 39 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -27610,7 +27704,7 @@ var singleton = null;
 var	singletonCounter = 0;
 var	stylesInsertedAtTop = [];
 
-var	fixUrls = __webpack_require__(36);
+var	fixUrls = __webpack_require__(40);
 
 module.exports = function(list, options) {
 	if (typeof DEBUG !== "undefined" && DEBUG) {
@@ -27926,7 +28020,7 @@ function updateLink (link, options, obj) {
 
 
 /***/ }),
-/* 36 */
+/* 40 */
 /***/ (function(module, exports) {
 
 

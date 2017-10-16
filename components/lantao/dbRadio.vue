@@ -5,7 +5,7 @@
                 <div data-reactroot="" class="pull-refresh-container">
                     <div class="status-editor-bar">
                         <div class="avatar">
-                            <img src="https://img1.doubanio.com/icon/user_normal.jpg" alt="未登陆">
+                            <img src="https://img1.doubanio.com/icon/user_normal.jpg">
                         </div>
                             <div class="holder">登录发广播</div>
                             <div class="icon icon-camera" style="background-image:url(../svg/ic_status_camera.svg)"></div>
@@ -56,29 +56,79 @@
                                 </a>
                             </div>
                             <div class="info">
-                                <div class="ic-btn ic-btn-like  left ">
+                                <div class="ic-btn ic-btn-like left" >
+                                    <i :style="'background-image:url(./svg/ic_like_gray.svg)'"></i>
                                     <span class="text">{{i.status.like_count}}</span>
                                 </div>
-                                <div class="ic-btn ic-btn-comment  left ">
+                                <div class="ic-btn ic-btn-comment left">
+                                    <i :style="'background-image:url(./svg/ic_comment.svg)'"></i>
                                     <span class="text">{{i.status.comments_count}}</span>
                                 </div>
-                                <div class="ic-btn ic-btn-retweet  left ">
+                                <div class="ic-btn ic-btn-retweet left">
+                                    <i :style="'background-image:url(./svg/ic_retweet_gray.svg)'"></i>
                                     <span class="text">{{i.status.reshares_count}}</span>
                                 </div>
-                                <div class="ic-btn ic-btn-more   right"></div>
+                                <div class="ic-btn ic-btn-more right"></div>
                             </div>
                         </li>
                     </ul>
                 </div>
             </div>
+            <div class="card" v-if="eternal">
+                <ul class="status-list comment-list">
+                    <li v-for="e in eternal">
+                        <div>
+                            <div class="desc">
+                                <a href="/people/95805238/">
+                                    <img alt="豆瓣" src="https://img3.doubanio.com/icon/up95805238-16.jpg">
+                                </a>
+                                <a>
+                                    <div class="user-info">
+                                        <strong>
+                                            lmm
+                                            <span>说： </span>
+                                        </strong>
+                                        <div class="timestamp">{{e.time}}</div>
+                                    </div>
+                                </a>
+                                
+                            </div>
+                            <a href="/people/3186129/status/2052193615/">
+                                <div class="content">
+                                    <div>{{e.eternal}}</div>
+                                </div>
+                            </a>
+                            <div class="feed-images single">
+                                <img v-if="e.img[0]" :src="'../addImage/eternal/phone18124092479/' + e.img[0]" :class="{'big':e.img.length<2}"/>
+                                <img v-if="e.img[1]" :src="'../addImage/eternal/phone18124092479/' + e.img[1]"/>
+                                <img v-if="e.img[2]" :src="'../addImage/eternal/phone18124092479/' + e.img[2]"/>
+                                <img v-if="e.img[3]" :src="'../addImage/eternal/phone18124092479/' + e.img[3]"/>
+                                <img v-if="e.img[4]" :src="'../addImage/eternal/phone18124092479/' + e.img[4]"/>
+                                <img v-if="e.img[5]" :src="'../addImage/eternal/phone18124092479/' + e.img[5]"/>
+                                <img v-if="e.img[6]" :src="'../addImage/eternal/phone18124092479/' + e.img[6]"/>
+                                <img v-if="e.img[7]" :src="'../addImage/eternal/phone18124092479/' + e.img[7]"/>
+                                <img v-if="e.img[8]" :src="'../addImage/eternal/phone18124092479/' + e.img[8]"/>
+                            </div>
+                        </div>
+
+                    </li>
+                </ul>
+                <div >
+                    <!-- {{e.eternal}} -->
+                    
+                </div>
+            </div>
+            <!-- <download></download> -->
         </div>
     </div>
 </template>
 <script>
+import download from './downLoad.vue';
     export default {
         data(){
             return {
-                item:[]
+                item:[],
+                eternal:[]
             }
         },
         methods:{
@@ -89,15 +139,34 @@
                     type:'get',
                     dataType:'jsonp',
                     success:function(data){
-                        console.log(data);
-                        self.item = data.items;
-                        console.log(self.item[14].status.images[0].normal.url);
+                        if(C.get('eternal')  != ''){
+                            self.eternal = JSON.parse(C.get('eternal'));
+                            console.log(self.eternal)
+                        }else{
+                            self.item = data.items;
+                        }
+
+                        // console.log(data);
+                        
+                        // console.log(self.item[14].status.images[0].normal.url);
+                        // console.log(JSON.parse(C.get('eternal')));
+                        // console.log(data.items.concat(JSON.parse(C.get('eternal'))));
                     }
                 })
+            },
+            mountedImage:function(){
+                console.log(C.get('eternal'));
+                // console.log(JSON.parse(C.get('eternal')));
+             
             }
         },
         mounted:function(){
             this.load();
+            this.mountedImage();
+
+        },
+        components:{
+            'download':download
         }
     }
 </script>
@@ -216,8 +285,7 @@ a {
     font-size: 14px;
     cursor: pointer;
 }
-.ic-btn::before {
-    content: '';
+.ic-btn i{
     width: 20px;
     height: 20px;
     background-position: center center;
@@ -238,18 +306,10 @@ a {
 .ic-btn.left {
     float: left;
 }
-.ic-btn-comment::before {
-    /*background-image: url(/f/talion/ac8a7e0…/pics/card/ic_comment.svg);*/
-}
-.ic-btn-retweet::before {
-    /*background-image: url(/f/talion/8604ef3…/pics/card/ic_retweet_gray.svg);*/
-}
 .ic-btn.right {
     float: right;
 }
-.ic-btn-more::before {
-    /*background-image: url(/f/talion/be268c0…/pics/card/more.svg);*/
-}
+
 .status-editor-bar .avatar img {
     width: 100%;
     height: 100%;
@@ -371,5 +431,13 @@ html body .page {
     height: 48px;
     padding-right: 90px;
     position: relative;
+}
+.feed-images img{
+    width: 93px;
+    height: 93px;
+}
+.feed-images .big{
+    width: 100%;
+    height: 100%;
 }
 </style>

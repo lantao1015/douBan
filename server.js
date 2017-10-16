@@ -4,6 +4,9 @@ var mysql = require('mysql');
 
 var multer = require('multer');
 
+var querystring = require("querystring");
+
+var url = require("url");
 
 var app = express();
 
@@ -134,14 +137,79 @@ app.get('/publish',function(req,res){
         })
         if(arr.length > 0){
             console.log('发布失败');
+            res.send(false);
+            return;
             // return;
         }else{
             console.log('发布成功');
+            res.send(true);
+            return;
         }
         // console.log(files);
     })
     //修改路径写入eternal
     
+})
+//点×时删除临时图片文件夹里的文件
+app.get('/deleImage',function(req, res){
+    res.set('Access-Control-Allow-Origin','*');
+    var query = url.parse(req.url).query;
+    var data = querystring.parse(query);
+    console.log(data);
+    fs.unlink(tampURL + phone + '/' + data.src,function(err){
+        if(err){
+            res.send(false);
+            return;
+        }
+        res.send(true);
+    });
+})
+//点取消时删除整个临时文件夹里的图片
+app.get('/delAll',function(req, res){
+    res.set('Access-Control-Allow-Origin','*');
+    fs.readdir(tampURL + phone,function(err,files){
+        if(err){
+            res.send(false);
+            console.log('删除读取目录失败');
+            return;
+        }
+        var arr = [];
+
+        files.forEach(function(item){
+            fs.unlink(tampURL + phone + '/' +item,function(err){
+                if(err){
+                    console.log(tampURL + phone + '/' +item,eternalURL + item);
+                    arr.push(err);
+                    console.log('arr的长度' + arr.length);
+                    
+                }
+            })
+        })
+        if(arr.length > 0){
+            console.log('删除全部失败');
+            res.send(false);
+            return;
+            // return;
+        }else{
+            console.log('删除全部成功');
+            res.send(true);
+            return;
+        }
+        // console.log(files);
+    }) 
+})
+
+app.get('/mountedEternalImage',function(req, res){
+    res.set('Access-Control-Allow-Origin','*');
+    fs.readdir(eternalURL + phone,function(err,files){
+        if(err){
+            res.send(false);
+            console.log('初始化读取已发布的目录失败');
+            return;
+        }
+        res.send(files);
+    })
+
 })
 // var mysql = require('mysql');
 // app.post("/getjobs", function(req, res) {
@@ -164,5 +232,6 @@ app.post('/profile',upload.any(),function(req, res, next){
     res.send(strr);
     strr = '';
 })
+
 app.listen(12345);
 console.log("ok");
